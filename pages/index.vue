@@ -1,7 +1,12 @@
 <template>
-  <Tutorial/>
+  <div>
+    112233
+  </div>
+  
 </template>
 
 <script>
-export default {}
+export default {
+  layout: "default",
+};
 </script>
