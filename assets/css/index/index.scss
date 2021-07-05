@@ -1,0 +1,47 @@
+.home-wrapper {
+    width: 100%;
+    height: 100%;
+
+    .tag-box {
+        width: 100%;
+        height: 46px;
+        margin-bottom: 6px;
+        background-color: #fff;
+
+        .tag-innerBox {
+            width: 960px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #71777c;
+            font-size: 14px;
+
+            .left-box {
+                display: flex;
+
+                .tag-item {
+                    margin-right: 25px;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: #00c58e;
+                    }
+                }
+            }
+
+            .btn {
+                cursor: pointer;
+            }
+
+            .btn:hover {
+                color: #00c58e;
+            }
+        }
+    }
+
+    .content {
+        
+    }
+}

@@ -4,6 +4,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #f4f5f5;
 }
 
 h1 {
@@ -27,5 +28,10 @@ h1 {
 
 .el-header {
   border-bottom: 1px solid #f1f1f1;
-  // background-color: pink;
+  background-color: #fff;
+}
+
+.el-main {
+  padding: 0;
+  margin: 0;
 }
