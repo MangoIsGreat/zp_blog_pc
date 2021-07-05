@@ -1,0 +1,41 @@
+// 主题色
+$primary-color: #00c58e;
+// 边框色
+$border-color: #e5e6eb;
+// 文章字体色
+$article-fontcolor: #4e5969;
+// 文章标题色
+$article-title-color: #1d2129;
+// 作者名字等字体颜色
+$info-fontcolor: #333333;
+
+// 背景色白
+$bg-color-white: #fff;
+// 背景色灰
+$bg-color-gray: #f4f5f5;
+
+// 正常字体
+$fontSize-normal: 16px;
+// 大字体
+$fontSize-large: 14px;
+// 中等字体
+$fontSize-middle: 13px;
+// 小字体
+$fontSize-small: 12px;
+
+// 文本信息显示不下省略号代替
+@mixin ellipsis() {
+  text-overflow: ellipsis; /*省略号 */
+  white-space: nowrap; /*溢出时不换行 */
+  overflow: hidden; /*溢出时隐藏 */
+}
+
+// 设置背景图片
+@mixin setBgImg($width, $height, $picUrl) {
+  width: $width;
+  height: $height;
+  background-image: url($picUrl);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
