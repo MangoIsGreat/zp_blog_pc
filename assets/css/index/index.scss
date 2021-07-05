@@ -1,47 +1,100 @@
 .home-wrapper {
+  width: 100%;
+  height: 100%;
+
+  .tag-box {
     width: 100%;
-    height: 100%;
+    height: 46px;
+    margin-bottom: 10px;
+    background-color: #fff;
 
-    .tag-box {
-        width: 100%;
-        height: 46px;
-        margin-bottom: 6px;
-        background-color: #fff;
+    .tag-innerBox {
+      width: 960px;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
 
-        .tag-innerBox {
-            width: 960px;
-            height: 100%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #71777c;
-            font-size: 14px;
+      .left-box {
+        display: flex;
 
-            .left-box {
-                display: flex;
+        .tag-item {
+          margin-right: 25px;
+          cursor: pointer;
 
-                .tag-item {
-                    margin-right: 25px;
-                    cursor: pointer;
-
-                    &:hover {
-                        color: #00c58e;
-                    }
-                }
-            }
-
-            .btn {
-                cursor: pointer;
-            }
-
-            .btn:hover {
-                color: #00c58e;
-            }
+          &:hover {
+            color: #00c58e;
+          }
         }
+      }
+
+      .btn {
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        color: #00c58e;
+      }
+    }
+  }
+
+  .content {
+    width: 100%;
+
+    .inner-content-box {
+      display: flex;
+      width: 960px;
+      margin: 0 auto;
     }
 
-    .content {
-        
+    .content-left {
+      flex: 1;
+      background-color: #fff;
+
+      .head {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border-bottom: 1px solid #f4f4f4;
+
+        .head-item {
+          padding: 0 16px;
+          cursor: pointer;
+          border-right: 1px solid #f4f4f4;
+
+          &:hover {
+            color: #00c58e;
+          }
+
+          &:nth-last-child(1) {
+            border: none;
+          }
+        }
+      }
+
+      .content-body {
+          width: 100%;
+          padding: 15px;
+
+          .body {
+              width: calc(100% - 30px);
+              height: 20px;
+              background-color: pink;
+          }
+      }
     }
+
+    .content-right {
+      padding: 0 10px;
+
+      .inner-box {
+        width: 240px;
+        height: 100px;
+        background-color: #fff;
+      }
+    }
+  }
 }

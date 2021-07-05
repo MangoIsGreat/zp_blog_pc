@@ -11,7 +11,22 @@
       </div>
     </div>
     <div class="content">
-      
+      <div class="inner-content-box">
+        <div class="content-left">
+          <div class="head">
+            <div class="head-item">热门</div>
+            <div class="head-item">最新</div>
+          </div>
+          <div class="content-body">
+            <div class="body">
+              
+            </div>
+          </div>
+        </div>
+        <div class="content-right">
+          <div class="inner-box"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
