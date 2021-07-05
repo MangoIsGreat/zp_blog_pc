@@ -8,6 +8,12 @@
         <nuxt />
       </el-main>
     </el-container>
+    <div class="to-top">
+      <i class="iconfont icon-zhcc_xiangshangjiantou"></i>
+    </div>
+    <div class="to-comment">
+      <i class="iconfont icon-huabanfuben"></i>
+    </div>
   </div>
 </template>
 

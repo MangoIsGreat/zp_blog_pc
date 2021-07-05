@@ -8,6 +8,8 @@ $article-fontcolor: #4e5969;
 $article-title-color: #1d2129;
 // 作者名字等字体颜色
 $info-fontcolor: #333333;
+// 字体颜色-灰
+$font-color-gray: #909090;
 
 // 背景色白
 $bg-color-white: #fff;
@@ -38,4 +40,26 @@ $fontSize-small: 12px;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+// 设置背景色及padding值
+@mixin setBgColorAndPadding($width, $padding) {
+  width: $width;
+  background-color: #fff;
+  padding: $padding;
+}
+
+// 设置右下角小组件
+@mixin setTopComment($right, $bottom, $width, $height) {
+  position: fixed;
+  right: $right;
+  bottom: $bottom;
+  width: $width;
+  background-color: #fff;
+  height: $height;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
