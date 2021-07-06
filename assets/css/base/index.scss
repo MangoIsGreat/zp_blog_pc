@@ -39,11 +39,11 @@ a:link {
   cursor: pointer;
 } /*a标签未访问时的样式*/
 a:visited {
-  text-decoration: overline;
+  text-decoration: none;
   cursor: pointer;
 } /*a标签访问过之后样式*/
 a:active {
-  text-decoration: overline;
+  text-decoration: none;
   cursor: pointer;
 } /*a标签鼠标按下mousedown时的样式*/
 

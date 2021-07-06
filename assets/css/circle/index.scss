@@ -1,0 +1,290 @@
+@import "/assets/css/config/common.scss";
+
+.circle-wrapper {
+  display: flex;
+  width: 960px;
+  margin: 20px auto;
+
+  .circle-menu {
+    @include setBgColorAndPadding(112px, 16px 12px);
+    box-sizing: border-box;
+    font-size: $fontSize-large;
+    color: $font-color-gray;
+    max-height: 470px;
+
+    .circle-menu-item {
+      width: 100%;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 3px;
+      margin-top: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $bg-color-hover;
+      }
+
+      &:nth-child(1) {
+        margin: 0;
+      }
+    }
+  }
+
+  .circle-content {
+    flex: 1;
+    padding: 0 15px;
+    box-sizing: border-box;
+
+    .circle-content-innerBox {
+      width: 100%;
+
+      .innerBox-publish {
+        box-sizing: border-box;
+        @include setBgColorAndPadding(100%, 16px 20px 0);
+        margin-bottom: 10px;
+
+        .publish-operateLine {
+          display: flex;
+          padding: 10px 0;
+          justify-content: space-between;
+          align-items: center;
+
+          .operateLine-left {
+            .operateLine-left-item {
+              font-size: $fontSize-middle;
+            }
+          }
+        }
+      }
+
+      .circle-content-list-box {
+        .circle-content-list-item {
+          width: 100%;
+          margin-bottom: 10px;
+          background-color: $bg-color-white;
+
+          .list-item-top {
+            @include setBgColorAndPadding(100%, 16px 20px 0);
+            box-sizing: border-box;
+            border-bottom: 1px solid $border-color;
+
+            .list-item-info {
+              display: flex;
+              width: 100%;
+              justify-content: space-between;
+              align-items: center;
+
+              .list-item-info-left {
+                display: flex;
+
+                .list-item-info-left-avatar {
+                  width: 45px;
+                  height: 45px;
+                  margin-right: 10px;
+                  border-radius: 45px;
+                }
+
+                .list-item-info-left-info {
+                  .list-item-info-left-info-title {
+                    font-weight: 700;
+                    font-size: $fontSize-bigger;
+                    color: $article-title-color;
+                    line-height: 20px;
+                  }
+
+                  .list-item-info-left-info-details {
+                    display: flex;
+                    font-size: $fontSize-middle;
+                    line-height: 24px;
+                    color: $font-color-gray;
+                  }
+                }
+              }
+
+              .list-item-info-follow {
+                // border: 1px solid $primary-color;
+                color: $primary-color;
+              }
+            }
+
+            .list-item-desc {
+              padding-left: 55px;
+              padding-bottom: 5px;
+              width: calc(100% - 55px);
+              line-height: 24px;
+              font-size: $fontSize-large;
+              color: $article-title-color2;
+            }
+          }
+
+          .list-item-operate {
+            display: flex;
+
+            .list-item-operate-t {
+              flex: 1;
+              padding: 3px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .iconfont {
+                font-size: $fontSize-middle;
+                line-height: 24px;
+                cursor: pointer;
+              }
+            }
+
+            .list-item-operate-t:nth-child(1),
+            .list-item-operate-t:nth-child(2) {
+              box-sizing: border-box;
+              border-right: 1px solid $border-color;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .circle-info {
+    width: 248px;
+
+    .circle-info-authorInfo {
+      width: 100%;
+      margin-bottom: 10px;
+      background-color: $bg-color-white;
+
+      .authorInfo-top {
+        display: flex;
+        width: 100%;
+        padding: 16px;
+        box-sizing: border-box;
+        border-bottom: 1px solid $border-color;
+        cursor: pointer;
+
+        .authorInfo-top-avatar {
+          width: 62px;
+          height: 62px;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+
+        .authorInfo-top-info {
+          flex: 1;
+
+          .authorInfo-top-info-name {
+            margin-top: 8px;
+            color: $article-title-color2;
+            font-size: $fontSize-bigger;
+            font-weight: 700;
+            line-height: 24px;
+          }
+
+          .authorInfo-top-info-job {
+            color: $font-color-gray;
+            font-size: $fontSize-middle;
+            line-height: 24px;
+          }
+        }
+      }
+
+      .authorInfo-bottom {
+        display: flex;
+        padding: 10px 0;
+
+        .authorInfo-bottom-item {
+          flex: 1;
+          font-size: $fontSize-middle;
+          color: $font-color-gray;
+          line-height: 20px;
+          text-align: center;
+
+          .bottom-item-box {
+            box-sizing: border-box;
+            border-right: 1px solid $border-color;
+            cursor: pointer;
+
+            .authorInfo-bottom-item-num {
+              font-weight: 700;
+              color: $article-title-color2;
+            }
+          }
+
+          &:nth-last-child(1) .bottom-item-box {
+            border: none;
+          }
+        }
+      }
+    }
+
+    .circle-info-great {
+      width: 100%;
+      margin-bottom: 10px;
+      background-color: $bg-color-white;
+
+      .great-title {
+        width: 100%;
+        padding: 13px 16px;
+        box-sizing: border-box;
+        font-weight: 700;
+        color: $article-title-color2;
+        font-size: $fontSize-bigger;
+        border-bottom: 1px solid $border-color;
+      }
+
+      .great-wrapper {
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+
+        .great-wrapper-item {
+          display: flex;
+          width: 100%;
+          padding: 12px 0;
+          box-sizing: border-box;
+          border-bottom: 1px solid $border-color;
+
+          &:nth-last-child(1) {
+            border: none;
+          }
+
+          .content-pic {
+            width: 68px;
+            height: 68px;
+            border-radius: 4px;
+          }
+
+          .content-left {
+            flex: 1;
+            padding-right: 14px;
+            box-sizing: border-box;
+
+            .content-left-operate {
+              display: flex;
+              margin-top: 14px;
+              font-size: $fontSize-small;
+              color: $font-color-gray;
+            }
+
+            .content-left-title {
+              font-size: $fontSize-middle;
+              color: $article-title-color2;
+              line-height: 16px;
+              // 两行或多行文本溢出显示省略号
+              word-break: break-all;
+              text-overflow: ellipsis;
+              display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+              -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+              -webkit-line-clamp: 2; /** 显示的行数 **/
+              overflow: hidden; /** 隐藏超出的内容 **/
+            }
+          }
+        }
+      }
+    }
+
+    .circle-poster {
+      @include setBgImg(100%, 200px, "@/assets/img/circle-page-poster.jpg");
+      cursor: pointer;
+    }
+  }
+}
