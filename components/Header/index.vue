@@ -2,7 +2,7 @@
   <div class="header-wrapper">
     <div class="left-wrapper">
       <h1 class="logo">得到</h1>
-      <div v-for="item in titleList" :key="item" class="item">
+      <div v-for="(item, index) in titleList" :key="index" class="item">
         <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
       </div>
     </div>
@@ -39,8 +39,8 @@ export default {
           route: "/circle"
         },
         {
-          name: "发现",
-          route: "/find"
+          name: "资讯",
+          route: "/news"
         }
       ]
     };
