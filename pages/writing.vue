@@ -14,7 +14,13 @@
         </div>
       </div>
       <div class="writing-wrapper-body">
-        <mavon-editor class="writing-wrapper-body-editor" :ishljs="true" v-model="handbook" />
+        <mavon-editor
+          :boxShadow="false"
+          @change="input"
+          class="writing-wrapper-body-editor"
+          :ishljs="true"
+          v-model="handbook"
+        />
       </div>
     </no-ssr>
   </div>
@@ -25,10 +31,19 @@ export default {
   layout: "fullpage",
   data() {
     return {
-      handbook: "#### how to use mavonEditor in nuxt.js",
+      handbook: "",
       articleTitle: "",
       avatarUrl: ""
     };
+  },
+  methods: {
+    input(value,render) {
+      console.log(value);
+      console.log("------------------");
+      console.log(this.handbook);
+      console.log("====####")
+      console.log(render)
+    }
   }
 };
 </script>

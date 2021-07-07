@@ -27,6 +27,7 @@
                   v-for="(item, index) in infoList"
                   :key="index"
                   class="infinite-list-item list-item"
+                  @click="toArticle"
                 >
                   <div class="item-info">
                     <div class="author-name">李勇</div>
@@ -41,9 +42,13 @@
                         helper初始渲染初始渲染初始渲染初始渲染初始渲染初始渲染初始渲染
                       </div>
                       <div class="operate">
-                        <i class="iconfont icon-yanjing operate-item"> 1143</i>
-                        <i class="iconfont icon-dianzan operate-item"> 11</i>
-                        <i class="iconfont icon-liaotian"> 6</i>
+                        <i class="iconfont icon-yanjing operate-item"
+                          >&nbsp;1143</i
+                        >
+                        <i class="iconfont icon-dianzan operate-item"
+                          >&nbsp;11</i
+                        >
+                        <i class="iconfont icon-liaotian">&nbsp;6</i>
                       </div>
                     </div>
                     <img
@@ -93,7 +98,9 @@
           </div>
           <div class="footer">
             <div class="line-item">
-              <a target="_blank" href="#">关于</a> · <a target="_blank" href="https://juejin.cn/">友情链接</a> ·
+              <a target="_blank" href="#">关于</a>&nbsp;·&nbsp;
+              <a target="_blank" href="https://juejin.cn/">友情链接</a
+              >&nbsp;·&nbsp;
               <a target="_blank" href="https://juejin.cn/">更多文章</a>
             </div>
             <div class="line-item">
@@ -109,7 +116,7 @@
               联系邮箱: zp_web@126.com
             </div>
             <div class="line-item">
-              <a target="_blank" href="#">&copy;2021 得到</a>
+              <a target="_blank" href="#">&copy;2021&nbsp;得到</a>
             </div>
           </div>
         </div>
@@ -123,34 +130,7 @@ export default {
   layout: "default",
   data() {
     return {
-      infoList: [
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        ,
-        1,
-        ,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        ,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
+      infoList: [1, 1, 1, 1, 1, 1, 1],
       authorList: [5, 5, 5],
       tagList: [
         {
@@ -173,7 +153,10 @@ export default {
   },
   methods: {
     loadData() {
-      console.log(1)
+      console.log(1);
+    },
+    toArticle() {
+      window.open("/article", "_blank");
     }
   }
 };
