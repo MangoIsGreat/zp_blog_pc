@@ -42,8 +42,22 @@
       </div>
       <div class="aside-box">
         <div class="send-news">
-          <div class="send-news-title">资讯投递</div>
-          <el-button>立即投递</el-button>
+          <div class="sen-news-t">
+            <div class="send-news-title">资讯投递</div>
+            <el-button type="primary" class="send-news-btn" size="mini"
+              >立即投递</el-button
+            >
+          </div>
+          <div class="send-news-desc">
+            欢迎投递行业动态、软件更新、编程语言相关资讯线索
+          </div>
+        </div>
+        <div class="qr-code-wrapper">
+          <div class="qr-code"></div>
+          <div class="qr-code-desc">
+            <div class="qr-code-desc-title">下载得到客户端</div>
+            <div class="qr-code-desc-word">一个旨在分享技术的社区</div>
+          </div>
         </div>
         <div class="footer">
           <div class="line-item">
