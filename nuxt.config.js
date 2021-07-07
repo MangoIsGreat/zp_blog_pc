@@ -21,15 +21,26 @@ export default {
     'element-ui/lib/theme-chalk/index.css',
     '@/assets/css/main.scss',
     '@/assets/iconfont/iconfont.css',
+    '@/assets/css/config/animation.scss',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    {src: '@/plugins/mavon-editor', ssr: false},
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+
+  // 添加页面切换过渡动画
+  transition: {
+    name: 'page',
+    mode: 'out-in',
+    beforeEnter (el) {
+      console.log('Before enter...');
+    }
+  },
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [

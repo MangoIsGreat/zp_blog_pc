@@ -73,3 +73,8 @@ a:active {
 .to-comment {
   @include setTopComment(30px, 30px, 40px, 40px);
 }
+
+// fullpage-layout
+.fullpage-layout {
+  background-color: $bg-color-white;
+}

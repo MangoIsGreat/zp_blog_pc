@@ -150,6 +150,7 @@
 
 <script>
 export default {
+  layout: "default",
   data() {
     return {
       menuList: ["推荐", "热门", "关注", "上班摸鱼", "内推招聘"],

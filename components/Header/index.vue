@@ -14,7 +14,9 @@
         suffix-icon="el-icon-search"
         placeholder="探索得到"
       ></el-input>
-      <el-button class="item" type="primary" size="small">写文章</el-button>
+      <el-button class="item" @click="toWrite" type="primary" size="small"
+        >写文章</el-button
+      >
       <el-badge :value="3" class="item">
         <i class="el-icon-bell"></i>
       </el-badge>
@@ -45,7 +47,11 @@ export default {
       ]
     };
   },
-  methods: {}
+  methods: {
+    toWrite() {
+      window.open("/writing", "_blank");
+    }
+  }
 };
 </script>
 
