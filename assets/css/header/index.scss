@@ -23,11 +23,11 @@
     .item {
       line-height: 60px;
       padding: 0 15px;
-    }
-
-    .item:hover {
-      color: #00c58e;
       cursor: pointer;
+
+      a:hover {
+        color: #00c58e;
+      }
     }
   }
 
