@@ -86,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <div class="author-list-item author-list-footer">完整榜单 &gt;</div>
+            <div @click="getAuthorList" class="author-list-item author-list-footer">完整榜单 &gt;</div>
           </div>
           <div class="home-page-poster"></div>
           <div class="qr-code-wrapper">
@@ -157,7 +157,10 @@ export default {
     },
     toArticle() {
       window.open("/article", "_blank");
-    }
+    },
+    getAuthorList() {
+      window.open("/author-list", "_blank");
+    },
   }
 };
 </script>

@@ -1,0 +1,26 @@
+@import "/assets/css/config/common.scss";
+
+.header-type-wrapper {
+  width: 100%;
+  height: 46px;
+  margin-bottom: 20px;
+  background-color: $bg-color-white;
+
+  .header-type-wrapper-innerBox {
+    display: flex;
+    align-items: center;
+    width: 960px;
+    height: 100%;
+    margin: 0 auto;
+    font-size: $fontSize-large;
+
+    .header-item {
+      margin-right: 20px;
+      cursor: pointer;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+}

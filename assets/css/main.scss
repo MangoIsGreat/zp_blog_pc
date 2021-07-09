@@ -4,8 +4,11 @@
 // 基本样式
 @import "./base/index.scss";
 
+// 页面头部tag组件样式
+@import "./components/headerType.scss";
+
 // 头部组件样式
-@import "./header/index.scss";
+@import "./components/header.scss";
 
 // 首页样式
 @import "./index/index.scss";
@@ -24,3 +27,6 @@
 
 // 资讯内容页样式
 @import "./news-detail/index.scss";
+
+// 作者排行页样式
+@import "./author-list/index.scss";
