@@ -18,6 +18,7 @@
             v-for="(item, index) in newsList"
             :key="index"
             class="infinite-list-item"
+            @click="toNewsPage"
           >
             <div class="list-item-content">
               <h3 class="item-content-title">
@@ -109,7 +110,10 @@ export default {
     };
   },
   methods: {
-    loadData() {}
+    loadData() {},
+    toNewsPage() {
+      window.open("/news-detail", "_blank");
+    }
   }
 };
 </script>
