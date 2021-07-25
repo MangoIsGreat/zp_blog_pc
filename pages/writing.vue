@@ -51,7 +51,7 @@ export default {
         tag: 10002
       };
 
-      const data = await this.$axios.$post("v1/blog/create", params);
+      const data = await this.$axios.$post("/blog/create", params);
 
       console.log(data);
     },

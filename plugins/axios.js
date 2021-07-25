@@ -1,4 +1,5 @@
 import { getLocalStorage } from "@/utils/store";
+import { encode } from "@/utils/encode";
 
 export default ({ $axios }) => {
   // 设置基地址
@@ -8,7 +9,7 @@ export default ({ $axios }) => {
     const token = getLocalStorage("user_token");
     // 将获取到token加入到请求头中
     if (token) {
-      config.headers.common["Authorization"] = token;
+      config.headers.common["Authorization"] = encode(token);
     }
 
     return config;
