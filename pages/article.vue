@@ -27,8 +27,8 @@
         <h1 class="main-title-name">
           「论道架构师」拒绝无脑搬砖，从分库分表开始
         </h1>
-        <div class="markdown-body">
-          去年同期写过一个基于 Node 的 DevOps
+        <div class="markdown-body" v-html="mdContent">
+          <!-- 去年同期写过一个基于 Node 的 DevOps
           系列，但是整个项目工程非常大，上手成本比较高，对于一些中小型团队或者新手参考的意义不算多，所以针对这些群体重启了一个新的工程化系列。
           新的系列将从 0 到 1
           逐步搭建一套完整工程化方案，所有文章将统一放在《前端工程化》专栏中。
@@ -48,7 +48,7 @@
           逐步搭建一套完整工程化方案，所有文章将统一放在《前端工程化》专栏中。
           作者：CookieBoty 链接：https://juejin.cn/post/6982215543017193502
           来源：掘金
-          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。 -->
         </div>
         <div class="article-author-wrapper">
           <div class="article-tag-type">
@@ -267,6 +267,8 @@
 </template>
 
 <script>
+import marked from "marked";
+
 export default {
   layout: "default",
   data() {
@@ -275,6 +277,20 @@ export default {
       articleTagList: [2, 1, 1, 1],
       moreArticleList: [2, 1, 1, 1],
       comment: ""
+    };
+  },
+  async asyncData({ $axios }) {
+    const data = await $axios.get("/blog/list");
+
+    console.log("====>>");
+    console.log(data.data.rows);
+
+    const mdContent = marked(data.data.rows[1].content || "", {
+      sanitize: true
+    });
+
+    return {
+      mdContent
     };
   },
   methods: {

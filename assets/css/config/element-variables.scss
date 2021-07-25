@@ -4,4 +4,15 @@ $--color-primary: #00c58e;
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: "~element-ui/lib/theme-chalk/fonts";
 
-@import "~element-ui/packages/theme-chalk/src/index"; // 这个地方后面要 改成 样式按需引入，请继续看下文
+// 样式也按需引入，嘿嘿嘿
+@import "~element-ui/packages/theme-chalk/src/index";
+// @import "~element-ui/packages/theme-chalk/src/button";
+// @import "~element-ui/packages/theme-chalk/src/input";
+// @import "~element-ui/packages/theme-chalk/src/badge";
+// @import "~element-ui/packages/theme-chalk/src/avatar";
+// @import "~element-ui/packages/theme-chalk/src/container";
+// @import "~element-ui/packages/theme-chalk/src/header";
+// @import "~element-ui/packages/theme-chalk/src/main";
+// @import "~element-ui/packages/theme-chalk/src/infinite-scroll";
+// @import "~element-ui/packages/theme-chalk/src/form";
+// @import "~element-ui/packages/theme-chalk/src/form-item";

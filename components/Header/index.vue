@@ -14,13 +14,22 @@
         suffix-icon="el-icon-search"
         placeholder="探索得到"
       ></el-input>
-      <el-button class="item" @click="toWrite" type="primary" size="small"
+      <el-button
+        class="item"
+        @click="openPage('/writing')"
+        type="primary"
+        size="small"
         >写文章</el-button
       >
       <el-badge :value="3" class="item">
         <i class="el-icon-bell"></i>
       </el-badge>
-      <el-avatar class="avatar item" :src="circleUrl"></el-avatar>
+      <!-- <el-avatar
+        @click="login()"
+        class="avatar item"
+        :src="circleUrl"
+      ></el-avatar> -->
+      <div class="avatar item" :src="circleUrl" @click="login"></div>
     </div>
   </div>
 </template>
@@ -48,8 +57,15 @@ export default {
     };
   },
   methods: {
-    toWrite() {
-      window.open("/writing", "_blank");
+    openPage(path) {
+      window.open(path, "_blank");
+    },
+    login() {
+      const isLogin = false;
+
+      if (!isLogin) {
+        this.$store.commit("login/toggleOpen", true);
+      }
     }
   }
 };

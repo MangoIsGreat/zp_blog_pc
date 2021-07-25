@@ -1,6 +1,16 @@
+import { getLocalStorage } from "@/utils/store";
+
 export default ({ $axios }) => {
+  // 设置基地址
+  // $axios.defaults.baseURL = 'http://XXX/api';
   // 请求拦截器
   $axios.onRequest(config => {
+    const token = getLocalStorage("user_token");
+    // 将获取到token加入到请求头中
+    if (token) {
+      config.headers.common["Authorization"] = token;
+    }
+
     return config;
   });
 

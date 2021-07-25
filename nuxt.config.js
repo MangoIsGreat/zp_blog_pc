@@ -50,15 +50,37 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios"
+    // "@nuxtjs/proxy"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: dev[process.env.NODE_ENV].ENV_API
+    // proxy: true, // 开启代理
+    // prefix: "/api", // 请求url加前缀
+    // credentials: true // 跨域请求时是否需要凭证
   },
+
+  // proxy: {
+  //   "/api": {
+  //     target: "http://localhost:3001",
+  //     changeOrigin: true,
+  //     pathRewrite: {
+  //       "^/api": "/v1"
+  //     }
+  //   }
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/]
+    transpile: [/^element-ui/],
+    // babel: {
+    //   plugins: [
+    //     [
+    //       "component",
+    //       { libraryName: "element-ui", styleLibraryName: "theme-chalk" }
+    //     ]
+    //   ]
+    // }
   }
 };

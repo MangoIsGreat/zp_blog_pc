@@ -22,7 +22,6 @@
           :boxShadow="false"
           @change="input"
           @save="input"
-          @htmlCode="htmlCode"
           class="writing-wrapper-body-editor"
           :ishljs="true"
           v-model="handbook"
@@ -43,20 +42,21 @@ export default {
       mdValue: "" // mavon-editor输入的内容
     };
   },
-  created() {
-    console.log("========>");
-    console.log(this.$axios.baseURL);
-  },
   methods: {
-    publish() {
-      this.$axios.get("/aaa").then(res => console.log(111111555))
+    async publish() {
+      const params = {
+        title: "测试文章",
+        content: this.mdValue,
+        description: "测试",
+        tag: 10002
+      };
+
+      const data = await this.$axios.$post("v1/blog/create", params);
+
+      console.log(data);
     },
     input(value, render) {
       this.mdValue = value;
-    },
-    htmlCode(a, b) {
-      console.log(111111);
-      console.log(a, b);
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
