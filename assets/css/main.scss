@@ -13,23 +13,26 @@
 // 登录组件样式
 @import "./components/login.scss";
 
+// 写文章页发布文章组件样式
+@import "./components/publishPanel.scss";
+
 // 首页样式
-@import "./index/index.scss";
+@import "./pages/home.scss";
 
 // 互动页样式
-@import "./circle/index.scss";
+@import "./pages/circle.scss";
 
 // 资讯页样式
-@import "./news/index.scss";
+@import "./pages/news.scss";
 
 // 写文章页样式
-@import "./writing/index.scss";
+@import "./pages/writing.scss";
 
 // 文章内容页样式
-@import "./article/index.scss";
+@import "./pages/article.scss";
 
 // 资讯内容页样式
-@import "./news-detail/index.scss";
+@import "./pages/news-detail.scss";
 
 // 作者排行页样式
-@import "./author-list/index.scss";
+@import "./pages/author-list.scss";

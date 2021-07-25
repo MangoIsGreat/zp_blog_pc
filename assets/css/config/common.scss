@@ -81,3 +81,14 @@ $fontSize-small: 12px;
   justify-content: center;
   cursor: pointer;
 }
+
+// 设置标题
+@mixin setTitle(
+  $fontSize: 14px,
+  $color: $article-title-color,
+  $fontWeight: 400
+) {
+  font-size: $fontSize;
+  color: $color;
+  font-weight: $fontWeight;
+}

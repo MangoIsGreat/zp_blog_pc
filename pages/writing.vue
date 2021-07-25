@@ -1,5 +1,5 @@
 <template>
-  <div class="writing-wrapper">
+  <div class="writing-wrapper" @click="cancelShowPanel">
     <no-ssr>
       <div class="header-wrapper">
         <el-input
@@ -9,7 +9,10 @@
         ></el-input>
         <div class="header-wrapper-right">
           <el-button class="draft" size="small">草稿箱</el-button>
-          <el-button size="small" type="primary" @click="publish"
+          <el-button
+            size="small"
+            type="primary"
+            @click.stop="isShowPanel = true"
             >发布</el-button
           >
           <el-avatar class="avatar" size="medium" :src="avatarUrl"></el-avatar>
@@ -27,11 +30,19 @@
           v-model="handbook"
         />
       </div>
+      <!-- 弹窗 -->
+      <PublishPanel
+        @publish="publish"
+        @cancel="cancelShowPanel"
+        v-if="isShowPanel"
+      />
     </no-ssr>
   </div>
 </template>
 
 <script>
+import { Message } from "element-ui";
+
 export default {
   layout: "fullpage",
   data() {
@@ -39,24 +50,57 @@ export default {
       handbook: "",
       articleTitle: "", // 文章标题
       avatarUrl: "",
-      mdValue: "" // mavon-editor输入的内容
+      mdValue: "", // mavon-editor输入的内容
+      rMdValue: "", // mavon-editor输入的内容解析后
+      isShowPanel: false // 是否展示弹框
     };
   },
   methods: {
-    async publish() {
+    cancelShowPanel() {
+      // 关闭弹框
+      if (!this.isShowPanel) return;
+      this.isShowPanel = false;
+    },
+    async publish(value) {
+      let description = value.description; // 文章描述
+
+      if (!this.articleTitle) {
+        Message.warning("文章标题不能为空！");
+        return;
+      }
+
+      if (!this.mdValue) {
+        Message.warning("文章内容不能为空！");
+        return;
+      }
+
+      if (!description) {
+        description = this.rMdValue.substr(0, 100);
+      }
+
       const params = {
-        title: "测试文章",
+        title: this.articleTitle,
         content: this.mdValue,
-        description: "测试",
-        tag: 10002
+        description,
+        tag: value.tag,
+        cover_url: value.cover_url
       };
 
-      const data = await this.$axios.$post("/blog/create", params);
+      const data = await this.$axios.post("/blog/create", params);
 
-      console.log(data);
+      if (data.error_code === 0) {
+        Message.success("文章发表成功！");
+
+        this.articleTitle = "";
+        this.mdValue = "";
+        this.handbook = "";
+
+        this.isShowPanel = false;
+      }
     },
     input(value, render) {
       this.mdValue = value;
+      this.rMdValue = render;
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {

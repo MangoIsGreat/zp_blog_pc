@@ -11,7 +11,9 @@ import {
   InfiniteScroll,
   Form,
   FormItem,
-  Message
+  Message,
+  Upload,
+  Dialog
 } from "element-ui";
 
 Vue.use(Input);
@@ -25,3 +27,5 @@ Vue.use(InfiniteScroll);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Message);
+Vue.use(Upload);
+Vue.use(Dialog);
