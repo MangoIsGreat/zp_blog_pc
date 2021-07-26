@@ -24,20 +24,27 @@
       <el-badge :value="3" class="item">
         <i class="el-icon-bell"></i>
       </el-badge>
-      <!-- <el-avatar
-        @click="login()"
-        class="avatar item"
-        :src="circleUrl"
-      ></el-avatar> -->
-      <div class="avatar item" :src="circleUrl" @click="login"></div>
+      <div @click.stop="login">
+        <el-avatar
+          class="avatar item"
+          :src="userInfo ? userInfo.avatar : ''"
+        ></el-avatar>
+      </div>
     </div>
+    <!-- 用户面板 -->
+    <user-info v-if="isShowInfo" />
   </div>
 </template>
 
 <script>
+import { getLocalStorage } from "@/utils/store";
+import userInfo from "./userInfo.vue";
+
 export default {
+  components: { userInfo },
   data() {
     return {
+      userInfo: null, // 用户信息
       input: "",
       circleUrl: "",
       titleList: [
@@ -56,16 +63,40 @@ export default {
       ]
     };
   },
+  computed: {
+    isLogin() {
+      return this.$store.state.login.isLogin;
+    },
+    isShowInfo() {
+      return this.$store.state.login.isShowInfo;
+    }
+  },
+  watch: {
+    isLogin() {
+      this.getUserInfo();
+    }
+  },
+  mounted() {
+    // 获取用户信息：
+    this.getUserInfo();
+  },
   methods: {
+    getUserInfo() {
+      const userInfo = getLocalStorage("user_info");
+
+      this.userInfo = userInfo;
+    },
     openPage(path) {
       window.open(path, "_blank");
     },
     login() {
-      const isLogin = false;
+      const isLogin = getLocalStorage("user_token") ? true : false;
 
       if (!isLogin) {
-        this.$store.commit("login/toggleOpen", true);
+        return this.$store.commit("login/toggleOpen", true);
       }
+
+      this.$store.commit("login/toggleInfoOpen", true);
     }
   }
 };

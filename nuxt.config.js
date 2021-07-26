@@ -28,7 +28,7 @@ export default {
   plugins: [
     "@/plugins/element-ui",
     "@/plugins/axios",
-    { src: "@/plugins/mavon-editor", ssr: false }
+    { src: "@/plugins/mavon-editor", ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -73,7 +73,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/],
+    transpile: [/^element-ui/]
     // babel: {
     //   plugins: [
     //     [

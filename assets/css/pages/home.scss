@@ -27,7 +27,7 @@
           cursor: pointer;
 
           &:hover {
-            color: $primary-color;
+            color: $primary-color !important;
           }
         }
       }
@@ -105,7 +105,7 @@
 
                 .author-name,
                 .time {
-                  pointer-events:none;
+                  pointer-events: none;
                   border-right: 1px solid $border-color;
                 }
 
@@ -114,12 +114,12 @@
                 }
 
                 .time {
-                  pointer-events:none;
+                  pointer-events: none;
                   padding: 0 8px;
                 }
 
                 .tag-type {
-                  pointer-events:none;
+                  pointer-events: none;
                   padding-left: 8px;
                 }
               }
@@ -156,7 +156,7 @@
                     }
 
                     i {
-                      pointer-events:none;
+                      pointer-events: none;
                       font-size: 13px;
                     }
                   }

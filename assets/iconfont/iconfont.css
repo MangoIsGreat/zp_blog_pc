@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 2652745 */
-  src: url('iconfont.woff2?t=1625511298228') format('woff2'),
-       url('iconfont.woff?t=1625511298228') format('woff'),
-       url('iconfont.ttf?t=1625511298228') format('truetype');
+  font-family: "iconfont"; /* Project id 2666177 */
+  src: url('iconfont.woff2?t=1627294441471') format('woff2'),
+       url('iconfont.woff?t=1627294441471') format('woff'),
+       url('iconfont.ttf?t=1627294441471') format('truetype');
 }
 
 .iconfont {
@@ -13,31 +13,123 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ico:before {
+  content: "\e647";
+}
+
+.icon-lianjie:before {
+  content: "\e628";
+}
+
+.icon-jiahao:before {
+  content: "\e62f";
+}
+
+.icon-lingdai:before {
+  content: "\e607";
+}
+
+.icon-shenglvehao:before {
+  content: "\e708";
+}
+
+.icon-gengduo:before {
+  content: "\e608";
+}
+
+.icon-pencil-draw-svgrepo-com:before {
+  content: "\e70b";
+}
+
+.icon-xiangzuo:before {
+  content: "\e682";
+}
+
+.icon-xingxing:before {
+  content: "\e606";
+}
+
 .icon-dianzan1:before {
   content: "\e60c";
 }
 
-.icon-xunzhang1:before {
-  content: "\f416";
+.icon-xiangyou:before {
+  content: "\e860";
 }
 
-.icon-huabanfuben:before {
-  content: "\e622";
-}
-
-.icon-zhcc_xiangshangjiantou:before {
-  content: "\e688";
-}
-
-.icon-dianzan:before {
+.icon-biaoqian:before {
   content: "\e600";
 }
 
 .icon-yanjing:before {
-  content: "\e67c";
+  content: "\e62b";
 }
 
-.icon-liaotian:before {
-  content: "\e6cb";
+.icon-fangdajing:before {
+  content: "\e6dd";
+}
+
+.icon-pinglun:before {
+  content: "\e60f";
+}
+
+.icon-fenxiang:before {
+  content: "\e602";
+}
+
+.icon-zixun:before {
+  content: "\e630";
+}
+
+.icon-shouye-:before {
+  content: "\e635";
+}
+
+.icon-bangdan:before {
+  content: "\e6af";
+}
+
+.icon-shezhi:before {
+  content: "\e611";
+}
+
+.icon-dilanxianxingiconyihuifu_huabanfuben:before {
+  content: "\e603";
+}
+
+.icon-huati:before {
+  content: "\e8c4";
+}
+
+.icon-pinglun1:before {
+  content: "\e66d";
+}
+
+.icon-wode:before {
+  content: "\e604";
+}
+
+.icon-gonggao:before {
+  content: "\e605";
+}
+
+.icon-xiaoxi:before {
+  content: "\e676";
+}
+
+.icon-huangguan:before {
+  content: "\f057";
+}
+
+.icon-tubiaozhuanqu-05:before {
+  content: "\e646";
+}
+
+.icon-dianzan:before {
+  content: "\e601";
+}
+
+.icon-menu_fkgl:before {
+  content: "\e648";
 }
 

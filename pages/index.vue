@@ -3,7 +3,15 @@
     <div class="tag-box">
       <div class="tag-innerBox">
         <div class="left-box">
-          <div class="tag-item" v-for="(item, index) in tagList" :key="index">
+          <div
+            :style="{
+              color: item.tag_type === selectedTag ? '#00c58e' : '#4e5969'
+            }"
+            class="tag-item"
+            @click="selectTag(item.tag_type)"
+            v-for="(item, index) in tagList"
+            :key="index"
+          >
             {{ item.tag_name }}
           </div>
         </div>
@@ -86,7 +94,12 @@
                 </div>
               </div>
             </div>
-            <div @click="getAuthorList" class="author-list-item author-list-footer">完整榜单 &gt;</div>
+            <div
+              @click="getAuthorList"
+              class="author-list-item author-list-footer"
+            >
+              完整榜单 &gt;
+            </div>
           </div>
           <div class="home-page-poster"></div>
           <div class="qr-code-wrapper">
@@ -126,32 +139,50 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
+
 export default {
   layout: "default",
   data() {
     return {
       infoList: [1, 1, 1, 1, 1, 1, 1],
       authorList: [5, 5, 5],
-      tagList: [
-        {
-          tag_name: "推荐"
-        },
-        {
-          tag_name: "关注"
-        },
-        {
-          tag_name: "后端"
-        },
-        {
-          tag_name: "前端"
-        },
-        {
-          tag_name: "测试"
-        }
-      ]
+      selectedTag: 0 //当前选中的标签
     };
   },
+  async asyncData({ $axios }) {
+    // return { project: 'nuxt' }
+    const data = await $axios.get("/tag/list");
+
+    if (data.error_code === 0) {
+      const listData = await $axios.get("/blog/list", {
+        params: { tag: data.data.rows[0].tag_type }
+      });
+
+      console.log(222, listData)
+
+      return {
+        tagList: data.data.rows,
+        listData: listData.data.rows
+      };
+    } else {
+      Message.error("标签类型获取失败");
+    }
+  },
+  created() {
+    // 设置默认选中标签类型：
+    this.selectedTag = this.tagList[0].tag_type;
+  },
   methods: {
+    async selectTag(value) {
+      this.selectedTag = value;
+
+      const listData = await this.$axios.get("/blog/list", {
+        params: { tag: value }
+      });
+
+      console.log(333, listData.data.rows)
+    },
     loadData() {
       console.log(1);
     },
@@ -160,7 +191,7 @@ export default {
     },
     getAuthorList() {
       window.open("/author-list", "_blank");
-    },
+    }
   }
 };
 </script>

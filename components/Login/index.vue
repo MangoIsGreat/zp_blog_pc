@@ -166,6 +166,7 @@ export default {
             this.$store.commit("login/toggleOpen", false);
 
             setLocalStorage("user_token", data.token);
+            setLocalStorage("user_info", data.data);
           }
         } else {
           // 验证失败
