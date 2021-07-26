@@ -22,8 +22,20 @@
       <div class="inner-content-box">
         <div class="content-left">
           <div class="head">
-            <div class="head-item">热门</div>
-            <div class="head-item">最新</div>
+            <div
+              class="head-item"
+              :style="{ color: rankingType === 'hot' ? '#00c58e' : '#4e5969' }"
+              @click="selectStatus('hot')"
+            >
+              热门
+            </div>
+            <div
+              class="head-item"
+              :style="{ color: rankingType === 'new' ? '#00c58e' : '#4e5969' }"
+              @click="selectStatus('new')"
+            >
+              最新
+            </div>
           </div>
           <div class="content-body">
             <div class="body">
@@ -32,10 +44,10 @@
                 v-infinite-scroll="loadData"
               >
                 <li
-                  v-for="(item, index) in infoList"
+                  v-for="(item, index) in listData"
                   :key="index"
                   class="infinite-list-item list-item"
-                  @click="toArticle"
+                  @click="toArticle(item.id)"
                 >
                   <div class="item-info">
                     <div class="author-name">李勇</div>
@@ -44,25 +56,21 @@
                   </div>
                   <div class="item-content">
                     <div class="content-left">
-                      <h3 class="title">手写Vue2系列之初始渲染</h3>
+                      <h3 class="title">{{ item.title }}</h3>
                       <div class="desc">
-                        实现Vue.js的初始渲染过程,设计内容包括: render
-                        helper初始渲染初始渲染初始渲染初始渲染初始渲染初始渲染初始渲染
+                        {{ item.description }}
                       </div>
                       <div class="operate">
                         <i class="iconfont icon-yanjing operate-item"
-                          >&nbsp;1143</i
+                          >&nbsp;{{ item.blogReadNum }}</i
                         >
                         <i class="iconfont icon-dianzan operate-item"
-                          >&nbsp;11</i
+                          >&nbsp;{{ item.blogLikeNum }}</i
                         >
                         <i class="iconfont icon-liaotian">&nbsp;6</i>
                       </div>
                     </div>
-                    <img
-                      class="content-right"
-                      src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d7ff178b8e14dca9a964ddc993af0b9~tplv-k3u1fbpfcp-zoom-mark-crop-v2:0:0:360:240.awebp"
-                    />
+                    <img class="content-right" :src="item.titlePic" />
                   </div>
                 </li>
               </ul>
@@ -147,19 +155,24 @@ export default {
     return {
       infoList: [1, 1, 1, 1, 1, 1, 1],
       authorList: [5, 5, 5],
-      selectedTag: 0 //当前选中的标签
+      selectedTag: 0, //当前选中的标签
+      rankingType: "hot", // 获取文章的排列顺序，最新/最热
+      listData: [] // 博客列表
     };
   },
+
   async asyncData({ $axios }) {
-    // return { project: 'nuxt' }
     const data = await $axios.get("/tag/list");
 
     if (data.error_code === 0) {
       const listData = await $axios.get("/blog/list", {
-        params: { tag: data.data.rows[0].tag_type }
+        params: {
+          tag: data.data.rows[0].tag_type,
+          rankingType: "hot"
+        }
       });
 
-      console.log(222, listData)
+      console.log(222, listData);
 
       return {
         tagList: data.data.rows,
@@ -174,20 +187,34 @@ export default {
     this.selectedTag = this.tagList[0].tag_type;
   },
   methods: {
+    // 获取博客列表
+    async getBlogList() {
+      const listData = await this.$axios.get("/blog/list", {
+        params: {
+          tag: this.selectedTag,
+          rankingType: this.rankingType
+        }
+      });
+
+      if (listData.error_code === 0) {
+        this.listData = listData.data.rows;
+      }
+    },
     async selectTag(value) {
       this.selectedTag = value;
 
-      const listData = await this.$axios.get("/blog/list", {
-        params: { tag: value }
-      });
+      this.getBlogList();
+    },
+    selectStatus(value) {
+      this.rankingType = value;
 
-      console.log(333, listData.data.rows)
+      this.getBlogList();
     },
     loadData() {
       console.log(1);
     },
-    toArticle() {
-      window.open("/article", "_blank");
+    toArticle(id) {
+      window.open(`/article?id=${id}`, "_blank");
     },
     getAuthorList() {
       window.open("/author-list", "_blank");

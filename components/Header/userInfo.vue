@@ -42,7 +42,7 @@ export default {
       removeLocalStorage("user_info");
 
       this.$store.commit("login/toggleInfoOpen", false);
-    //   this.$store.commit("login/toggleLogin", false);
+      // this.$store.commit("login/toggleLogin", false);
 
       this.$store.commit("login/toggleOpen", false);
     }

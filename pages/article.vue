@@ -19,37 +19,11 @@
           </div>
           <el-button class="pay-attention" size="mini">关注</el-button>
         </div>
-        <img
-          class="theme-pic"
-          src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f69ec436a2e04c21aa5930a027c5f0cb~tplv-k3u1fbpfcp-watermark.image"
-          alt=""
-        />
+        <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
         <h1 class="main-title-name">
-          「论道架构师」拒绝无脑搬砖，从分库分表开始
+          {{ articleInfo.title }}
         </h1>
-        <div class="markdown-body" v-html="mdContent">
-          <!-- 去年同期写过一个基于 Node 的 DevOps
-          系列，但是整个项目工程非常大，上手成本比较高，对于一些中小型团队或者新手参考的意义不算多，所以针对这些群体重启了一个新的工程化系列。
-          新的系列将从 0 到 1
-          逐步搭建一套完整工程化方案，所有文章将统一放在《前端工程化》专栏中。
-          作者：CookieBoty 链接：https://juejin.cn/post/6982215543017193502
-          来源：掘金
-          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-          去年同期写过一个基于 Node 的 DevOps
-          系列，但是整个项目工程非常大，上手成本比较高，对于一些中小型团队或者新手参考的意义不算多，所以针对这些群体重启了一个新的工程化系列。
-          新的系列将从 0 到 1
-          逐步搭建一套完整工程化方案，所有文章将统一放在《前端工程化》专栏中。
-          作者：CookieBoty 链接：https://juejin.cn/post/6982215543017193502
-          来源：掘金
-          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-          去年同期写过一个基于 Node 的 DevOps
-          系列，但是整个项目工程非常大，上手成本比较高，对于一些中小型团队或者新手参考的意义不算多，所以针对这些群体重启了一个新的工程化系列。
-          新的系列将从 0 到 1
-          逐步搭建一套完整工程化方案，所有文章将统一放在《前端工程化》专栏中。
-          作者：CookieBoty 链接：https://juejin.cn/post/6982215543017193502
-          来源：掘金
-          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。 -->
-        </div>
+        <div class="markdown-body" v-html="mdContent"></div>
         <div class="article-author-wrapper">
           <div class="article-tag-type">
             <div class="type">
@@ -268,6 +242,7 @@
 
 <script>
 import marked from "marked";
+import { Message } from "element-ui";
 
 export default {
   layout: "default",
@@ -279,18 +254,22 @@ export default {
       comment: ""
     };
   },
-  async asyncData({ $axios }) {
-    const data = await $axios.get("/blog/list");
+  async asyncData({ query, $axios }) {
+    const data = await $axios.get("/blog/article", {
+      params: { id: query.id }
+    });
 
-    console.log("====>>");
-    console.log(data.data.rows);
+    if (data.error_code !== 0) {
+      return Message.error("获取文章失败！");
+    }
 
-    const mdContent = marked(data.data.rows[1].content || "", {
+    const mdContent = marked(data.data.content || "", {
       sanitize: true
     });
 
     return {
-      mdContent
+      mdContent,
+      articleInfo: data.data
     };
   },
   methods: {

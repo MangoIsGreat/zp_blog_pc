@@ -52,7 +52,8 @@ export default {
       avatarUrl: "",
       mdValue: "", // mavon-editor输入的内容
       rMdValue: "", // mavon-editor输入的内容解析后
-      isShowPanel: false // 是否展示弹框
+      isShowPanel: false, // 是否展示弹框
+      writeContent: "" // 使用正则过滤掉标签之后的文本
     };
   },
   methods: {
@@ -75,7 +76,7 @@ export default {
       }
 
       if (!description) {
-        description = this.rMdValue.substr(0, 100);
+        description = this.writeContent;
       }
 
       const params = {
@@ -83,7 +84,7 @@ export default {
         content: this.mdValue,
         description,
         tag: value.tag,
-        cover_url: value.cover_url
+        titlePic: value.cover_url
       };
 
       const data = await this.$axios.post("/blog/create", params);
@@ -101,6 +102,11 @@ export default {
     input(value, render) {
       this.mdValue = value;
       this.rMdValue = render;
+
+      // 过滤解析字符串中的标签
+      const reg = /<\/?.+?\/?>/g; // 过滤的正则
+      const content = render.replace(reg, ""); // 使用正则替换
+      this.writeContent = content.substr(0, 100);
     },
     // 绑定@imgAdd event
     $imgAdd(pos, $file) {
