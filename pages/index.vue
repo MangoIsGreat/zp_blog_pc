@@ -42,6 +42,8 @@
               <ul
                 class="infinite-list list-wrapper"
                 v-infinite-scroll="loadData"
+                :infinite-scroll-delay="500"
+                :infinite-scroll-distance="60"
               >
                 <li
                   v-for="(item, index) in listData"
@@ -153,6 +155,8 @@ export default {
   layout: "default",
   data() {
     return {
+      pageSize: 15, //页容量
+      pageIndex: 2, // 当前页
       infoList: [1, 1, 1, 1, 1, 1, 1],
       authorList: [5, 5, 5],
       selectedTag: 0, //当前选中的标签
@@ -168,15 +172,16 @@ export default {
       const listData = await $axios.get("/blog/list", {
         params: {
           tag: data.data.rows[0].tag_type,
-          rankingType: "hot"
+          rankingType: "hot",
+          pageSize: 15,
+          pageIndex: 1
         }
       });
 
-      console.log(222, listData);
-
       return {
         tagList: data.data.rows,
-        listData: listData.data.rows
+        listData: listData.data.rows,
+        countNum: listData.data.count
       };
     } else {
       Message.error("标签类型获取失败");
@@ -192,26 +197,45 @@ export default {
       const listData = await this.$axios.get("/blog/list", {
         params: {
           tag: this.selectedTag,
-          rankingType: this.rankingType
+          rankingType: this.rankingType,
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex
         }
       });
 
       if (listData.error_code === 0) {
-        this.listData = listData.data.rows;
+        listData.data.rows.forEach(item => {
+          this.listData.push(item);
+        });
+
+        // 当前页数+1
+        this.pageIndex += 1;
       }
     },
     async selectTag(value) {
       this.selectedTag = value;
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
 
       this.getBlogList();
     },
     selectStatus(value) {
       this.rankingType = value;
 
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
       this.getBlogList();
     },
     loadData() {
-      console.log(1);
+      // 当前页大于总页数时停止请求数据：
+      if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
+
+      // 下拉加载更多：
+      this.getBlogList();
     },
     toArticle(id) {
       window.open(`/article?id=${id}`, "_blank");
