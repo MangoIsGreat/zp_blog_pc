@@ -52,9 +52,9 @@
                   @click="toArticle(item.id)"
                 >
                   <div class="item-info">
-                    <div class="author-name">李勇</div>
+                    <div class="author-name">{{ item.User.nickname }}</div>
                     <div class="time">一小时前</div>
-                    <div class="tag-type">Vue.js</div>
+                    <div class="tag-type">{{ item.Tag.tagName }}</div>
                   </div>
                   <div class="item-content">
                     <div class="content-left">
@@ -63,13 +63,22 @@
                         {{ item.description }}
                       </div>
                       <div class="operate">
-                        <i class="iconfont icon-yanjing operate-item"
-                          >&nbsp;{{ item.blogReadNum }}</i
+                        <div class="operate-item">
+                          <i class="iconfont icon-yanjing"
+                            >&nbsp;{{ item.blogReadNum }}</i
+                          >
+                        </div>
+                        <div
+                          class="operate-item"
+                          @click.stop="likeBlog(item.id)"
                         >
-                        <i class="iconfont icon-dianzan operate-item"
-                          >&nbsp;{{ item.blogLikeNum }}</i
-                        >
-                        <i class="iconfont icon-liaotian">&nbsp;6</i>
+                          <i class="iconfont icon-dianzan"
+                            >&nbsp;{{ item.blogLikeNum }}</i
+                          >
+                        </div>
+                        <div>
+                          <i class="iconfont icon-pinglun">&nbsp;6</i>
+                        </div>
                       </div>
                     </div>
                     <img class="content-right" :src="item.titlePic" />
@@ -236,6 +245,12 @@ export default {
 
       // 下拉加载更多：
       this.getBlogList();
+    },
+    // 点赞博客
+    async likeBlog(blogId) {
+      const data = await this.$axios.post("/blike/like", { blog: blogId });
+
+      console.log(666, data);
     },
     toArticle(id) {
       window.open(`/article?id=${id}`, "_blank");
