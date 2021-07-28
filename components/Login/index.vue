@@ -4,7 +4,7 @@
       <div class="form-item-header">
         <div class="title">{{ title }}</div>
         <div class="cancel" @click="cancel">
-          *
+          <i class="iconfont icon-guanbi"></i>
         </div>
       </div>
       <el-form-item v-if="isRegister" prop="nickname" key="nickname">

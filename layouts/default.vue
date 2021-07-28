@@ -5,14 +5,14 @@
         <Header />
       </el-header>
       <el-main>
-        <nuxt />
+        <nuxt id="main" />
       </el-main>
     </el-container>
-    <div class="to-top">
-      <i class="iconfont icon-zhcc_xiangshangjiantou"></i>
+    <div class="to-top" @click="toTop">
+      <i class="iconfont icon-toTop"></i>
     </div>
     <div class="to-comment">
-      <i class="iconfont icon-huabanfuben"></i>
+      <i class="iconfont icon-pinglun"></i>
     </div>
     <!-- 登录组件 -->
     <login v-if="isLogin" />
@@ -32,6 +32,9 @@ export default {
       if (!this.$store.state.login.isShowInfo) return;
 
       this.$store.commit("login/toggleInfoOpen", false);
+    },
+    toTop() {
+      document.getElementsByClassName("el-main")[0].scrollTop = 0;
     }
   }
 };

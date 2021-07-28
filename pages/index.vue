@@ -79,7 +79,7 @@
                             >&nbsp;{{ item.blogLikeNum }}</i
                           >
                         </div>
-                        <div>
+                        <div @click.stop="comment(item.id)">
                           <i class="iconfont icon-pinglun">&nbsp;6</i>
                         </div>
                       </div>
@@ -222,6 +222,8 @@ export default {
 
         // 当前页数+1
         this.pageIndex += 1;
+      } else {
+        Message.error("更多文章获取失败！");
       }
     },
     async selectTag(value) {
@@ -270,11 +272,14 @@ export default {
           });
         }
       } else {
-        Message.error("点赞失败！");
+        Message.error("操作失败！");
       }
     },
-    toArticle(id) {
+    toArticle(id, author) {
       window.open(`/article?id=${id}`, "_blank");
+    },
+    comment(id, author) {
+      window.open(`/article?id=${id}#make_comments`, "_blank");
     },
     getAuthorList() {
       window.open("/author-list", "_blank");

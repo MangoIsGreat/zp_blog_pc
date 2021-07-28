@@ -29,6 +29,7 @@
             width: 40px;
             margin-right: 10px;
             border-radius: 50%;
+            background-color: #ccc;
           }
 
           .author-info {
@@ -144,6 +145,7 @@
               height: 40px;
               margin-right: 10px;
               border-radius: 50%;
+              background-color: #ccc;
             }
 
             .info-left-author-detail {
@@ -506,6 +508,7 @@
             height: 50px;
             border-radius: 50%;
             margin-right: 10px;
+            background-color: #ccc;
           }
 
           .author-body-top-info {
@@ -605,7 +608,7 @@
 
         .more-article-content-item {
           width: 100%;
-          padding: 12px 0;
+          padding: 10px 0;
           box-sizing: border-box;
           color: $article-fontcolor;
           font-size: $fontSize-large;
@@ -631,8 +634,8 @@
 
   .fixed-left-box {
     position: fixed;
-    left: 200px;
-    top: 160px;
+    // left: 200px;
+    // top: 160px;
     display: flex;
     flex-direction: column;
 
@@ -645,6 +648,7 @@
       margin-top: 10px;
       background: $bg-color-white;
       cursor: pointer;
+      color: #b2bac2;
     }
   }
 }
