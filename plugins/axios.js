@@ -1,12 +1,13 @@
 import { getLocalStorage } from "@/utils/store";
+import { getCookie } from "@/utils/cookie";
 import { encode } from "@/utils/encode";
 
-export default ({ $axios }) => {
+export default ({ $axios, app }) => {
   // 设置基地址
   // $axios.defaults.baseURL = 'http://XXX/api';
   // 请求拦截器
   $axios.onRequest(config => {
-    const token = getLocalStorage("user_token");
+    const token = getCookie(app, "user_token");
     // 将获取到token加入到请求头中
     if (token) {
       config.headers.common["Authorization"] = encode(token);

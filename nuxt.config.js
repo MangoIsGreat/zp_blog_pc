@@ -28,7 +28,7 @@ export default {
   plugins: [
     "@/plugins/element-ui",
     "@/plugins/axios",
-    { src: "@/plugins/mavon-editor", ssr: false },
+    { src: "@/plugins/mavon-editor", ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -48,9 +48,9 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
-    "@nuxtjs/axios"
-    // "@nuxtjs/proxy"
+    "@nuxtjs/axios",
+    "cookie-universal-nuxt",
+    ['cookie-universal-nuxt', { alias: 'cookiz' }],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

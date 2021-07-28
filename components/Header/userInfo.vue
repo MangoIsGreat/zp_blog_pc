@@ -32,13 +32,14 @@
 
 <script>
 import { removeLocalStorage } from "@/utils/store";
+import { removeCookie } from "@/utils/cookie";
 export default {
   methods: {
     writing() {
       window.open("/writing", "_blank");
     },
     logout() {
-      removeLocalStorage("user_token");
+      removeCookie(this, "user_token");
       removeLocalStorage("user_info");
 
       this.$store.commit("login/toggleInfoOpen", false);

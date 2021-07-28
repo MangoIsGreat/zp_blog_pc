@@ -47,6 +47,7 @@
 
 <script>
 import { setLocalStorage } from "@/utils/store";
+import { setCookie } from "@/utils/cookie";
 import { Message } from "element-ui";
 
 export default {
@@ -165,7 +166,7 @@ export default {
           if (data.error_code === 0) {
             this.$store.commit("login/toggleOpen", false);
 
-            setLocalStorage("user_token", data.token);
+            setCookie(this, "user_token", data.token);
             setLocalStorage("user_info", data.data);
           }
         } else {
@@ -184,8 +185,6 @@ export default {
           };
 
           const data = await this.$axios.post("/user/register", params);
-
-          console.log(data);
 
           if (data.error_code === 0) {
             Message.success("恭喜您，注册成功！");

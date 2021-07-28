@@ -71,8 +71,11 @@
                         <div
                           class="operate-item"
                           @click.stop="likeBlog(item.id)"
+                          :style="{
+                            color: item.isLike ? '#2de938' : '#4e5969'
+                          }"
                         >
-                          <i class="iconfont icon-dianzan"
+                          <i class="iconfont icon-dianzan1"
                             >&nbsp;{{ item.blogLikeNum }}</i
                           >
                         </div>
@@ -250,7 +253,25 @@ export default {
     async likeBlog(blogId) {
       const data = await this.$axios.post("/blike/like", { blog: blogId });
 
-      console.log(666, data);
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.listData.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = true;
+              item.blogLikeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.listData.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = false;
+              item.blogLikeNum--;
+            }
+          });
+        }
+      } else {
+        Message.error("点赞失败！");
+      }
     },
     toArticle(id) {
       window.open(`/article?id=${id}`, "_blank");
