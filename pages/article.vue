@@ -1,5 +1,5 @@
 <template>
-  <div class="article-wrapper">
+  <div class="article-wrapper" @click="hiddenToComment">
     <div class="article-wrapper-content">
       <div class="content-innerBox">
         <div class="innerBox-author">
@@ -89,29 +89,64 @@
               </div>
               <div class="second-line">
                 <div class="emoj">表情</div>
-                <el-button size="small" type="primary">评论</el-button>
+                <el-button
+                  size="small"
+                  :autofocus="true"
+                  type="primary"
+                  @click="makeComment"
+                  >评论</el-button
+                >
               </div>
             </div>
             <div class="comments-main-body">
-              <div class="comments-main-body-innerBox">
-                <img
-                  class="avatar"
-                  src="https://sf3-ttcdn-tos.pstatp.com/img/user-avatar/96edaca0277d56b4232e2aebafa2d982~300x300.image"
-                  alt=""
-                />
+              <div
+                class="comments-main-body-innerBox"
+                :key="index"
+                v-for="(item, index) in commentList"
+              >
+                <img class="avatar" :src="item.User.avatar" alt="" />
                 <div class="comments-main-body-innerBox-right">
                   <div class="user-line">
-                    <div class="user-line-name">彭道宽</div>
+                    <div class="user-line-name">{{ item.User.nickname }}</div>
                     <div class="user-line-sign">
-                      前端小兵成长营前端小兵成长营
+                      {{ item.User.profession }}
                     </div>
                   </div>
-                  <div class="comments-line">已阅</div>
+                  <div class="comments-line">{{ item.content }}</div>
                   <div class="bottom-line">
                     <div class="time">52分钟前</div>
                     <div class="bottom-line-right">
                       <i class="iconfont icon-dianzan"></i>
-                      <i class="iconfont icon-liaotian">&nbsp;回复</i>
+                      <i
+                        class="iconfont icon-pinglun"
+                        @click.stop="showToComment(item.id)"
+                        >&nbsp;回复</i
+                      >
+                    </div>
+                  </div>
+                  <!-- 评论输入框 -->
+                  <div
+                    @click.stop
+                    class="reply-to-comment"
+                    v-if="commentId === item.id"
+                  >
+                    <div class="first-line">
+                      <el-input
+                        size="small"
+                        class="input-btn"
+                        v-model="replyComment"
+                        :autofocus="true"
+                        :placeholder="`回复${item.User.nickname}...`"
+                      ></el-input>
+                    </div>
+                    <div class="second-line">
+                      <div class="emoj">表情</div>
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="replyToComment(item)"
+                        >评论</el-button
+                      >
                     </div>
                   </div>
                   <div class="comments-reply-body">
@@ -160,32 +195,34 @@
             v-for="(item, index) in moreList"
             :key="index"
             class="infinite-list-item list-item"
-            @click="toArticle"
+            @click="toArticle(item.id)"
           >
-            <div class="item-info">
-              <div class="author-name">{{ item.User.nickname }}</div>
-              <div class="time">一小时前</div>
-              <div class="tag-type">{{ item.Tag.tagName }}</div>
-            </div>
-            <div class="item-content">
-              <div class="content-left">
-                <h3 class="title">{{ item.title }}</h3>
-                <div class="desc">
-                  {{ item.description }}
-                </div>
-                <div class="operate">
-                  <i class="iconfont icon-yanjing operate-item"
-                    >&nbsp;{{ item.blogReadNum }}</i
-                  >
-                  <i class="iconfont icon-dianzan operate-item"
-                    >&nbsp;{{ item.blogLikeNum }}</i
-                  >
-                  <i class="iconfont icon-pinglun"
-                    >&nbsp;{{ item.commentNum }}</i
-                  >
-                </div>
+            <div class="list-item-wrapper">
+              <div class="item-info">
+                <div class="author-name">{{ item.User.nickname }}</div>
+                <div class="time">一小时前</div>
+                <div class="tag-type">{{ item.Tag.tagName }}</div>
               </div>
-              <img class="content-right" :src="item.titlePic" />
+              <div class="item-content">
+                <div class="content-left">
+                  <h3 class="title">{{ item.title }}</h3>
+                  <div class="desc">
+                    {{ item.description }}
+                  </div>
+                  <div class="operate">
+                    <i class="iconfont icon-yanjing operate-item"
+                      >&nbsp;{{ item.blogReadNum }}</i
+                    >
+                    <i class="iconfont icon-dianzan operate-item"
+                      >&nbsp;{{ item.blogLikeNum }}</i
+                    >
+                    <i class="iconfont icon-pinglun"
+                      >&nbsp;{{ item.commentNum }}</i
+                    >
+                  </div>
+                </div>
+                <img class="content-right" :src="item.titlePic" />
+              </div>
             </div>
           </li>
         </ul>
@@ -233,6 +270,7 @@
             class="more-article-content-item"
             v-for="(item, index) in hotList"
             :key="index"
+            @click="toArticle(item.id)"
           >
             <div class="content-item-title">
               {{ item.title }}
@@ -265,15 +303,16 @@ export default {
   layout: "default",
   data() {
     return {
-      infoList: [1, 1, 1, 1, 1, 1, 1, 1, 1],
       articleTagList: [2, 1, 1, 1],
       hotList: [], // 热门文章推荐
       moreList: [], // 相关文章推荐
-      comment: "",
+      comment: "", // 评论内容
+      replyComment: "", // 回复"评论内容"
       fixedLeft: 200, // 左侧点赞面板距离左侧位置
       fixedTop: 160, // 左侧点赞面板距离顶部位置
       pageSize: 10, //页容量
-      pageIndex: 2 // 当前页
+      pageIndex: 2, // 当前页
+      commentId: "" // 要评论的博客评论
     };
   },
   async asyncData({ query, $axios }) {
@@ -306,12 +345,22 @@ export default {
       Message.error("获取相关文章推荐失败！");
     }
 
+    // 获取评论列表
+    const commentList = await $axios.get("/bcomment/list", {
+      params: { blog: query.id }
+    });
+
+    if (commentList.error_code !== 0) {
+      Message.error("获取评论列表失败！");
+    }
+
     return {
-      mdContent,
-      articleInfo: data.data,
-      hotList: hotList.data.rows,
-      moreList: moreList.data.rows,
-      countNum: moreList.data.count
+      mdContent, // 博客内容
+      articleInfo: data.data, // 作者信息
+      hotList: hotList.data.rows, // 热门文章推荐
+      moreList: moreList.data.rows, // 更多相关文章推荐
+      countNum: moreList.data.count, // 更多文章总文章数
+      commentList: commentList.data.rows // 评论列表
     };
   },
   mounted() {
@@ -330,7 +379,7 @@ export default {
     async getMoreBlog() {
       const listData = await this.$axios.get("/blog/more", {
         params: {
-          id: query.id,
+          id: this.$route.query.id,
           pageIndex: this.pageIndex,
           pageSize: this.pageSize
         }
@@ -350,12 +399,50 @@ export default {
     setFixed() {
       window.addEventListener("resize", this.dealWithPosition);
     },
-    toArticle() {
-      window.open("/article", "_blank");
+    toArticle(id) {
+      window.open(`/article?id=${id}`, "_blank");
     },
     dealWithPosition() {
       this.fixedLeft = document.body.clientWidth * 0.1042;
       this.fixedTop = document.body.clientHeight * 0.083;
+    },
+    // 评论博客
+    async makeComment() {
+      const data = await this.$axios.post("/bcomment/comment", {
+        blog: this.$route.query.id,
+        content: this.comment
+      });
+
+      if (data.error_code !== 0) {
+        Message.error("评论失败！");
+      }
+
+      // 清空评论
+      this.comment = "";
+    },
+    // 展示评论"评论"
+    showToComment(id) {
+      this.commentId = id;
+    },
+    // 隐藏"博客评论"评论输入框
+    hiddenToComment() {
+      this.commentId = "";
+    },
+    // 评论"博客评论"
+    async replyToComment(value) {
+      const data = await this.$axios.post("/bcomment/reply", {
+        blog: this.$route.query.id,
+        comment: value.blogId,
+        content: this.replyComment,
+        toUid: value.User.id
+      });
+
+      if (data.error_code !== 0) {
+        Message.error("评论失败！");
+      }
+
+      // 清空评论
+      this.replyComment = "";
     }
   },
   beforeDestroy() {
