@@ -104,12 +104,14 @@
                 :key="index"
                 v-for="(item, index) in commentList"
               >
-                <img class="avatar" :src="item.User.avatar" alt="" />
+                <img class="avatar" :src="item.comment.avatar" alt="" />
                 <div class="comments-main-body-innerBox-right">
                   <div class="user-line">
-                    <div class="user-line-name">{{ item.User.nickname }}</div>
+                    <div class="user-line-name">
+                      {{ item.comment.nickname }}
+                    </div>
                     <div class="user-line-sign">
-                      {{ item.User.profession }}
+                      {{ item.comment.profession }}
                     </div>
                   </div>
                   <div class="comments-line">{{ item.content }}</div>
@@ -136,7 +138,7 @@
                         class="input-btn"
                         v-model="replyComment"
                         :autofocus="true"
-                        :placeholder="`回复${item.User.nickname}...`"
+                        :placeholder="`回复${item.comment.nickname}...`"
                       ></el-input>
                     </div>
                     <div class="second-line">
@@ -150,26 +152,63 @@
                     </div>
                   </div>
                   <div class="comments-reply-body">
-                    <div class="comments-reply-body-line">
-                      <img
-                        class="avatar"
-                        src="https://sf1-ttcdn-tos.pstatp.com/img/user-avatar/bce60f0d6d1bc92907c435bb69b4f9c1~300x300.image"
-                        alt=""
-                      />
+                    <div
+                      class="comments-reply-body-line"
+                      :key="i"
+                      v-for="(t, i) in item.child"
+                    >
+                      <img class="avatar" :src="t.from.avatar" alt="" />
                       <div class="comments-reply-body-line-right">
                         <div class="reply-line-author-info">
-                          <div class="username">橘猫很方</div>
-                          <div class="identity">(作者)</div>
-                          <div class="sign">前端小兵成长营前端小兵成长营</div>
+                          <div class="username">{{ t.from.nickname }}</div>
+                          <div
+                            class="identity"
+                            v-if="item.comment.id === t.from.id"
+                          >
+                            (作者)
+                          </div>
+                          <div class="sign">{{ t.from.profession }}</div>
                         </div>
                         <div class="reply-line-comments-body">
-                          已阅
+                          回复&nbsp;<span class="reply">{{
+                            t.to.nickname
+                          }}</span
+                          >：{{ t.content }}
                         </div>
                         <div class="reply-line-bottom">
                           <div class="time">48分钟前</div>
                           <div class="bottom-right">
                             <i class="iconfont icon-dianzan"></i>
-                            <i class="iconfont icon-liaotian">&nbsp;回复</i>
+                            <i
+                              @click.stop="showReply(t.id)"
+                              class="iconfont icon-pinglun"
+                              >&nbsp;回复</i
+                            >
+                          </div>
+                        </div>
+                        <!-- 回复输入框 -->
+                        <div
+                          @click.stop
+                          class="reply-to-comment"
+                          v-if="t.id === replyId"
+                        >
+                          <div class="first-line">
+                            <el-input
+                              size="small"
+                              class="input-btn"
+                              v-model="replyContent"
+                              :autofocus="true"
+                              :placeholder="`回复${t.from.nickname}...`"
+                            ></el-input>
+                          </div>
+                          <div class="second-line">
+                            <div class="emoj">表情</div>
+                            <el-button
+                              size="mini"
+                              type="primary"
+                              @click.stop="replyToReply(t, item)"
+                              >评论</el-button
+                            >
                           </div>
                         </div>
                       </div>
@@ -304,15 +343,18 @@ export default {
   data() {
     return {
       articleTagList: [2, 1, 1, 1],
+      commentList: [], // 评论列表
       hotList: [], // 热门文章推荐
       moreList: [], // 相关文章推荐
       comment: "", // 评论内容
       replyComment: "", // 回复"评论内容"
+      replyContent: "", // 回复"回复内容"
       fixedLeft: 200, // 左侧点赞面板距离左侧位置
       fixedTop: 160, // 左侧点赞面板距离顶部位置
       pageSize: 10, //页容量
       pageIndex: 2, // 当前页
-      commentId: "" // 要评论的博客评论
+      commentId: "", // 要评论的博客评论
+      replyId: "" // 要回复的评论id
     };
   },
   async asyncData({ query, $axios }) {
@@ -360,7 +402,7 @@ export default {
       hotList: hotList.data.rows, // 热门文章推荐
       moreList: moreList.data.rows, // 更多相关文章推荐
       countNum: moreList.data.count, // 更多文章总文章数
-      commentList: commentList.data.rows // 评论列表
+      commentList: commentList.data // 评论列表
     };
   },
   mounted() {
@@ -396,6 +438,19 @@ export default {
         Message.error("更多文章获取失败！");
       }
     },
+    // 获取评论列表
+    async getReplyList() {
+      // 获取评论列表
+      const commentList = await this.$axios.get("/bcomment/list", {
+        params: { blog: this.$route.query.id }
+      });
+
+      if (commentList.error_code !== 0) {
+        Message.error("获取评论列表失败！");
+      }
+
+      this.commentList = commentList.data; // 评论列表
+    },
     setFixed() {
       window.addEventListener("resize", this.dealWithPosition);
     },
@@ -424,17 +479,21 @@ export default {
     showToComment(id) {
       this.commentId = id;
     },
-    // 隐藏"博客评论"评论输入框
+    // 隐藏评论输入框
     hiddenToComment() {
+      // 隐藏博客评论输入框
       this.commentId = "";
+
+      // 隐藏回复评论输入框
+      this.replyId = "";
     },
     // 评论"博客评论"
     async replyToComment(value) {
       const data = await this.$axios.post("/bcomment/reply", {
         blog: this.$route.query.id,
-        comment: value.blogId,
+        comment: value.id,
         content: this.replyComment,
-        toUid: value.User.id
+        toUid: value.comment.id
       });
 
       if (data.error_code !== 0) {
@@ -443,6 +502,32 @@ export default {
 
       // 清空评论
       this.replyComment = "";
+    },
+    // 回复"博客评论"
+    async replyToReply(value, item) {
+      const data = await this.$axios.post("/bcomment/reply", {
+        blog: this.$route.query.id,
+        comment: item.id,
+        content: this.replyContent,
+        toUid: value.from.id
+      });
+
+      if (data.error_code !== 0) {
+        Message.error("评论失败！");
+      }
+
+      // 清空评论
+      this.replyContent = "";
+
+      // 隐藏评论框
+      this.replyId = "";
+
+      // 重新获取评论列表数据
+      this.getReplyList();
+    },
+    // 展示回复评论输入框
+    showReply(id) {
+      this.replyId = id;
     }
   },
   beforeDestroy() {

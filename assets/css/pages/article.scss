@@ -241,17 +241,16 @@
 
                 .user-line {
                   display: flex;
+                  font-size: $fontSize-middle;
 
                   .user-line-name {
-                    margin-right: 15px;
-                    color: $article-title-color;
-                    font-size: $fontSize-large;
+                    margin-right: 8px;
+                    color: #333;
                   }
 
                   .user-line-sign {
                     width: 100px;
                     @include ellipsis();
-                    font-size: $fontSize-middle;
                     color: $font-color-gray;
                   }
                 }
@@ -275,12 +274,12 @@
                   .bottom-line-right {
                     .icon-pinglun {
                       margin-left: 30px;
-                      cursor: pointer;
                     }
 
                     i {
                       color: $font-color-gray;
                       font-size: $fontSize-middle;
+                      cursor: pointer;
                     }
                   }
                 }
@@ -330,23 +329,21 @@
                       .reply-line-author-info {
                         display: flex;
                         line-height: 24px;
+                        font-size: $fontSize-middle;
 
                         .username {
-                          margin-right: 10px;
-                          color: $article-title-color;
-                          font-size: $fontSize-large;
+                          margin-right: 6px;
+                          color: #333;
                         }
 
                         .identity {
-                          margin-right: 10px;
-                          color: $article-title-color;
-                          font-size: $fontSize-large;
+                          margin-right: 6px;
+                          color: #333;
                         }
 
                         .sign {
                           width: 100px;
                           @include ellipsis();
-                          font-size: $fontSize-middle;
                           color: $font-color-gray;
                         }
                       }
@@ -357,6 +354,11 @@
                         font-size: $fontSize-middle;
                         line-height: 24px;
                         color: $article-fontcolor;
+
+                        .reply {
+                          color: $primary-color;
+                          cursor: pointer;
+                        }
                       }
 
                       .reply-line-bottom {
@@ -367,13 +369,14 @@
                         font-size: $fontSize-middle;
 
                         .bottom-right {
-                          .icon-liaotian {
-                            margin-left: 15px;
+                          .icon-pinglun {
+                            margin-left: 30px;
                           }
 
                           i {
                             color: $font-color-gray;
                             font-size: $fontSize-middle;
+                            cursor: pointer;
                           }
                         }
                       }
