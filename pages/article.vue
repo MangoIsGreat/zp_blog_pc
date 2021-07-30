@@ -88,7 +88,7 @@
         </div>
         <div class="comment-body-wrapper">
           <div class="comment-body-innerBox">
-            <div class="make-comments" id="make_comments">
+            <div class="make-comments" id="make_comments" @click.stop>
               <div class="first-line">
                 <img
                   src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
@@ -99,9 +99,10 @@
                   class="input-btn"
                   v-model="comment"
                   placeholder="输入评论..."
+                  @focus="showInputBtn"
                 ></el-input>
               </div>
-              <div class="second-line">
+              <div class="second-line" v-if="showCommentBtn">
                 <div class="emoj">表情</div>
                 <el-button
                   size="small"
@@ -114,6 +115,7 @@
             </div>
             <div class="comments-main-body">
               <div
+                @click.stop
                 class="comments-main-body-innerBox"
                 :key="index"
                 v-for="(item, index) in commentList"
@@ -132,7 +134,22 @@
                   <div class="bottom-line">
                     <div class="time">52分钟前</div>
                     <div class="bottom-line-right">
-                      <i class="iconfont icon-dianzan"></i>
+                      <div>
+                        <i
+                          @click.stop="likeComment(item.id)"
+                          :class="
+                            `iconfont ${
+                              item.isLike ? 'icon-dianzan1' : 'icon-dianzan'
+                            }`
+                          "
+                          :style="{
+                            color: item.isLike ? '#2de938' : '#b2bac2'
+                          }"
+                        ></i>
+                        <span v-show="item.likeNum !== 0">{{
+                          item.likeNum
+                        }}</span>
+                      </div>
                       <i
                         class="iconfont icon-pinglun"
                         @click.stop="showToComment(item.id)"
@@ -170,6 +187,7 @@
                       class="comments-reply-body-line"
                       :key="i"
                       v-for="(t, i) in item.child"
+                      @click.stop
                     >
                       <img class="avatar" :src="t.from.avatar" alt="" />
                       <div class="comments-reply-body-line-right">
@@ -192,7 +210,22 @@
                         <div class="reply-line-bottom">
                           <div class="time">48分钟前</div>
                           <div class="bottom-right">
-                            <i class="iconfont icon-dianzan"></i>
+                            <div>
+                              <i
+                                @click.stop="likeReply(t.id)"
+                                :class="
+                                  `iconfont ${
+                                    t.isLike ? 'icon-dianzan1' : 'icon-dianzan'
+                                  }`
+                                "
+                                :style="{
+                                  color: t.isLike ? '#2de938' : '#b2bac2'
+                                }"
+                              ></i>
+                              <span v-show="t.likeNum !== 0">{{
+                                t.likeNum
+                              }}</span>
+                            </div>
                             <i
                               @click.stop="showReply(t.id)"
                               class="iconfont icon-pinglun"
@@ -357,7 +390,12 @@
         class="icon-item icon-item-badge"
         :badge="articleInfo.blogLikeNum"
       >
-        <i class="iconfont icon-dianzan1"></i>
+        <i
+          :style="{
+            color: articleInfo.isLike ? '#2de938' : '#b2bac2'
+          }"
+          class="iconfont icon-dianzan1"
+        ></i>
       </div>
       <div
         class="icon-item icon-item-badge"
@@ -396,7 +434,8 @@ export default {
       pageSize: 10, //页容量
       pageIndex: 2, // 当前页
       commentId: "", // 要评论的博客评论
-      replyId: "" // 要回复的评论id
+      replyId: "", // 要回复的评论id
+      showCommentBtn: false // 是否展示评论框按钮
     };
   },
   async asyncData({ query, $axios }) {
@@ -520,6 +559,9 @@ export default {
 
       // 清空评论
       this.comment = "";
+
+      // 重新请求评论数据：
+      this.getReplyList();
     },
     // 展示评论"评论"
     showToComment(id) {
@@ -532,6 +574,12 @@ export default {
 
       // 隐藏回复评论输入框
       this.replyId = "";
+
+      // 重新请求评论数据：
+      this.getReplyList();
+
+      // 隐藏评论输入框按钮
+      this.showCommentBtn = false;
     },
     // 评论"博客评论"
     async replyToComment(value) {
@@ -548,6 +596,9 @@ export default {
 
       // 清空评论
       this.replyComment = "";
+
+      // 重新请求评论数据：
+      this.getReplyList();
     },
     // 回复"博客评论"
     async replyToReply(value, item) {
@@ -627,9 +678,77 @@ export default {
         blog: this.$route.query.id
       });
 
-      if (data.error_code !== 0) {
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.articleInfo.isLike = true;
+          this.articleInfo.blogLikeNum += 1;
+        } else if (data.data === "cancel") {
+          this.articleInfo.isLike = false;
+          this.articleInfo.blogLikeNum -= 1;
+        }
+      } else {
+        Message.error("操作失败！");
+      }
+    },
+    // 点赞评论
+    async likeComment(id) {
+      const data = await this.$axios.post("/clike/like", {
+        commentId: id
+      });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.commentList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = true;
+              item.likeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.commentList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = false;
+              item.likeNum--;
+            }
+          });
+        }
+      } else {
         Message.error("点赞失败！");
       }
+    },
+    // 点赞评论回复
+    async likeReply(id) {
+      const data = await this.$axios.post("/rlike/like", {
+        replyId: id
+      });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.commentList.forEach(item => {
+            item.child.forEach(t => {
+              if (t.id === id) {
+                t.isLike = true;
+                t.likeNum++;
+              }
+            });
+          });
+        } else if (data.data === "cancel") {
+          this.commentList.forEach(item => {
+            item.child.forEach(t => {
+              if (t.id === id) {
+                t.isLike = false;
+                t.likeNum--;
+              }
+            });
+          });
+        }
+      } else {
+        Message.error("点赞失败！");
+      }
+    },
+    // 展示评论框按钮
+    showInputBtn() {
+      this.showCommentBtn = true;
     }
   },
   beforeDestroy() {

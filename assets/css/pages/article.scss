@@ -280,6 +280,8 @@
                   font-size: $fontSize-middle;
 
                   .bottom-line-right {
+                    display: flex;
+
                     .icon-pinglun {
                       margin-left: 30px;
                     }
@@ -377,6 +379,8 @@
                         font-size: $fontSize-middle;
 
                         .bottom-right {
+                          display: flex;
+
                           .icon-pinglun {
                             margin-left: 30px;
                           }
