@@ -51,6 +51,10 @@
         .pay-attention {
           color: $primary-color;
           border: 1px solid $primary-color;
+
+          .not-attention {
+            color: $font-color-gray;
+          }
         }
       }
 
@@ -177,6 +181,10 @@
           .pay-attention {
             color: $primary-color;
             border: 1px solid $primary-color;
+
+            .not-attention {
+              color: $font-color-gray;
+            }
           }
         }
       }
@@ -676,18 +684,38 @@
 
   .fixed-left-box {
     position: fixed;
-    // left: 200px;
-    // top: 160px;
     display: flex;
     flex-direction: column;
 
-    i {
+    .icon-item {
+      display: flex;
+      position: relative;
+      margin-top: 16px;
+    }
+
+    .icon-item-badge::after {
+      content: attr(badge);
+      position: absolute;
+      top: 0;
+      left: 75%;
+      padding: 2px 5px;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1;
+      white-space: nowrap;
+      color: #fff;
+      background-color: #b2bac2;
+      border-radius: 8px;
+      transform-origin: left top;
+      transform: scale(0.75);
+    }
+
+    .icon-item i {
       width: 36px;
       height: 36px;
       border-radius: 50%;
       text-align: center;
       line-height: 36px;
-      margin-top: 10px;
       background: $bg-color-white;
       cursor: pointer;
       color: #b2bac2;

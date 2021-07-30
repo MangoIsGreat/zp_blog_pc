@@ -16,7 +16,14 @@
               </div>
             </div>
           </div>
-          <el-button class="pay-attention" size="mini">关注</el-button>
+          <el-button
+            v-if="!articleInfo.User.isSelf"
+            class="pay-attention"
+            size="mini"
+            @click="follow(articleInfo.User.id)"
+            ><span v-if="!articleInfo.User.isAttention">关注</span
+            ><span class="not-attention" v-else>已关注</span></el-button
+          >
         </div>
         <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
         <h1 class="main-title-name">
@@ -69,7 +76,14 @@
                 </div>
               </div>
             </div>
-            <el-button class="pay-attention" size="mini">关注</el-button>
+            <el-button
+              v-if="!articleInfo.User.isSelf"
+              class="pay-attention"
+              size="mini"
+              @click="follow(articleInfo.User.id)"
+              ><span v-if="!articleInfo.User.isAttention">关注</span
+              ><span class="not-attention" v-else>已关注</span></el-button
+            >
           </div>
         </div>
         <div class="comment-body-wrapper">
@@ -249,15 +263,27 @@
                     {{ item.description }}
                   </div>
                   <div class="operate">
-                    <i class="iconfont icon-yanjing operate-item"
-                      >&nbsp;{{ item.blogReadNum }}</i
+                    <div class="operate-item">
+                      <i class="iconfont icon-yanjing"
+                        >&nbsp;{{ item.blogReadNum }}</i
+                      >
+                    </div>
+                    <div
+                      class="operate-item"
+                      @click.stop="likeBlog(item.id)"
+                      :style="{
+                        color: item.isLike ? '#2de938' : '#4e5969'
+                      }"
                     >
-                    <i class="iconfont icon-dianzan operate-item"
-                      >&nbsp;{{ item.blogLikeNum }}</i
-                    >
-                    <i class="iconfont icon-pinglun"
-                      >&nbsp;{{ item.commentNum }}</i
-                    >
+                      <i class="iconfont icon-dianzan1"
+                        >&nbsp;{{ item.blogLikeNum }}</i
+                      >
+                    </div>
+                    <div @click.stop="toComment(item.id)">
+                      <i class="iconfont icon-pinglun"
+                        >&nbsp;{{ item.commentNum }}</i
+                      >
+                    </div>
                   </div>
                 </div>
                 <img class="content-right" :src="item.titlePic" />
@@ -326,10 +352,26 @@
       class="fixed-left-box"
       :style="{ left: this.fixedLeft + 'px', top: this.fixedTop + 'px' }"
     >
-      <i class="iconfont icon-dianzan1"></i>
-      <i class="iconfont icon-pinglun2"></i>
-      <i class="iconfont icon-xingxingmianxing"></i>
-      <i class="iconfont icon-xinfangjubao"></i>
+      <div
+        @click="likeArt"
+        class="icon-item icon-item-badge"
+        :badge="articleInfo.blogLikeNum"
+      >
+        <i class="iconfont icon-dianzan1"></i>
+      </div>
+      <div
+        class="icon-item icon-item-badge"
+        @click="leaveWord"
+        :badge="commentList.length"
+      >
+        <i class="iconfont icon-pinglun2"></i>
+      </div>
+      <div class="icon-item">
+        <i class="iconfont icon-xingxingmianxing"></i>
+      </div>
+      <div class="icon-item">
+        <i class="iconfont icon-xinfangjubao"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -410,6 +452,10 @@ export default {
     this.setFixed();
   },
   methods: {
+    // 跳转至评论页面
+    toComment(id) {
+      window.open(`/article?id=${id}#make_comments`, "_blank");
+    },
     loadData() {
       // 当前页大于总页数时停止请求数据：
       if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
@@ -528,6 +574,62 @@ export default {
     // 展示回复评论输入框
     showReply(id) {
       this.replyId = id;
+    },
+    // 关注作者
+    async follow(id) {
+      const data = await this.$axios.post("/fans/follow", { leader: id });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.articleInfo.User.isAttention = true;
+        } else if (data.data === "cancel") {
+          this.articleInfo.User.isAttention = false;
+        }
+      } else {
+        Message.error("关注失败！");
+      }
+    },
+    // 点赞博客
+    async likeBlog(blogId) {
+      const data = await this.$axios.post("/blike/like", { blog: blogId });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.moreList.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = true;
+              item.blogLikeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.moreList.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = false;
+              item.blogLikeNum--;
+            }
+          });
+        }
+      } else {
+        Message.error("操作失败！");
+      }
+    },
+    // 点击评论按钮页面停留在评论框位置
+    leaveWord() {
+      let url = window.location.href;
+
+      url = url.split("#make_comments")[0];
+
+      window.location.href = url + "#make_comments";
+    },
+    // 点赞该篇博客
+    async likeArt() {
+      const data = await this.$axios.post("/blike/like", {
+        blog: this.$route.query.id
+      });
+
+      if (data.error_code !== 0) {
+        Message.error("点赞失败！");
+      }
     }
   },
   beforeDestroy() {

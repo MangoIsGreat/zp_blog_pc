@@ -80,7 +80,9 @@
                           >
                         </div>
                         <div @click.stop="comment(item.id)">
-                          <i class="iconfont icon-pinglun">&nbsp;6</i>
+                          <i class="iconfont icon-pinglun"
+                            >&nbsp;{{ item.commentNum }}</i
+                          >
                         </div>
                       </div>
                     </div>
@@ -278,7 +280,7 @@ export default {
     toArticle(id, author) {
       window.open(`/article?id=${id}`, "_blank");
     },
-    comment(id, author) {
+    comment(id) {
       window.open(`/article?id=${id}#make_comments`, "_blank");
     },
     getAuthorList() {
