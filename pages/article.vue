@@ -1,5 +1,5 @@
 <template>
-  <div class="article-wrapper" @click="hiddenToComment">
+  <div class="article-wrapper" @click.stop="hiddenToComment">
     <div class="article-wrapper-content">
       <div class="content-innerBox">
         <div class="innerBox-author">
@@ -404,8 +404,47 @@
       >
         <i class="iconfont icon-pinglun2"></i>
       </div>
-      <div class="icon-item">
-        <i class="iconfont icon-xingxingmianxing"></i>
+      <div class="icon-item item-collection">
+        <i
+          class="iconfont icon-xingxingmianxing"
+          @click.stop="makeCollection"
+          :style="{
+            color: articleInfo.isCollect ? '#ffc347' : '#b2bac2'
+          }"
+        ></i>
+        <div @click.stop class="collection-panel" v-if="showCollection">
+          <div class="collection-panel-header">添加到收藏集</div>
+          <div class="collection-panel-body">
+            <div
+              class="collection-panel-body-item"
+              v-for="(item, index) in collectionList"
+              @click="collectBlog(item.id)"
+              :key="index"
+            >
+              <span class="panel-body-item-type">{{ item.type }}</span>
+              <span class="panel-body-item-number">{{ item.number }}</span>
+            </div>
+          </div>
+          <div class="collection-panel-footer">
+            <el-button
+              class="collection-panel-footer-create"
+              v-if="!newCollection"
+              type="text"
+              size="mini"
+              @click="newCollection = true"
+              >新建收藏集</el-button
+            >
+            <div v-else class="collection-panel-footer-input">
+              <el-input
+                class="collection-panel-footer-input-text"
+                v-model="collectionType"
+              ></el-input>
+              <el-button @click="createCollection" size="mini" plain
+                >添加</el-button
+              >
+            </div>
+          </div>
+        </div>
       </div>
       <div class="icon-item">
         <i class="iconfont icon-xinfangjubao"></i>
@@ -435,7 +474,12 @@ export default {
       pageIndex: 2, // 当前页
       commentId: "", // 要评论的博客评论
       replyId: "", // 要回复的评论id
-      showCommentBtn: false // 是否展示评论框按钮
+      showCommentBtn: false, // 是否展示评论框按钮
+      newCollection: "", // 新建收藏集
+      showCollection: false, // 是否展示收藏集面板
+      collectionList: [], // 收藏集列表
+      newCollection: false, // 新建收藏集
+      collectionType: "" // 输入的新建收藏集名称
     };
   },
   async asyncData({ query, $axios }) {
@@ -575,11 +619,14 @@ export default {
       // 隐藏回复评论输入框
       this.replyId = "";
 
-      // 重新请求评论数据：
-      this.getReplyList();
-
       // 隐藏评论输入框按钮
       this.showCommentBtn = false;
+
+      // 隐藏展示收藏集面板
+      this.showCollection = false;
+
+      // 新建收藏集按钮回复初始状态
+      this.newCollection = false;
     },
     // 评论"博客评论"
     async replyToComment(value) {
@@ -749,6 +796,72 @@ export default {
     // 展示评论框按钮
     showInputBtn() {
       this.showCommentBtn = true;
+    },
+    // 获取收藏集
+    async makeCollection() {
+      if (this.showCollection) {
+        // 如果已经展开收藏面板，则隐藏面板
+        this.showCollection = false;
+        // 新建收藏集按钮回复初始状态
+        this.newCollection = false;
+        return;
+      }
+
+      // 收藏面板未展开，则展开收藏面板
+      this.showCollection = true;
+
+      // 获取收藏集列表
+      this.getCollection();
+    },
+    // 获取收藏集列表
+    async getCollection() {
+      const result = await this.$axios.get("/collect/list");
+
+      if (result.error_code === 0) {
+        this.collectionList = result.data;
+      } else {
+        Message.error("获取收藏集失败！");
+      }
+    },
+    // 创建收藏集
+    async createCollection() {
+      const result = await this.$axios.post("/collect/create", {
+        type: this.collectionType
+      });
+
+      if (result.error_code === 0) {
+        if (result.data.type === 0) {
+          this.getCollection();
+        } else if (result.data.type === 1) {
+          Message.error("收藏集名称已存在！");
+        } else {
+          Message.error("创建收藏集失败！");
+        }
+      } else {
+        Message.error("创建收藏集失败！");
+      }
+    },
+    // 收藏博客
+    async collectBlog(collectionId) {
+      const result = await this.$axios.post("/collect/blog", {
+        blogId: this.$route.query.id,
+        collectionId
+      });
+
+      if (result.error_code === 0) {
+        if (result.data.type === 0) {
+          this.getCollection();
+
+          // 更改收藏状态
+          this.articleInfo.isCollect = true;
+        } else if (result.data.type === 1) {
+          return;
+        } else {
+          Message.error("收藏失败！");
+        }
+      } else {
+        Message.error("收藏失败！");
+      }
     }
   },
   beforeDestroy() {

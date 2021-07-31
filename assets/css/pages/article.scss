@@ -724,5 +724,89 @@
       cursor: pointer;
       color: #b2bac2;
     }
+
+    .item-collection {
+      position: relative;
+
+      .collection-panel {
+        position: absolute;
+        left: 36px;
+        top: 2px;
+        width: 340px;
+        height: 205px;
+        background-color: #fff;
+        border: 1px solid #eceeef;
+        border-radius: 3px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        margin: 0 0 0 1rem;
+        transform: translate(0);
+
+        .collection-panel-header {
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 3;
+          text-align: center;
+        }
+
+        .collection-panel-body {
+          height: 120px;
+          border: 1px solid #eceeef;
+          border-right: none;
+          border-left: none;
+          overflow: auto;
+
+          .collection-panel-body-item {
+            padding: 6px 12px;
+            box-sizing: border-box;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #f8f9fa;
+            }
+
+            .panel-body-item-type {
+              font-size: 12px;
+              line-height: 20px;
+              margin: 0 12px;
+            }
+
+            .panel-body-item-number {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              border-radius: 10px;
+              background-color: #f2f2f2;
+              color: #b9bec2;
+              font-size: 12px;
+              text-align: center;
+              line-height: 20px;
+            }
+          }
+        }
+
+        .collection-panel-footer {
+          height: 40px;
+          display: flex;
+          align-items: center;
+          padding: 0 12px;
+          box-sizing: border-box;
+
+          .el-input__inner {
+            border: none;
+          }
+
+          .collection-panel-footer-input {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .collection-panel-footer-input-text {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
   }
 }
