@@ -374,8 +374,19 @@
               {{ item.title }}
             </div>
             <div class="content-item-line">
-              <i class="iconfont icon-dianzan1">&nbsp;{{ item.blogLikeNum }}</i>
-              <i class="iconfont icon-pinglun2">&nbsp;{{ item.commentNum }}</i>
+              <i
+                @click.stop="likeHotArticle(item.id)"
+                class="iconfont icon-dianzan1"
+                :style="{
+                  color: item.isLike ? '#2de938' : '#b2bac2'
+                }"
+                >&nbsp;{{ item.blogLikeNum }}</i
+              >
+              <i
+                @click.stop="toHotArticle(item.id)"
+                class="iconfont icon-pinglun2"
+                >&nbsp;{{ item.commentNum }}</i
+              >
             </div>
           </div>
         </div>
@@ -418,7 +429,7 @@
             <div
               class="collection-panel-body-item"
               v-for="(item, index) in collectionList"
-              @click="collectBlog(item.id)"
+              @click="collectBlog(item)"
               :key="index"
             >
               <span class="panel-body-item-type">{{ item.type }}</span>
@@ -492,9 +503,7 @@ export default {
       return Message.error("获取文章失败！");
     }
 
-    const mdContent = marked(data.data.content || "", {
-      sanitize: true
-    });
+    const mdContent = marked(data.data.content || "");
 
     // 获取热门文章推荐
     const hotList = await $axios.get("/blog/hot", { params: { id: query.id } });
@@ -585,6 +594,9 @@ export default {
     },
     toArticle(id) {
       window.open(`/article?id=${id}`, "_blank");
+    },
+    toHotArticle(id) {
+      window.open(`/article?id=${id}#make_comments`, "_blank");
     },
     dealWithPosition() {
       this.fixedLeft = document.body.clientWidth * 0.1042;
@@ -842,10 +854,11 @@ export default {
       }
     },
     // 收藏博客
-    async collectBlog(collectionId) {
+    async collectBlog(data) {
       const result = await this.$axios.post("/collect/blog", {
         blogId: this.$route.query.id,
-        collectionId
+        collectionId: data.id,
+        collectType: data.type
       });
 
       if (result.error_code === 0) {
@@ -861,6 +874,29 @@ export default {
         }
       } else {
         Message.error("收藏失败！");
+      }
+    },
+    async likeHotArticle(blogId) {
+      const data = await this.$axios.post("/blike/like", { blog: blogId });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.hotList.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = true;
+              item.blogLikeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.hotList.forEach(item => {
+            if (item.id === blogId) {
+              item.isLike = false;
+              item.blogLikeNum--;
+            }
+          });
+        }
+      } else {
+        Message.error("操作失败！");
       }
     }
   },
