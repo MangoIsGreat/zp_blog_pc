@@ -234,6 +234,10 @@
                       margin-right: 10px;
                     }
 
+                    .identity {
+                      margin-right: 6px;
+                    }
+
                     .right-firstline-job {
                       color: #8a9aa9;
                     }
@@ -242,6 +246,10 @@
                   .body-innerBox-right-content {
                     line-height: 22px;
                     padding: 6px 0;
+
+                    .reply {
+                      color: $primary-color;
+                    }
                   }
 
                   .body-innerBox-right-bottomline {

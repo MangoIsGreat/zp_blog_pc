@@ -89,6 +89,7 @@
           </div>
           <div class="comment-body-wrapper">
             <div class="comment-body-innerBox">
+              <!-- 评论 -->
               <div class="make-comments" id="make_comments" @click.stop>
                 <div class="first-line">
                   <img
@@ -115,6 +116,7 @@
                 </div>
               </div>
               <div class="comments-main-body">
+                <!-- 回复评论 -->
                 <div
                   @click.stop
                   class="comments-main-body-innerBox"
