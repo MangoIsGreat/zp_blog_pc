@@ -277,7 +277,7 @@ export default {
         Message.error("操作失败！");
       }
     },
-    toArticle(id, author) {
+    toArticle(id) {
       window.open(`/article?id=${id}`, "_blank");
     },
     comment(id) {

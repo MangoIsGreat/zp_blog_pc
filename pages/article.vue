@@ -1,77 +1,18 @@
 <template>
-  <div class="article-wrapper" @click.stop="hiddenToComment">
-    <div class="article-wrapper-content">
-      <div class="content-innerBox">
-        <div class="innerBox-author">
-          <div class="innerBox-left">
-            <img :src="articleInfo.User.avatar" class="avatar" />
-            <div class="author-info">
-              <div class="author-name">{{ articleInfo.User.nickname }}</div>
-              <div class="author-info-detail">
-                <div class="detail-time">2021年07月01日</div>
-                &nbsp;&nbsp;
-                <div class="read-times">
-                  阅读&nbsp;{{ articleInfo.User.blogReadNum }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <el-button
-            v-if="!articleInfo.User.isSelf"
-            class="pay-attention"
-            size="mini"
-            @click="follow(articleInfo.User.id)"
-            ><span v-if="!articleInfo.User.isAttention">关注</span
-            ><span class="not-attention" v-else>已关注</span></el-button
-          >
-        </div>
-        <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
-        <h1 class="main-title-name">
-          {{ articleInfo.title }}
-        </h1>
-        <div class="markdown-body" v-html="mdContent"></div>
-        <div class="article-author-wrapper">
-          <div class="article-tag-type">
-            <div class="type">
-              文章分类&nbsp;&nbsp;&nbsp;
-              <div class="type-name">{{ articleInfo.Tag.tagName }}</div>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
-            <div class="tag">
-              文章标签&nbsp;&nbsp;&nbsp;
-              <div
-                v-for="(item, index) in articleTagList"
-                :key="index"
-                class="tag-name"
-              >
-                {{ articleInfo.Tag.tagName }}
-              </div>
-            </div>
-          </div>
-          <div class="author-bottom-info">
-            <div class="author-bottom-info-left">
-              <img
-                class="avatar bottom-avatar"
-                :src="articleInfo.User.avatar"
-              />
-              <div class="info-left-author-detail">
-                <div class="author-detail-info">
-                  <div class="author-detail-info-name">
-                    {{ articleInfo.User.nickname }}
-                  </div>
-                  <div class="author-detail-info-job">
-                    {{ articleInfo.User.profession }}
-                  </div>
-                </div>
-                <div class="author-detail-info-desc">
-                  <div class="publish">发布了33篇文章</div>
-                  &nbsp;·&nbsp;
-                  <div class="like">
-                    获得点赞&nbsp;{{ articleInfo.User.blogLikeNum }}
-                  </div>
-                  &nbsp;·&nbsp;
-                  <div class="read">
-                    获得阅读&nbsp;{{ articleInfo.User.blogReadNum }}
+  <div class="article-root" @click.stop="hiddenToComment">
+    <div class="article-wrapper">
+      <div class="article-wrapper-content">
+        <div class="content-innerBox">
+          <div class="innerBox-author">
+            <div class="innerBox-left">
+              <img :src="articleInfo.User.avatar" class="avatar" />
+              <div class="author-info">
+                <div class="author-name">{{ articleInfo.User.nickname }}</div>
+                <div class="author-info-detail">
+                  <div class="detail-time">2021年07月01日</div>
+                  &nbsp;&nbsp;
+                  <div class="read-times">
+                    阅读&nbsp;{{ articleInfo.User.blogReadNum }}
                   </div>
                 </div>
               </div>
@@ -85,380 +26,445 @@
               ><span class="not-attention" v-else>已关注</span></el-button
             >
           </div>
-        </div>
-        <div class="comment-body-wrapper">
-          <div class="comment-body-innerBox">
-            <div class="make-comments" id="make_comments" @click.stop>
-              <div class="first-line">
-                <img
-                  src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
-                  alt=""
-                  class="avatar"
-                />
-                <el-input
-                  class="input-btn"
-                  v-model="comment"
-                  placeholder="输入评论..."
-                  @focus="showInputBtn"
-                ></el-input>
+          <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
+          <h1 class="main-title-name">
+            {{ articleInfo.title }}
+          </h1>
+          <div class="markdown-body" v-html="mdContent"></div>
+          <div class="article-author-wrapper">
+            <div class="article-tag-type">
+              <div class="type">
+                文章分类&nbsp;&nbsp;&nbsp;
+                <div class="type-name">{{ articleInfo.Tag.tagName }}</div>
+                &nbsp;&nbsp;&nbsp;&nbsp;
               </div>
-              <div class="second-line" v-if="showCommentBtn">
-                <div class="emoj">表情</div>
-                <el-button
-                  size="small"
-                  :autofocus="true"
-                  type="primary"
-                  @click="makeComment"
-                  >评论</el-button
+              <div class="tag">
+                文章标签&nbsp;&nbsp;&nbsp;
+                <div
+                  v-for="(item, index) in articleTagList"
+                  :key="index"
+                  class="tag-name"
+                >
+                  {{ articleInfo.Tag.tagName }}
+                </div>
+              </div>
+            </div>
+            <div class="author-bottom-info">
+              <div class="author-bottom-info-left">
+                <img
+                  class="avatar bottom-avatar"
+                  :src="articleInfo.User.avatar"
+                />
+                <div class="info-left-author-detail">
+                  <div class="author-detail-info">
+                    <div class="author-detail-info-name">
+                      {{ articleInfo.User.nickname }}
+                    </div>
+                    <div class="author-detail-info-job">
+                      {{ articleInfo.User.profession }}
+                    </div>
+                  </div>
+                  <div class="author-detail-info-desc">
+                    <div class="publish">发布了33篇文章</div>
+                    &nbsp;·&nbsp;
+                    <div class="like">
+                      获得点赞&nbsp;{{ articleInfo.User.blogLikeNum }}
+                    </div>
+                    &nbsp;·&nbsp;
+                    <div class="read">
+                      获得阅读&nbsp;{{ articleInfo.User.blogReadNum }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <el-button
+                v-if="!articleInfo.User.isSelf"
+                class="pay-attention"
+                size="mini"
+                @click="follow(articleInfo.User.id)"
+                ><span v-if="!articleInfo.User.isAttention">关注</span
+                ><span class="not-attention" v-else>已关注</span></el-button
+              >
+            </div>
+          </div>
+          <div class="comment-body-wrapper">
+            <div class="comment-body-innerBox">
+              <div class="make-comments" id="make_comments" @click.stop>
+                <div class="first-line">
+                  <img
+                    src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                    alt=""
+                    class="avatar"
+                  />
+                  <el-input
+                    class="input-btn"
+                    v-model="comment"
+                    placeholder="输入评论..."
+                    @focus="showInputBtn"
+                  ></el-input>
+                </div>
+                <div class="second-line" v-if="showCommentBtn">
+                  <div class="emoj">表情</div>
+                  <el-button
+                    size="small"
+                    :autofocus="true"
+                    type="primary"
+                    @click="makeComment"
+                    >评论</el-button
+                  >
+                </div>
+              </div>
+              <div class="comments-main-body">
+                <div
+                  @click.stop
+                  class="comments-main-body-innerBox"
+                  :key="index"
+                  v-for="(item, index) in commentList"
+                >
+                  <img class="avatar" :src="item.comment.avatar" alt="" />
+                  <div class="comments-main-body-innerBox-right">
+                    <div class="user-line">
+                      <div class="user-line-name">
+                        {{ item.comment.nickname }}
+                      </div>
+                      <div class="user-line-sign">
+                        {{ item.comment.profession }}
+                      </div>
+                    </div>
+                    <div class="comments-line">{{ item.content }}</div>
+                    <div class="bottom-line">
+                      <div class="time">52分钟前</div>
+                      <div class="bottom-line-right">
+                        <div>
+                          <i
+                            @click.stop="likeComment(item.id)"
+                            :class="
+                              `iconfont ${
+                                item.isLike ? 'icon-dianzan1' : 'icon-dianzan'
+                              }`
+                            "
+                            :style="{
+                              color: item.isLike ? '#2de938' : '#b2bac2'
+                            }"
+                          ></i>
+                          <span v-show="item.likeNum !== 0">{{
+                            item.likeNum
+                          }}</span>
+                        </div>
+                        <i
+                          class="iconfont icon-pinglun"
+                          @click.stop="showToComment(item.id)"
+                          >&nbsp;回复</i
+                        >
+                      </div>
+                    </div>
+                    <!-- 评论输入框 -->
+                    <div
+                      @click.stop
+                      class="reply-to-comment"
+                      v-if="commentId === item.id"
+                    >
+                      <div class="first-line">
+                        <el-input
+                          size="small"
+                          class="input-btn"
+                          v-model="replyComment"
+                          :autofocus="true"
+                          :placeholder="`回复${item.comment.nickname}...`"
+                        ></el-input>
+                      </div>
+                      <div class="second-line">
+                        <div class="emoj">表情</div>
+                        <el-button
+                          size="mini"
+                          type="primary"
+                          @click="replyToComment(item)"
+                          >评论</el-button
+                        >
+                      </div>
+                    </div>
+                    <div class="comments-reply-body">
+                      <div
+                        class="comments-reply-body-line"
+                        :key="i"
+                        v-for="(t, i) in item.child"
+                        @click.stop
+                      >
+                        <img class="avatar" :src="t.from.avatar" alt="" />
+                        <div class="comments-reply-body-line-right">
+                          <div class="reply-line-author-info">
+                            <div class="username">{{ t.from.nickname }}</div>
+                            <div
+                              class="identity"
+                              v-if="item.comment.id === t.from.id"
+                            >
+                              (作者)
+                            </div>
+                            <div class="sign">{{ t.from.profession }}</div>
+                          </div>
+                          <div class="reply-line-comments-body">
+                            回复&nbsp;<span class="reply">{{
+                              t.to.nickname
+                            }}</span
+                            >：{{ t.content }}
+                          </div>
+                          <div class="reply-line-bottom">
+                            <div class="time">48分钟前</div>
+                            <div class="bottom-right">
+                              <div>
+                                <i
+                                  @click.stop="likeReply(t.id)"
+                                  :class="
+                                    `iconfont ${
+                                      t.isLike
+                                        ? 'icon-dianzan1'
+                                        : 'icon-dianzan'
+                                    }`
+                                  "
+                                  :style="{
+                                    color: t.isLike ? '#2de938' : '#b2bac2'
+                                  }"
+                                ></i>
+                                <span v-show="t.likeNum !== 0">{{
+                                  t.likeNum
+                                }}</span>
+                              </div>
+                              <i
+                                @click.stop="showReply(t.id)"
+                                class="iconfont icon-pinglun"
+                                >&nbsp;回复</i
+                              >
+                            </div>
+                          </div>
+                          <!-- 回复输入框 -->
+                          <div
+                            @click.stop
+                            class="reply-to-comment"
+                            v-if="t.id === replyId"
+                          >
+                            <div class="first-line">
+                              <el-input
+                                size="small"
+                                class="input-btn"
+                                v-model="replyContent"
+                                :autofocus="true"
+                                :placeholder="`回复${t.from.nickname}...`"
+                              ></el-input>
+                            </div>
+                            <div class="second-line">
+                              <div class="emoj">表情</div>
+                              <el-button
+                                size="mini"
+                                type="primary"
+                                @click.stop="replyToReply(t, item)"
+                                >评论</el-button
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="more-article-list">
+          <div class="more-article-list-header">
+            相关推荐
+          </div>
+          <ul
+            class="infinite-list list-wrapper"
+            v-infinite-scroll="loadData"
+            :infinite-scroll-delay="500"
+            :infinite-scroll-distance="60"
+          >
+            <li
+              v-for="(item, index) in moreList"
+              :key="index"
+              class="infinite-list-item list-item"
+              @click="toArticle(item.id)"
+            >
+              <div class="list-item-wrapper">
+                <div class="item-info">
+                  <div class="author-name">{{ item.User.nickname }}</div>
+                  <div class="time">一小时前</div>
+                  <div class="tag-type">{{ item.Tag.tagName }}</div>
+                </div>
+                <div class="item-content">
+                  <div class="content-left">
+                    <h3 class="title">{{ item.title }}</h3>
+                    <div class="desc">
+                      {{ item.description }}
+                    </div>
+                    <div class="operate">
+                      <div class="operate-item">
+                        <i class="iconfont icon-yanjing"
+                          >&nbsp;{{ item.blogReadNum }}</i
+                        >
+                      </div>
+                      <div
+                        class="operate-item"
+                        @click.stop="likeBlog(item.id)"
+                        :style="{
+                          color: item.isLike ? '#2de938' : '#4e5969'
+                        }"
+                      >
+                        <i class="iconfont icon-dianzan1"
+                          >&nbsp;{{ item.blogLikeNum }}</i
+                        >
+                      </div>
+                      <div @click.stop="toComment(item.id)">
+                        <i class="iconfont icon-pinglun"
+                          >&nbsp;{{ item.commentNum }}</i
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <img class="content-right" :src="item.titlePic" />
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="article-wrapper-aside">
+        <div class="aside-author">
+          <div class="aside-author-title">关于作者</div>
+          <div class="aside-author-body">
+            <div class="aside-author-body-top">
+              <img class="avatar" :src="articleInfo.User.avatar" alt="" />
+              <div class="author-body-top-info">
+                <div class="top-info-name">{{ articleInfo.User.nickname }}</div>
+                <div class="top-info-sign">
+                  {{ articleInfo.User.signature }}
+                </div>
+              </div>
+            </div>
+            <div class="aside-author-body-bottom">
+              <div class="aside-author-body-bottom-item">
+                <i class="iconfont icon-dianzan"></i
+                ><span class="text"
+                  >获得点赞&nbsp;{{ articleInfo.User.blogLikeNum }}</span
+                >
+              </div>
+              <div class="aside-author-body-bottom-item">
+                <i class="iconfont icon-yanjing"></i
+                ><span class="text"
+                  >文章被阅读&nbsp;{{ articleInfo.User.blogReadNum }}</span
                 >
               </div>
             </div>
-            <div class="comments-main-body">
-              <div
-                @click.stop
-                class="comments-main-body-innerBox"
-                :key="index"
-                v-for="(item, index) in commentList"
-              >
-                <img class="avatar" :src="item.comment.avatar" alt="" />
-                <div class="comments-main-body-innerBox-right">
-                  <div class="user-line">
-                    <div class="user-line-name">
-                      {{ item.comment.nickname }}
-                    </div>
-                    <div class="user-line-sign">
-                      {{ item.comment.profession }}
-                    </div>
-                  </div>
-                  <div class="comments-line">{{ item.content }}</div>
-                  <div class="bottom-line">
-                    <div class="time">52分钟前</div>
-                    <div class="bottom-line-right">
-                      <div>
-                        <i
-                          @click.stop="likeComment(item.id)"
-                          :class="
-                            `iconfont ${
-                              item.isLike ? 'icon-dianzan1' : 'icon-dianzan'
-                            }`
-                          "
-                          :style="{
-                            color: item.isLike ? '#2de938' : '#b2bac2'
-                          }"
-                        ></i>
-                        <span v-show="item.likeNum !== 0">{{
-                          item.likeNum
-                        }}</span>
-                      </div>
-                      <i
-                        class="iconfont icon-pinglun"
-                        @click.stop="showToComment(item.id)"
-                        >&nbsp;回复</i
-                      >
-                    </div>
-                  </div>
-                  <!-- 评论输入框 -->
-                  <div
-                    @click.stop
-                    class="reply-to-comment"
-                    v-if="commentId === item.id"
-                  >
-                    <div class="first-line">
-                      <el-input
-                        size="small"
-                        class="input-btn"
-                        v-model="replyComment"
-                        :autofocus="true"
-                        :placeholder="`回复${item.comment.nickname}...`"
-                      ></el-input>
-                    </div>
-                    <div class="second-line">
-                      <div class="emoj">表情</div>
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click="replyToComment(item)"
-                        >评论</el-button
-                      >
-                    </div>
-                  </div>
-                  <div class="comments-reply-body">
-                    <div
-                      class="comments-reply-body-line"
-                      :key="i"
-                      v-for="(t, i) in item.child"
-                      @click.stop
-                    >
-                      <img class="avatar" :src="t.from.avatar" alt="" />
-                      <div class="comments-reply-body-line-right">
-                        <div class="reply-line-author-info">
-                          <div class="username">{{ t.from.nickname }}</div>
-                          <div
-                            class="identity"
-                            v-if="item.comment.id === t.from.id"
-                          >
-                            (作者)
-                          </div>
-                          <div class="sign">{{ t.from.profession }}</div>
-                        </div>
-                        <div class="reply-line-comments-body">
-                          回复&nbsp;<span class="reply">{{
-                            t.to.nickname
-                          }}</span
-                          >：{{ t.content }}
-                        </div>
-                        <div class="reply-line-bottom">
-                          <div class="time">48分钟前</div>
-                          <div class="bottom-right">
-                            <div>
-                              <i
-                                @click.stop="likeReply(t.id)"
-                                :class="
-                                  `iconfont ${
-                                    t.isLike ? 'icon-dianzan1' : 'icon-dianzan'
-                                  }`
-                                "
-                                :style="{
-                                  color: t.isLike ? '#2de938' : '#b2bac2'
-                                }"
-                              ></i>
-                              <span v-show="t.likeNum !== 0">{{
-                                t.likeNum
-                              }}</span>
-                            </div>
-                            <i
-                              @click.stop="showReply(t.id)"
-                              class="iconfont icon-pinglun"
-                              >&nbsp;回复</i
-                            >
-                          </div>
-                        </div>
-                        <!-- 回复输入框 -->
-                        <div
-                          @click.stop
-                          class="reply-to-comment"
-                          v-if="t.id === replyId"
-                        >
-                          <div class="first-line">
-                            <el-input
-                              size="small"
-                              class="input-btn"
-                              v-model="replyContent"
-                              :autofocus="true"
-                              :placeholder="`回复${t.from.nickname}...`"
-                            ></el-input>
-                          </div>
-                          <div class="second-line">
-                            <div class="emoj">表情</div>
-                            <el-button
-                              size="mini"
-                              type="primary"
-                              @click.stop="replyToReply(t, item)"
-                              >评论</el-button
-                            >
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-      </div>
-      <div class="more-article-list">
-        <div class="more-article-list-header">
-          相关推荐
-        </div>
-        <ul
-          class="infinite-list list-wrapper"
-          v-infinite-scroll="loadData"
-          :infinite-scroll-delay="500"
-          :infinite-scroll-distance="60"
-        >
-          <li
-            v-for="(item, index) in moreList"
-            :key="index"
-            class="infinite-list-item list-item"
-            @click="toArticle(item.id)"
-          >
-            <div class="list-item-wrapper">
-              <div class="item-info">
-                <div class="author-name">{{ item.User.nickname }}</div>
-                <div class="time">一小时前</div>
-                <div class="tag-type">{{ item.Tag.tagName }}</div>
-              </div>
-              <div class="item-content">
-                <div class="content-left">
-                  <h3 class="title">{{ item.title }}</h3>
-                  <div class="desc">
-                    {{ item.description }}
-                  </div>
-                  <div class="operate">
-                    <div class="operate-item">
-                      <i class="iconfont icon-yanjing"
-                        >&nbsp;{{ item.blogReadNum }}</i
-                      >
-                    </div>
-                    <div
-                      class="operate-item"
-                      @click.stop="likeBlog(item.id)"
-                      :style="{
-                        color: item.isLike ? '#2de938' : '#4e5969'
-                      }"
-                    >
-                      <i class="iconfont icon-dianzan1"
-                        >&nbsp;{{ item.blogLikeNum }}</i
-                      >
-                    </div>
-                    <div @click.stop="toComment(item.id)">
-                      <i class="iconfont icon-pinglun"
-                        >&nbsp;{{ item.commentNum }}</i
-                      >
-                    </div>
-                  </div>
-                </div>
-                <img class="content-right" :src="item.titlePic" />
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="article-wrapper-aside">
-      <div class="aside-author">
-        <div class="aside-author-title">关于作者</div>
-        <div class="aside-author-body">
-          <div class="aside-author-body-top">
-            <img class="avatar" :src="articleInfo.User.avatar" alt="" />
-            <div class="author-body-top-info">
-              <div class="top-info-name">{{ articleInfo.User.nickname }}</div>
-              <div class="top-info-sign">{{ articleInfo.User.signature }}</div>
-            </div>
-          </div>
-          <div class="aside-author-body-bottom">
-            <div class="aside-author-body-bottom-item">
-              <i class="iconfont icon-dianzan"></i
-              ><span class="text"
-                >获得点赞&nbsp;{{ articleInfo.User.blogLikeNum }}</span
-              >
-            </div>
-            <div class="aside-author-body-bottom-item">
-              <i class="iconfont icon-yanjing"></i
-              ><span class="text"
-                >文章被阅读&nbsp;{{ articleInfo.User.blogReadNum }}</span
-              >
-            </div>
+        <div class="qr-code-wrapper">
+          <div class="qr-code"></div>
+          <div class="qr-code-desc">
+            <div class="qr-code-desc-title">下载得到客户端</div>
+            <div class="qr-code-desc-word">一个旨在分享技术的社区</div>
           </div>
         </div>
-      </div>
-      <div class="qr-code-wrapper">
-        <div class="qr-code"></div>
-        <div class="qr-code-desc">
-          <div class="qr-code-desc-title">下载得到客户端</div>
-          <div class="qr-code-desc-word">一个旨在分享技术的社区</div>
-        </div>
-      </div>
-      <div class="home-page-poster"></div>
-      <div class="more-article">
-        <div class="more-article-header">相关文章</div>
-        <div class="more-article-content">
-          <div
-            class="more-article-content-item"
-            v-for="(item, index) in hotList"
-            :key="index"
-            @click="toArticle(item.id)"
-          >
-            <div class="content-item-title">
-              {{ item.title }}
-            </div>
-            <div class="content-item-line">
-              <i
-                @click.stop="likeHotArticle(item.id)"
-                class="iconfont icon-dianzan1"
-                :style="{
-                  color: item.isLike ? '#2de938' : '#b2bac2'
-                }"
-                >&nbsp;{{ item.blogLikeNum }}</i
-              >
-              <i
-                @click.stop="toHotArticle(item.id)"
-                class="iconfont icon-pinglun2"
-                >&nbsp;{{ item.commentNum }}</i
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="fixed-left-box"
-      :style="{ left: this.fixedLeft + 'px', top: this.fixedTop + 'px' }"
-    >
-      <div
-        @click="likeArt"
-        class="icon-item icon-item-badge"
-        :badge="articleInfo.blogLikeNum"
-      >
-        <i
-          :style="{
-            color: articleInfo.isLike ? '#2de938' : '#b2bac2'
-          }"
-          class="iconfont icon-dianzan1"
-        ></i>
-      </div>
-      <div
-        class="icon-item icon-item-badge"
-        @click="leaveWord"
-        :badge="commentList.length"
-      >
-        <i class="iconfont icon-pinglun2"></i>
-      </div>
-      <div class="icon-item item-collection">
-        <i
-          class="iconfont icon-xingxingmianxing"
-          @click.stop="makeCollection"
-          :style="{
-            color: articleInfo.isCollect ? '#ffc347' : '#b2bac2'
-          }"
-        ></i>
-        <div @click.stop class="collection-panel" v-if="showCollection">
-          <div class="collection-panel-header">添加到收藏集</div>
-          <div class="collection-panel-body">
+        <div class="home-page-poster"></div>
+        <div class="more-article">
+          <div class="more-article-header">相关文章</div>
+          <div class="more-article-content">
             <div
-              class="collection-panel-body-item"
-              v-for="(item, index) in collectionList"
-              @click="collectBlog(item)"
+              class="more-article-content-item"
+              v-for="(item, index) in hotList"
               :key="index"
+              @click="toArticle(item.id)"
             >
-              <span class="panel-body-item-type">{{ item.type }}</span>
-              <span class="panel-body-item-number">{{ item.number }}</span>
-            </div>
-          </div>
-          <div class="collection-panel-footer">
-            <el-button
-              class="collection-panel-footer-create"
-              v-if="!newCollection"
-              type="text"
-              size="mini"
-              @click="newCollection = true"
-              >新建收藏集</el-button
-            >
-            <div v-else class="collection-panel-footer-input">
-              <el-input
-                class="collection-panel-footer-input-text"
-                v-model="collectionType"
-              ></el-input>
-              <el-button @click="createCollection" size="mini" plain
-                >添加</el-button
-              >
+              <div class="content-item-title">
+                {{ item.title }}
+              </div>
+              <div class="content-item-line">
+                <i
+                  @click.stop="likeHotArticle(item.id)"
+                  class="iconfont icon-dianzan1"
+                  :style="{
+                    color: item.isLike ? '#2de938' : '#b2bac2'
+                  }"
+                  >&nbsp;{{ item.blogLikeNum }}</i
+                >
+                <i
+                  @click.stop="toHotArticle(item.id)"
+                  class="iconfont icon-pinglun2"
+                  >&nbsp;{{ item.commentNum }}</i
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="icon-item">
-        <i class="iconfont icon-xinfangjubao"></i>
+      <div
+        class="fixed-left-box"
+        :style="{ left: this.fixedLeft + 'px', top: this.fixedTop + 'px' }"
+      >
+        <div
+          @click="likeArt"
+          class="icon-item icon-item-badge"
+          :badge="articleInfo.blogLikeNum"
+        >
+          <i
+            :style="{
+              color: articleInfo.isLike ? '#2de938' : '#b2bac2'
+            }"
+            class="iconfont icon-dianzan1"
+          ></i>
+        </div>
+        <div
+          class="icon-item icon-item-badge"
+          @click="leaveWord"
+          :badge="commentList.length"
+        >
+          <i class="iconfont icon-pinglun2"></i>
+        </div>
+        <div class="icon-item item-collection">
+          <i
+            class="iconfont icon-xingxingmianxing"
+            @click.stop="makeCollection"
+            :style="{
+              color: articleInfo.isCollect ? '#ffc347' : '#b2bac2'
+            }"
+          ></i>
+          <div @click.stop class="collection-panel" v-if="showCollection">
+            <div class="collection-panel-header">添加到收藏集</div>
+            <div class="collection-panel-body">
+              <div
+                class="collection-panel-body-item"
+                v-for="(item, index) in collectionList"
+                @click="collectBlog(item)"
+                :key="index"
+              >
+                <span class="panel-body-item-type">{{ item.type }}</span>
+                <span class="panel-body-item-number">{{ item.number }}</span>
+              </div>
+            </div>
+            <div class="collection-panel-footer">
+              <el-button
+                class="collection-panel-footer-create"
+                v-if="!newCollection"
+                type="text"
+                size="mini"
+                @click="newCollection = true"
+                >新建收藏集</el-button
+              >
+              <div v-else class="collection-panel-footer-input">
+                <el-input
+                  class="collection-panel-footer-input-text"
+                  v-model="collectionType"
+                ></el-input>
+                <el-button @click="createCollection" size="mini" plain
+                  >添加</el-button
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="icon-item">
+          <i class="iconfont icon-xinfangjubao"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -500,7 +506,7 @@ export default {
     });
 
     if (data.error_code !== 0) {
-      return Message.error("获取文章失败！");
+      Message.error("获取文章失败！");
     }
 
     const mdContent = marked(data.data.content || "");
