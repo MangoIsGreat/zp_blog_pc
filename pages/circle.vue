@@ -2,13 +2,34 @@
   <div class="circle-box" @click.stop="hiddenCommenBtn">
     <div class="circle-wrapper">
       <div class="circle-menu">
-        <div class="circle-menu-item">
+        <div
+          class="circle-menu-item"
+          @click="setMenu('new')"
+          :style="{
+            color: selectedMenu === 'new' ? '#fff' : '#909090',
+            backgroundColor: selectedMenu === 'new' ? '#00c58e' : '#fff'
+          }"
+        >
           推荐
         </div>
-        <div class="circle-menu-item">
+        <div
+          class="circle-menu-item"
+          @click="setMenu('hot')"
+          :style="{
+            color: selectedMenu === 'hot' ? '#fff' : '#909090',
+            backgroundColor: selectedMenu === 'hot' ? '#00c58e' : '#fff'
+          }"
+        >
           热门
         </div>
-        <div class="circle-menu-item circle-menu-item-attention">
+        <div
+          class="circle-menu-item circle-menu-item-attention"
+          @click="setMenu('attention')"
+          :style="{
+            color: selectedMenu === 'attention' ? '#fff' : '#909090',
+            backgroundColor: selectedMenu === 'attention' ? '#00c58e' : '#fff'
+          }"
+        >
           关注
         </div>
         <div class="cutting-line"></div>
@@ -16,8 +37,14 @@
           v-for="(item, index) in menuList"
           :key="index"
           class="circle-menu-item"
+          @click="setMenu(item.themeName)"
+          :style="{
+            color: selectedMenu === item.themeName ? '#fff' : '#909090',
+            backgroundColor:
+              selectedMenu === item.themeName ? '#00c58e' : '#fff'
+          }"
         >
-          {{ item }}
+          {{ item.themeName }}
         </div>
       </div>
       <div class="circle-content">
@@ -349,6 +376,7 @@
               class="great-wrapper-item"
               v-for="(item, index) in messageList"
               :key="index"
+              @click="toDetailPage(item.id)"
             >
               <div class="content-left">
                 <div class="content-left-title">
@@ -383,7 +411,7 @@ export default {
   data() {
     return {
       userInfo: null, // 用户信息
-      menuList: ["上班摸鱼", "内推招聘"],
+      menuList: [],
       listData: [], // "动态"列表数据
       messageList: [], // 精选留言
       content: "", // 输入的内容
@@ -399,7 +427,8 @@ export default {
       replyComment: "", // 回复评论
       replyToReplyValue: "", // 回复评论回复
       showReply: false, // 是否展示评论回复输入框
-      showReplyToReply: "" // 是否展示回复评论输入框
+      showReplyToReply: "", // 是否展示回复评论输入框
+      selectedMenu: "new" // 选中的menu
     };
   },
   async asyncData({ $axios }) {
@@ -414,7 +443,7 @@ export default {
     });
 
     if (data.error_code !== 0) {
-      Message.error("标签类型获取失败");
+      Message.error("动态列表数据获取失败");
     }
 
     // 获取精选留言数据
@@ -424,10 +453,18 @@ export default {
       Message.error("精选留言获取失败");
     }
 
+    // 获取"动态"类型
+    const theme = await $axios.get("/theme/list");
+
+    if (theme.error_code !== 0) {
+      Message.error("动态类型获取失败");
+    }
+
     return {
       listData: data.data, // 动态列表数据
       countNum: data.data.count, // 总"动态"条数
-      messageList: favList.data // 精选留言
+      messageList: favList.data, // 精选留言
+      menuList: theme.data // 动态类型
     };
   },
   mounted() {
@@ -706,6 +743,32 @@ export default {
       } else {
         Message.error("点赞失败！");
       }
+    },
+    // 跳转至动态详情页
+    toDetailPage(id) {
+      window.open(`/circle-detail?id=${id}`);
+    },
+    // 选中标签类型
+    setMenu(value) {
+      this.selectedMenu = value;
+
+      // 重置pageIndex/pageSize
+      this.pageIndex = 1;
+      this.pageSize = 15;
+
+      // 先清空原始数据
+      this.listData = [];
+
+      // 重新获取动态数据
+      if (["new", "hot", "attention"].includes(value)) {
+        this.type = value;
+        this.theme = "";
+      } else {
+        this.type = "";
+        this.theme = value;
+      }
+
+      this.getList();
     }
   }
 };
