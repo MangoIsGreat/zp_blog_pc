@@ -66,9 +66,40 @@
                 <el-button class="operateLine-left-item" type="text"
                   >图片</el-button
                 >
-                <el-button class="operateLine-left-item" type="text"
-                  ># 话题</el-button
-                >
+                <div class="operateLine-left-item operateLine-left-item-topic">
+                  <el-button
+                    @click.stop="addTheme"
+                    class="topic-btn"
+                    type="text"
+                    ># 话题</el-button
+                  >
+                  <div @click.stop v-if="showTheme" class="topic-panel">
+                    <div class="topic-panel-header">话题列表</div>
+                    <div class="topic-panel-innerBox">
+                      <div class="topic-panel-innerBox-item">
+                        <div
+                          @click="setTheme({ themeName: '', id: '' })"
+                          class="panel-innerBox-item-name"
+                        >
+                          不添加任何话题
+                        </div>
+                      </div>
+                      <div
+                        class="topic-panel-innerBox-item"
+                        :key="index"
+                        v-for="(item, index) in themeList"
+                        @click="setTheme(item)"
+                      >
+                        <div class="panel-innerBox-item-name">
+                          {{ item.themeName }}
+                        </div>
+                        <div class="panel-innerBox-item-num">
+                          {{ item.artNum }}动态
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <el-button @click="publish" type="primary" size="small"
                 >发布</el-button
@@ -404,6 +435,7 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 import { getLocalStorage } from "../utils/store";
 
 export default {
@@ -428,7 +460,10 @@ export default {
       replyToReplyValue: "", // 回复评论回复
       showReply: false, // 是否展示评论回复输入框
       showReplyToReply: "", // 是否展示回复评论输入框
-      selectedMenu: "new" // 选中的menu
+      selectedMenu: "new", // 选中的menu
+      showTheme: false, // 是否显示话题选择面板
+      themeList: [], // 话题列表
+      selectedTheme: "" // 选中的主题
     };
   },
   async asyncData({ $axios }) {
@@ -486,7 +521,7 @@ export default {
     // 发布动态
     async publish() {
       const data = await this.$axios.post("/dynamic/create", {
-        theme: this.theme,
+        theme: this.selectedTheme,
         content: this.content,
         picUrl: this.picUrl
       });
@@ -618,6 +653,8 @@ export default {
       this.showReply = false;
       // 隐藏“动态评论回复”回复输入框
       this.showReplyToReply = "";
+      // 隐藏选择"主题"面板
+      this.showTheme = false;
     },
     // 评论"动态评论"
     async replyToComment(comment, dynamic) {
@@ -769,6 +806,52 @@ export default {
       }
 
       this.getList();
+    },
+    // 添加话题选择
+    async addTheme() {
+      this.showTheme = true;
+
+      const data = await this.$axios.get("/theme/list");
+
+      if (data.error_code === 0) {
+        this.themeList = data.data;
+      } else {
+        Message.error("获取主题失败!");
+      }
+    },
+    // 设置话题
+    setTheme(data) {
+      // 清空话题时
+      if (!data.themeName) {
+        this.selectedTheme = "";
+
+        const newTheme = this.content.split("#")[2];
+
+        this.content = `${newTheme}`;
+
+        return (this.showTheme = false);
+      }
+
+      // 第一次未设置话题时
+      if (!this.selectedTheme && data.themeName) {
+        this.content = `#${data.themeName}# ${this.content}`;
+        this.showTheme = false;
+        this.selectedTheme = data.themeName;
+        return;
+      }
+
+      // 更换话题时
+      if (this.selectedTheme) {
+        const newTheme = this.content.split("#")[2];
+
+        this.content = `#${data.themeName}# ${newTheme}`;
+      } else {
+        this.content = `#${data.themeName}# ${this.content}`;
+      }
+
+      this.showTheme = false;
+
+      this.selectedTheme = data.themeName;
     }
   }
 };

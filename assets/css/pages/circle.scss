@@ -61,8 +61,85 @@
           align-items: center;
 
           .operateLine-left {
+            display: flex;
+
             .operateLine-left-item {
               font-size: $fontSize-middle;
+            }
+
+            .operateLine-left-item-topic {
+              position: relative;
+              margin-left: 8px;
+              color: #00c58e;
+
+              .topic-btn {
+                font-size: $fontSize-middle;
+                color: #00c58e;
+              }
+
+              .topic-panel {
+                width: 310px;
+                height: 410px;
+                position: absolute;
+                left: -38px;
+                top: 46px;
+                background-color: #fff;
+                box-shadow: 0 5px 18px 0 rgba(0, 0, 0, 0.16);
+
+                &::before {
+                  content: "";
+                  position: absolute;
+                  margin-left: -6px;
+                  top: -7px;
+                  left: 60px;
+                  width: 12px;
+                  height: 12px;
+                  background-color: #fff;
+                  border: 1px solid #ddd;
+                  border-right: none;
+                  border-bottom: none;
+                  transform: rotate(45deg);
+                }
+
+                .topic-panel-header {
+                  line-height: 45px;
+                  font-size: 16px;
+                  color: $article-title-color;
+                  text-align: center;
+                  border-bottom: 1px solid $border-color;
+                  font-weight: 500;
+                }
+
+                .topic-panel-innerBox {
+                  width: 100%;
+                  height: 365px;
+                  overflow: auto;
+                  padding: 20px;
+                  box-sizing: border-box;
+
+                  .topic-panel-innerBox-item {
+                    display: flex;
+                    justify-content: space-between;
+                    line-height: 45px;
+                    border-bottom: 1px solid #f4f4f4;
+                    cursor: pointer;
+
+                    &:hover {
+                      background-color: #f8f8f8;
+                    }
+
+                    .panel-innerBox-item-name {
+                      color: #2e3135;
+                      font-size: 15px;
+                    }
+
+                    .panel-innerBox-item-num {
+                      font-size: 13px;
+                      color: #8a9aa9;
+                    }
+                  }
+                }
+              }
             }
           }
         }
