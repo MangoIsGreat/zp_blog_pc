@@ -93,7 +93,9 @@
       </div>
     </div>
     <div class="publish-panel-wrapper-footer">
-      <el-button size="mini" type="primary" @click="cancel" plain>取消</el-button>
+      <el-button size="mini" type="primary" @click="cancel" plain
+        >取消</el-button
+      >
       <el-button
         size="mini"
         @click="publish"
@@ -107,7 +109,7 @@
 
 <script>
 import dev from "@/env";
-import { getLocalStorage } from "@/utils/store";
+import { getCookie } from "@/utils/cookie";
 import { encode } from "@/utils/encode";
 import { Message } from "element-ui";
 
@@ -148,13 +150,13 @@ export default {
       this.$emit("publish", data);
     },
     cancel() {
-        this.$emit("cancel");
+      this.$emit("cancel");
     },
     selectTag(value) {
       this.selectedTagType = value;
     },
     getToken() {
-      const token = getLocalStorage("user_token");
+      const token = getCookie(this, "user_token");
       // 将获取到token加入到请求头中
       if (!token) return;
       this.token = encode(token);
@@ -174,6 +176,15 @@ export default {
     },
     uploadError(err, file, fileList) {
       Message.error("文件上传失败");
+    },
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      console.log(file);
+    },
+    handleDownload(file) {
+      console.log(file);
     }
   }
 };

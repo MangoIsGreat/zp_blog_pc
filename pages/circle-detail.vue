@@ -35,6 +35,17 @@
           <div class="list-item-desc">
             {{ dynData.content }}
           </div>
+          <div class="list-item-theme" v-if="dynData.theme">
+            {{ `#${dynData.theme}#` }}
+          </div>
+          <div class="list-item-photo">
+            <img
+              :src="pic"
+              class="list-item-photo-t"
+              v-for="(pic, picIndex) in dynData.picUrl"
+              :key="picIndex"
+            />
+          </div>
         </div>
         <div class="list-item-operate">
           <div class="list-item-operate-t" @click="likeDynamic(dynData.id)">
@@ -244,6 +255,7 @@
               class="great-wrapper-item"
               v-for="(item, index) in messageList"
               :key="index"
+              @click="toDetailPage(item.id)"
             >
               <div class="content-left">
                 <div class="content-left-title">
@@ -258,7 +270,8 @@
                 </div>
               </div>
               <img
-                src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70dbcf3837cc47e5b951c7ff9e98ab48~tplv-k3u1fbpfcp-zoom-mark-crop-v2:460:460:0:0.awebp"
+                v-if="item.picUrl"
+                :src="item.picUrl[0]"
                 class="content-pic"
               />
             </div>
@@ -295,12 +308,22 @@ export default {
       Message.error("动态数据获取失败");
     }
 
+    if (data.data.picUrl) {
+      data.data.picUrl = JSON.parse(data.data.picUrl);
+    }
+
     // 获取精选留言数据
     const favList = await $axios.get("/dynamic/favlist");
 
     if (favList.error_code !== 0) {
       Message.error("精选留言获取失败");
     }
+
+    favList.data.forEach(item => {
+      if (item.picUrl) {
+        item.picUrl = JSON.parse(item.picUrl);
+      }
+    });
 
     // 获取评论列表
     const commentList = await $axios.get("/dcomment/list", {
@@ -310,8 +333,6 @@ export default {
     if (commentList.error_code !== 0) {
       Message.error("获取评论列表失败！");
     }
-
-    console.log(33, data.data);
 
     return {
       dynData: data.data, // 动态数据
@@ -507,6 +528,10 @@ export default {
 
       // 隐藏评论回复评论按钮
       this.showReplyToReply = "";
+    },
+    // 跳转至动态详情页
+    toDetailPage(id) {
+      window.open(`/circle-detail?id=${id}`);
     }
   }
 };

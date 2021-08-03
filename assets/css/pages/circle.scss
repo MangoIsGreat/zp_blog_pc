@@ -6,11 +6,14 @@
   margin: 20px auto;
 
   .circle-menu {
+    position: fixed;
+    left: 280px;
+    top: 80px;
     @include setBgColorAndPadding(112px, 16px 12px);
     box-sizing: border-box;
     font-size: $fontSize-large;
     color: $font-color-gray;
-    max-height: 470px;
+    max-height: 390px;
 
     .cutting-line {
       width: 100%;
@@ -43,7 +46,7 @@
 
   .circle-content {
     flex: 1;
-    padding: 0 15px;
+    padding: 0 15px 0 127px;
     box-sizing: border-box;
 
     .circle-content-innerBox {
@@ -53,6 +56,7 @@
         box-sizing: border-box;
         @include setBgColorAndPadding(100%, 16px 20px 0);
         margin-bottom: 10px;
+        box-sizing: border-box;
 
         .publish-operateLine {
           display: flex;
@@ -143,6 +147,10 @@
             }
           }
         }
+
+        .publish-photo {
+          padding-bottom: 20px;
+        }
       }
 
       .circle-content-list-box {
@@ -154,7 +162,6 @@
           .list-item-top {
             @include setBgColorAndPadding(100%, 16px 20px 0);
             box-sizing: border-box;
-            border-bottom: 1px solid $border-color;
 
             .list-item-info {
               display: flex;
@@ -207,10 +214,30 @@
               font-size: $fontSize-large;
               color: $article-title-color2;
             }
+
+            .list-item-theme {
+              padding-left: 55px;
+              margin-bottom: 5px;
+              font-size: 14px;
+              color: $primary-color;
+            }
+          }
+
+          .list-item-photo {
+            display: flex;
+            margin: 5px 0 20px;
+            padding: 0 40px;
+            box-sizing: border-box;
+
+            .list-item-photo-t {
+              width: 140px;
+              margin-right: 20px;
+            }
           }
 
           .list-item-operate {
             display: flex;
+            border-top: 1px solid $border-color;
 
             .list-item-operate-t {
               flex: 1;
@@ -237,8 +264,13 @@
           .comment-box {
             border-top: 1px solid $border-color;
             position: relative;
-            padding: 16px 20px;
+            padding: 16px 0 0;
             box-sizing: border-box;
+
+            .comment-box-innerBox {
+              padding: 0 20px 16px;
+              box-sizing: border-box;
+            }
 
             &::before {
               content: "";
@@ -285,7 +317,7 @@
 
             .comments-main-body {
               padding-left: 42px;
-              margin-top: 14px;
+              // margin-top: 14px;
               box-sizing: border-box;
 
               .comments-main-body-innerBox {
@@ -414,6 +446,15 @@
                   }
                 }
               }
+            }
+
+            .comment-detail-page {
+              line-height: 40px;
+              text-align: center;
+              color: #406599;
+              border-top: 1px solid #ebebeb;
+              cursor: pointer;
+              font-size: 13px;
             }
           }
         }

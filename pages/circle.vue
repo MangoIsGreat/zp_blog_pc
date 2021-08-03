@@ -63,7 +63,10 @@
                 <el-button class="operateLine-left-item" type="text"
                   >表情</el-button
                 >
-                <el-button class="operateLine-left-item" type="text"
+                <el-button
+                  @click.stop="showUpload = true"
+                  class="operateLine-left-item"
+                  type="text"
                   >图片</el-button
                 >
                 <div class="operateLine-left-item operateLine-left-item-topic">
@@ -104,6 +107,48 @@
               <el-button @click="publish" type="primary" size="small"
                 >发布</el-button
               >
+            </div>
+            <div class="publish-photo" @click.stop v-if="showUpload">
+              <el-upload
+                :data="{ type: 'circle' }"
+                :action="uploadURL"
+                list-type="picture-card"
+                :auto-upload="true"
+                :limit="3"
+                :headers="{ Authorization: token }"
+                :on-exceed="limit"
+                :on-success="uploadSuccess"
+                :on-error="uploadError"
+              >
+                <i slot="default" class="el-icon-plus"></i>
+                <div slot="file" slot-scope="{ file }">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url"
+                    alt=""
+                  />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleDownload(file)"
+                    >
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </el-upload>
             </div>
           </div>
           <ul
@@ -150,6 +195,17 @@
                 <div class="list-item-desc">
                   {{ item.content }}
                 </div>
+                <div class="list-item-theme" v-if="item.theme">
+                  {{ `#${item.theme}#` }}
+                </div>
+              </div>
+              <div class="list-item-photo">
+                <img
+                  :src="pic"
+                  class="list-item-photo-t"
+                  v-for="(pic, picIndex) in item.picUrl"
+                  :key="picIndex"
+                />
               </div>
               <div class="list-item-operate">
                 <div class="list-item-operate-t" @click="likeDynamic(item.id)">
@@ -179,28 +235,30 @@
               </div>
               <div class="comment-box" v-if="dynamicId === item.id">
                 <!-- 评论 -->
-                <div class="make-comments" @click.stop>
-                  <div class="first-line">
-                    <img
-                      src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
-                      alt=""
-                      class="avatar"
-                    />
-                    <el-input
-                      class="input-btn"
-                      v-model="comment"
-                      placeholder="输入评论..."
-                      @focus="showComment = true"
-                    ></el-input>
-                  </div>
-                  <div class="second-line" v-if="showComment">
-                    <div class="emoj">表情</div>
-                    <el-button
-                      @click.stop="makeComment(item.id)"
-                      size="small"
-                      type="primary"
-                      >评论</el-button
-                    >
+                <div class="comment-box-innerBox">
+                  <div class="make-comments" @click.stop>
+                    <div class="first-line">
+                      <img
+                        src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                        alt=""
+                        class="avatar"
+                      />
+                      <el-input
+                        class="input-btn"
+                        v-model="comment"
+                        placeholder="输入评论..."
+                        @focus="showComment = true"
+                      ></el-input>
+                    </div>
+                    <div class="second-line" v-if="showComment">
+                      <div class="emoj">表情</div>
+                      <el-button
+                        @click.stop="makeComment(item.id)"
+                        size="small"
+                        type="primary"
+                        >评论</el-button
+                      >
+                    </div>
                   </div>
                 </div>
                 <div class="comments-main-body">
@@ -352,6 +410,10 @@
                     </div>
                   </div>
                 </div>
+                <!-- 查看评论详情页 -->
+                <div class="comment-detail-page" @click="toDetailPage(item.id)">
+                  查看更多&gt;
+                </div>
               </div>
             </li>
           </ul>
@@ -360,16 +422,13 @@
       <div class="circle-info">
         <div class="circle-info-authorInfo">
           <div class="authorInfo-top">
-            <img
-              :src="userInfo && userInfo.avatar"
-              class="authorInfo-top-avatar"
-            />
+            <img :src="userInfo.avatar" class="authorInfo-top-avatar" />
             <div class="authorInfo-top-info">
               <div class="authorInfo-top-info-name">
-                {{ userInfo && userInfo.nickname }}
+                {{ userInfo.nickname }}
               </div>
               <div class="authorInfo-top-info-job">
-                {{ userInfo && userInfo.profession }}
+                {{ userInfo.profession }}
               </div>
             </div>
           </div>
@@ -378,7 +437,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo && userInfo.idolNum }}
+                  {{ userInfo.idolNum }}
                 </div>
               </div>
             </div>
@@ -386,7 +445,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注者</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo && userInfo.fansNum }}
+                  {{ userInfo.fansNum }}
                 </div>
               </div>
             </div>
@@ -394,7 +453,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">获赞</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo && userInfo.blogLikeNum }}
+                  {{ userInfo.blogLikeNum }}
                 </div>
               </div>
             </div>
@@ -422,7 +481,8 @@
                 </div>
               </div>
               <img
-                src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/70dbcf3837cc47e5b951c7ff9e98ab48~tplv-k3u1fbpfcp-zoom-mark-crop-v2:460:460:0:0.awebp"
+                v-if="item.picUrl"
+                :src="item.picUrl[0]"
                 class="content-pic"
               />
             </div>
@@ -435,21 +495,24 @@
 </template>
 
 <script>
+import dev from "@/env";
+import { encode } from "@/utils/encode";
+import { getCookie } from "@/utils/cookie";
 import { Message } from "element-ui";
-import { getLocalStorage } from "../utils/store";
 
 export default {
   layout: "default",
   data() {
     return {
-      userInfo: null, // 用户信息
+      uploadURL: dev[process.env.NODE_ENV].ENV_API + "/upload", // 图片上传地址
+      token: "", // token
       menuList: [],
       listData: [], // "动态"列表数据
       messageList: [], // 精选留言
       content: "", // 输入的内容
       theme: "", // 当前选中的动态主题
       type: "new", // 当前选中的"动态"类型 -- recommend/hot/attention
-      picUrl: "", // 上传的图片
+      picUrl: [], // 上传的图片
       pageIndex: 2, // 当前动态是第几页
       pageSize: 15, // 当前请求数据数
       comment: "", // "动态"评论
@@ -463,7 +526,8 @@ export default {
       selectedMenu: "new", // 选中的menu
       showTheme: false, // 是否显示话题选择面板
       themeList: [], // 话题列表
-      selectedTheme: "" // 选中的主题
+      selectedTheme: "", // 选中的主题
+      showUpload: false // 是否展示图片上传按钮
     };
   },
   async asyncData({ $axios }) {
@@ -474,6 +538,12 @@ export default {
         theme: "", // 当前选中的动态主题
         pageIndex: 1,
         pageSize: 15
+      }
+    });
+
+    data.data.forEach(item => {
+      if (item.picUrl) {
+        item.picUrl = JSON.parse(item.picUrl);
       }
     });
 
@@ -488,8 +558,21 @@ export default {
       Message.error("精选留言获取失败");
     }
 
+    favList.data.forEach(item => {
+      if (item.picUrl) {
+        item.picUrl = JSON.parse(item.picUrl);
+      }
+    });
+
     // 获取"动态"类型
     const theme = await $axios.get("/theme/list");
+
+    if (theme.error_code !== 0) {
+      Message.error("动态类型获取失败");
+    }
+
+    // 获取“用户信息”
+    const userInfo = await $axios.get("/user/userInfo");
 
     if (theme.error_code !== 0) {
       Message.error("动态类型获取失败");
@@ -499,17 +582,20 @@ export default {
       listData: data.data, // 动态列表数据
       countNum: data.data.count, // 总"动态"条数
       messageList: favList.data, // 精选留言
-      menuList: theme.data // 动态类型
+      menuList: theme.data, // 动态类型
+      userInfo: userInfo.data // 用户信息
     };
   },
-  mounted() {
-    // 获取用户信息
-    this.getUserInfo();
+  created() {
+    // 获取token
+    this.getToken();
   },
   methods: {
-    // 获取用户信息
-    getUserInfo() {
-      this.userInfo = getLocalStorage("user_info");
+    getToken() {
+      const token = getCookie(this, "user_token");
+      // 将获取到token加入到请求头中
+      if (!token) return;
+      this.token = encode(token);
     },
     loadData() {
       // 当前页大于总页数时停止请求数据：
@@ -520,10 +606,16 @@ export default {
     },
     // 发布动态
     async publish() {
+      const picUrl = JSON.stringify(this.picUrl);
+
+      const tmpTheme = this.content.split("#");
+
+      this.content = tmpTheme[tmpTheme.length - 1];
+
       const data = await this.$axios.post("/dynamic/create", {
         theme: this.selectedTheme,
         content: this.content,
-        picUrl: this.picUrl
+        picUrl
       });
 
       if (data.error_code === 0) {
@@ -552,6 +644,9 @@ export default {
 
       if (data.error_code === 0) {
         data.data.forEach(item => {
+          if (item.picUrl) {
+            item.picUrl = JSON.parse(item.picUrl);
+          }
           this.listData.push(item);
         });
 
@@ -622,11 +717,6 @@ export default {
       }
 
       this.commentList = commentList.data; // 评论列表
-
-      // 没有评论数据则关闭评论面板
-      if (commentList.data.length === 0) {
-        this.dynamicId = "";
-      }
     },
     // 是否展示评论面板
     toggleComment(commenId) {
@@ -655,6 +745,8 @@ export default {
       this.showReplyToReply = "";
       // 隐藏选择"主题"面板
       this.showTheme = false;
+      // 隐藏图片上传按钮
+      this.showUpload = false;
     },
     // 评论"动态评论"
     async replyToComment(comment, dynamic) {
@@ -852,6 +944,29 @@ export default {
       this.showTheme = false;
 
       this.selectedTheme = data.themeName;
+    },
+    // 上传图片超过时提醒
+    limit() {
+      Message.warning("只允许上传三张图片作为封面！");
+    },
+    // 文件上传成功
+    uploadSuccess(response, file, fileList) {
+      if (response.error_code === 0) {
+        this.picUrl.push(response.url);
+      }
+    },
+    // 文件上传失败
+    uploadError(err, file, fileList) {
+      Message.error("文件上传失败");
+    },
+    handleRemove(file) {
+      console.log(file);
+    },
+    handlePictureCardPreview(file) {
+      console.log(file);
+    },
+    handleDownload(file) {
+      console.log(file);
     }
   }
 };

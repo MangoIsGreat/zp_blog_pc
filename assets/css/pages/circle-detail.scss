@@ -19,8 +19,9 @@
       .list-item-top {
         @include setBgColorAndPadding(100%, 16px 20px 0);
         box-sizing: border-box;
-        border-bottom: 1px solid $border-color;
         background-color: #fff;
+        padding-bottom: 20px;
+        box-sizing: border-box;
 
         .list-item-info {
           display: flex;
@@ -73,11 +74,31 @@
           font-size: $fontSize-large;
           color: $article-title-color2;
         }
+
+        .list-item-theme {
+          padding-left: 55px;
+          margin-bottom: 5px;
+          font-size: 14px;
+          color: $primary-color;
+        }
+
+        .list-item-photo {
+          display: flex;
+          margin: 5px 0 0;
+          padding: 0 40px;
+          box-sizing: border-box;
+
+          .list-item-photo-t {
+            width: 140px;
+            margin-right: 20px;
+          }
+        }
       }
 
       .list-item-operate {
         display: flex;
         background-color: #fff;
+        border-top: 1px solid $border-color;
 
         .list-item-operate-t {
           flex: 1;
