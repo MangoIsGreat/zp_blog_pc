@@ -87,7 +87,7 @@ export default {
       this.userInfo = userInfo;
     },
     openPage(path) {
-      window.open(path, "_blank");
+      window.open(`${path}?type=article`, "_blank");
     },
     login() {
       const isLogin = getLocalStorage("user_token") ? true : false;

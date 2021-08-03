@@ -28,7 +28,7 @@
         </div>
         <div class="panel-wrapper-body-item-right">
           <el-upload
-            :data="{ type: 'article' }"
+            :data="{ type: uploadType }"
             :action="uploadURL"
             list-type="picture-card"
             :auto-upload="true"
@@ -116,6 +116,8 @@ import { Message } from "element-ui";
 export default {
   data() {
     return {
+      editType: null, // 编辑的内容类型
+      uploadType: "", // 上传图片类型
       tagList: [], // 分类标签
       dialogImageUrl: "",
       dialogVisible: false,
@@ -133,8 +135,28 @@ export default {
 
     // 获取token
     this.getToken();
+
+    // 获取要发布的文章类型
+    this.getArtType();
+
+    // 设置上传文件类型
+    this.setUploadType();
   },
   methods: {
+    setUploadType() {
+      if (this.$route.query.type === "article") {
+        this.uploadType = "article";
+      } else if (this.$route.query.type === "news") {
+        this.uploadType = "news";
+      }
+    },
+    getArtType() {
+      if (this.$route.query.type) {
+        this.editType = this.$route.query.type;
+      } else {
+        Message.error("编辑的文章类型是必填参数！");
+      }
+    },
     publish() {
       if (this.selectedTagType < 0) {
         Message.warning("必须选择一个文章标签类型！");
@@ -162,7 +184,12 @@ export default {
       this.token = encode(token);
     },
     async getTagList() {
-      const data = await this.$axios.get("/tag/list");
+      let path = "/tag/list";
+      if (this.editType === "news") {
+        path = "/newstype/list";
+      }
+
+      const data = await this.$axios.get(path);
 
       if (data.error_code === 0) {
         this.tagList = data.data.rows;

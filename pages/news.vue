@@ -45,7 +45,11 @@
         <div class="send-news">
           <div class="sen-news-t">
             <div class="send-news-title">资讯投递</div>
-            <el-button type="primary" class="send-news-btn" size="mini"
+            <el-button
+              @click="publishNews"
+              type="primary"
+              class="send-news-btn"
+              size="mini"
               >立即投递</el-button
             >
           </div>
@@ -113,6 +117,10 @@ export default {
     loadData() {},
     toNewsPage() {
       window.open("/news-detail", "_blank");
+    },
+    // 打开投递“资讯”页
+    publishNews() {
+      window.open("/writing?type=news", "_blank");
     }
   }
 };

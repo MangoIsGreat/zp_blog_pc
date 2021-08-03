@@ -6,6 +6,7 @@
           class="tit-input"
           v-model="articleTitle"
           placeholder="输入文章标题..."
+          :maxlength="30"
         ></el-input>
         <div class="header-wrapper-right">
           <el-button class="draft" size="small">草稿箱</el-button>
@@ -47,6 +48,7 @@ export default {
   layout: "fullpage",
   data() {
     return {
+      editType: null, // 编辑的内容类型
       handbook: "",
       articleTitle: "", // 文章标题
       avatarUrl: "",
@@ -55,6 +57,13 @@ export default {
       isShowPanel: false, // 是否展示弹框
       writeContent: "" // 使用正则过滤掉标签之后的文本
     };
+  },
+  created() {
+    if (this.$route.query.type) {
+      this.editType = this.$route.query.type;
+    } else {
+      Message.error("编辑的文章类型是必填参数！");
+    }
   },
   methods: {
     cancelShowPanel() {
@@ -66,12 +75,12 @@ export default {
       let description = value.description; // 文章描述
 
       if (!this.articleTitle) {
-        Message.warning("文章标题不能为空！");
+        Message.warning("标题不能为空！");
         return;
       }
 
       if (!this.mdValue) {
-        Message.warning("文章内容不能为空！");
+        Message.warning("内容不能为空！");
         return;
       }
 
@@ -87,7 +96,12 @@ export default {
         titlePic: value.cover_url
       };
 
-      const data = await this.$axios.post("/blog/create", params);
+      let path = "/blog/create";
+      if (this.editType === "news") {
+        path = "/news/create";
+      }
+
+      const data = await this.$axios.post(path, params);
 
       if (data.error_code === 0) {
         Message.success("文章发表成功！");
@@ -97,6 +111,8 @@ export default {
         this.handbook = "";
 
         this.isShowPanel = false;
+      } else {
+        Message.success("文章发布失败！");
       }
     },
     input(value, render) {
