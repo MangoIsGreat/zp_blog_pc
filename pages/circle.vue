@@ -193,10 +193,10 @@
                   </el-button>
                 </div>
                 <div class="list-item-desc">
-                  {{ item.content }}
-                </div>
-                <div class="list-item-theme" v-if="item.theme">
-                  {{ `#${item.theme}#` }}
+                  <span class="list-item-desc-theme" v-if="item.theme">{{
+                    `#${item.theme}# `
+                  }}</span
+                  >{{ item.content }}
                 </div>
               </div>
               <div class="list-item-photo">
@@ -420,7 +420,7 @@
         </div>
       </div>
       <div class="circle-info">
-        <div class="circle-info-authorInfo">
+        <div class="circle-info-authorInfo" v-if="userInfo">
           <div class="authorInfo-top">
             <img :src="userInfo.avatar" class="authorInfo-top-avatar" />
             <div class="authorInfo-top-info">
@@ -480,11 +480,11 @@
                   </div>
                 </div>
               </div>
-              <img
+              <div
                 v-if="item.picUrl"
-                :src="item.picUrl[0]"
+                :style="{ backgroundImage: `url(${item.picUrl})` }"
                 class="content-pic"
-              />
+              ></div>
             </div>
           </div>
         </div>

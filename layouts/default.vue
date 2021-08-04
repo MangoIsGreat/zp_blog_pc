@@ -11,7 +11,7 @@
     <div class="to-top" @click="toTop">
       <i class="iconfont icon-toTop"></i>
     </div>
-    <div class="to-comment">
+    <div class="to-comment" @click="toComment">
       <i class="iconfont icon-pinglun"></i>
     </div>
     <!-- 登录组件 -->
@@ -35,6 +35,9 @@ export default {
     },
     toTop() {
       document.getElementsByClassName("el-main")[0].scrollTop = 0;
+    },
+    toComment() {
+      window.open("/circle", "_blank");
     }
   }
 };

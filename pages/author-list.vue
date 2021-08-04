@@ -1,6 +1,6 @@
 <template>
   <div class="author-list-wrapper">
-    <header-type :typeData="typeList" />
+    <!-- <header-type :typeData="typeList" /> -->
     <div class="author-list-wrapper-body">
       <div class="list-content">
         <ul class="infinite-list" v-infinite-scroll="loadData">
@@ -10,20 +10,25 @@
             class="infinite-list-item"
           >
             <div class="item-left">
-              <img
-                class="avatar"
-                src="https://sf3-ttcdn-tos.pstatp.com/img/user-avatar/9c947eb58aadae6e42bc00df6b99bc9b~300x300.image"
-                alt=""
-              />
+              <img class="avatar" :src="item.avatar" alt="" />
               <div class="item-left-info">
-                <div class="item-left-info-title">橘猫很方</div>
-                <div class="item-left-info-job">前端开发工程师</div>
+                <div class="item-left-info-title">{{ item.nickname }}</div>
+                <div class="item-left-info-job">{{ item.profession }}</div>
                 <div class="item-left-info-bottomLine">
-                  获得599赞&nbsp;·&nbsp;97229阅读
+                  {{ item.blogReadNum }}阅读&nbsp;·&nbsp;获得{{
+                    item.blogLikeNum
+                  }}赞
                 </div>
               </div>
             </div>
-            <el-button class="pay-attention" size="mini">关注</el-button>
+            <el-button
+              @click="follow(item.id)"
+              v-if="!item.isSelf"
+              class="pay-attention"
+              size="mini"
+              ><span v-if="!item.isAttention">关注</span
+              ><span class="not-attention" v-else>已关注</span></el-button
+            >
           </li>
         </ul>
       </div>
@@ -36,40 +41,77 @@ export default {
   layout: "default",
   data() {
     return {
-      typeList: [
-        {
-          name: "推荐"
-        },
-        {
-          name: "后端"
-        },
-        {
-          name: "前端"
-        },
-        {
-          name: "Android"
-        },
-        {
-          name: "ios"
-        },
-        {
-          name: "人工智能"
-        },
-        {
-          name: "开发工具"
-        },
-        {
-          name: "代码人生"
-        },
-        {
-          name: "阅读"
-        }
-      ],
-      listData: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      listData: [],
+      pageIndex: 2,
+      pageSize: 20
+    };
+  },
+  async asyncData({ $axios }) {
+    // 获取"动态"列表数据
+    const data = await $axios.get("/author/ranking", {
+      params: {
+        pageIndex: 1,
+        pageSize: 20
+      }
+    });
+
+    if (data.error_code !== 0) {
+      Message.error("数据获取失败");
+    }
+
+    return {
+      listData: data.data.rows, // 列表数据
+      countNum: data.data.count // 总数据长度
     };
   },
   methods: {
-    loadData() {}
+    loadData() {
+      // 当前页大于总页数时停止请求数据：
+      if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
+
+      // 下拉加载更多：
+      this.getAuthorList();
+    },
+    // 获取作者列表数据
+    async getAuthorList() {
+      const listData = await this.$axios.get("/author/ranking", {
+        params: {
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize
+        }
+      });
+
+      if (listData.error_code === 0) {
+        this.listData.push(...listData.data.rows);
+
+        // 当前页数+1
+        this.pageIndex += 1;
+      } else {
+        Message.error("更多文章获取失败！");
+      }
+    },
+    // 关注作者
+    async follow(id) {
+      const data = await this.$axios.post("/fans/follow", { leader: id });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.listData.forEach(item => {
+            if (item.id === id) {
+              item.isAttention = true;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.listData.forEach(item => {
+            if (item.id === id) {
+              item.isAttention = false;
+            }
+          });
+        }
+      } else {
+        Message.error("关注失败！");
+      }
+    }
   }
 };
 </script>

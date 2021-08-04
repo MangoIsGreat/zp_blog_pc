@@ -213,13 +213,11 @@
               line-height: 24px;
               font-size: $fontSize-large;
               color: $article-title-color2;
-            }
 
-            .list-item-theme {
-              padding-left: 55px;
-              margin-bottom: 5px;
-              font-size: 14px;
-              color: $primary-color;
+              .list-item-desc-theme {
+                font-size: 14px;
+                color: $primary-color;
+              }
             }
           }
 
@@ -569,6 +567,9 @@
             width: 68px;
             height: 68px;
             border-radius: 4px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
           }
 
           .content-left {
