@@ -3,19 +3,21 @@
     <div class="article-wrapper-content">
       <div class="content-innerBox">
         <h1 class="main-title-name">
-          三星正在利用版权索赔来警告泄密者
+          {{ articleInfo.title }}
         </h1>
         <div class="news-article-desc">
-          <div class="news-article-desc-item">科技热点</div>
-          <div class="news-article-desc-item">行业动态</div>
+          <div class="news-article-desc-item">
+            {{ articleInfo.User.nickname }}
+          </div>
+          <div class="news-article-desc-item">
+            {{ articleInfo.NewsType.tagName }}
+          </div>
           <div class="news-article-desc-item">18小时前</div>
-          <div class="news-article-desc-item">阅读&nbsp;55</div>
+          <div class="news-article-desc-item">
+            阅读&nbsp;{{ articleInfo.newsReadNum }}
+          </div>
         </div>
-        <img
-          class="theme-pic"
-          src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1d2fe1184be4deaae589cc683144613~tplv-k3u1fbpfcp-watermark.image"
-          alt=""
-        />
+        <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
         <div class="markdown-body" v-html="mdContent"></div>
       </div>
       <div class="more-article-list">
@@ -27,16 +29,20 @@
             v-for="(item, index) in moreList"
             :key="index"
             class="infinite-list-item list-item"
-            @click="toNewsPage"
+            @click="toNewsPage(item.id)"
           >
             <div class="item-content">
               <div class="content-left">
-                <h3 class="title">手写Vue2系列之初始渲染</h3>
+                <h3 class="title">{{ item.title }}</h3>
                 <div class="bottom-line">
-                  <div class="name bottom-line-item">掘金小电台</div>
+                  <div class="name bottom-line-item">
+                    {{ item.User.nickname }}
+                  </div>
                   <div class="time bottom-line-item">20小时前</div>
                   <div class="like bottom-line-item">
-                    1点赞&nbsp;·&nbsp;0评论
+                    {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
+                      item.newsReadNum
+                    }}阅读
                   </div>
                 </div>
               </div>
@@ -49,7 +55,11 @@
       <div class="send-news">
         <div class="sen-news-t">
           <div class="send-news-title">资讯投递</div>
-          <el-button type="primary" class="send-news-btn" size="mini"
+          <el-button
+            @click="publishNews"
+            type="primary"
+            class="send-news-btn"
+            size="mini"
             >立即投递</el-button
           >
         </div>
@@ -62,15 +72,23 @@
         <div class="more-article-content">
           <div
             class="more-article-content-item"
-            v-for="(item, index) in hotList"
+            v-for="(item, index) in newList"
             :key="index"
+            @click="toNewsPage(item.id)"
           >
             <div class="content-item-title">
-              没内鬼，来点干货！SQL优化和诊断
+              {{ item.title }}
             </div>
             <div class="content-item-line">
-              <i class="iconfont icon-dianzan">&nbsp;273</i>
-              <i class="iconfont icon-liaotian">&nbsp;27</i>
+              <i
+                :style="{
+                  color: item.isLike ? '#2de938' : '#b2bac2'
+                }"
+                class="iconfont icon-dianzan1"
+                @click.stop="likeNewArt(item.id)"
+                >&nbsp;{{ item.newsLikeNum }}</i
+              >
+              <i class="iconfont icon-yanjing">&nbsp;{{ item.newsReadNum }}</i>
             </div>
           </div>
         </div>
@@ -82,23 +100,48 @@
             class="more-article-content-item"
             v-for="(item, index) in hotList"
             :key="index"
+            @click="toNewsPage(item.id)"
           >
             <div class="content-item-title">
-              没内鬼，来点干货！SQL优化和诊断
+              {{ item.title }}
             </div>
             <div class="content-item-line">
-              <i class="iconfont icon-dianzan">&nbsp;273</i>
-              <i class="iconfont icon-liaotian">&nbsp;27</i>
+              <i
+                :style="{
+                  color: item.isLike ? '#2de938' : '#b2bac2'
+                }"
+                class="iconfont icon-dianzan1"
+                @click.stop="likeHotArt(item.id)"
+                >&nbsp;{{ item.newsLikeNum }}</i
+              >
+              <i class="iconfont icon-yanjing">&nbsp;{{ item.newsReadNum }}</i>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="fixed-left-box">
-      <i class="iconfont icon-dianzan"></i>
-      <i class="iconfont icon-liaotian"></i>
-      <i class="iconfont icon-liaotian"></i>
-      <i class="iconfont icon-liaotian"></i>
+    <div
+      class="fixed-left-box"
+      :style="{ left: this.fixedLeft + 'px', top: this.fixedTop + 'px' }"
+    >
+      <div
+        @click="likeArt"
+        class="icon-item icon-item-badge"
+        :badge="articleInfo.newsLikeNum"
+      >
+        <i
+          :style="{
+            color: articleInfo.isLike ? '#2de938' : '#b2bac2'
+          }"
+          class="iconfont icon-dianzan1"
+        ></i>
+      </div>
+      <div class="icon-item icon-item-badge" :badge="articleInfo.newsReadNum">
+        <i class="iconfont icon-yanjing"></i>
+      </div>
+      <div class="icon-item">
+        <i class="iconfont icon-xinfangjubao"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -113,10 +156,14 @@ export default {
     return {
       hotList: [], // 热门文章推荐
       moreList: [], // 相关文章推荐
+      pageSize: 10, //页容量
+      pageIndex: 2, // 当前页
+      moreList: [], // 相关文章推荐
+      fixedLeft: 200, // 左侧点赞面板距离左侧位置
+      fixedTop: 160 // 左侧点赞面板距离顶部位置
     };
   },
   async asyncData({ query, $axios }) {
-    console.log(111, query)
     // 获取文章详情
     const data = await $axios.get("/news/article", {
       params: { id: query.id }
@@ -135,6 +182,13 @@ export default {
       Message.error("获取热门文章推荐失败！");
     }
 
+    // 获取最新文章推荐
+    const newList = await $axios.get("/news/new", { params: { id: query.id } });
+
+    if (newList.error_code !== 0) {
+      Message.error("获取热门文章推荐失败！");
+    }
+
     // 获取相关文章推荐
     const moreList = await $axios.get("/news/more", {
       params: { id: query.id, pageIndex: 1, pageSize: 10 }
@@ -148,14 +202,131 @@ export default {
       mdContent, // 博客内容
       articleInfo: data.data, // 作者信息
       hotList: hotList.data.rows, // 热门文章推荐
-      moreList: moreList.data.rows // 更多相关文章推荐
+      newList: newList.data.rows, // 最新文章推荐
+      moreList: moreList.data.rows, // 更多相关文章推荐
+      countNum: moreList.data.count // 更多文章总文章数
     };
   },
+  mounted() {
+    // 实时更新左侧操作面板的位置：
+    this.setFixed();
+  },
   methods: {
-    loadData() {},
-    toNewsPage() {
-      window.open("/news-detail", "_blank");
+    setFixed() {
+      window.addEventListener("resize", this.dealWithPosition);
+    },
+    dealWithPosition() {
+      this.fixedLeft = document.body.clientWidth * 0.1042;
+      this.fixedTop = document.body.clientHeight * 0.083;
+    },
+    loadData() {
+      // 当前页大于总页数时停止请求数据：
+      if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
+
+      // 下拉加载更多：
+      this.getMoreNews();
+    },
+    toNewsPage(id) {
+      window.open(`/news-detail?id=${id}`, "_blank");
+    },
+    // 获取更多资讯列表
+    async getMoreNews() {
+      const listData = await this.$axios.get("/news/more", {
+        params: {
+          id: this.$route.query.id,
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize
+        }
+      });
+
+      if (listData.error_code === 0) {
+        listData.data.rows.forEach(item => {
+          this.moreList.push(item);
+        });
+
+        // 当前页数+1
+        this.pageIndex += 1;
+      } else {
+        Message.error("更多文章获取失败！");
+      }
+    },
+    // 点赞该篇资讯
+    async likeArt() {
+      const data = await this.$axios.post("/newslike/like", {
+        newsId: this.$route.query.id
+      });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.articleInfo.isLike = true;
+          this.articleInfo.newsLikeNum += 1;
+        } else if (data.data === "cancel") {
+          this.articleInfo.isLike = false;
+          this.articleInfo.newsLikeNum -= 1;
+        }
+      } else {
+        Message.error("操作失败！");
+      }
+    },
+    // 点赞最新资讯
+    async likeNewArt(id) {
+      const data = await this.$axios.post("/newslike/like", {
+        newsId: id
+      });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.newList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = true;
+              item.newsLikeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.newList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = true;
+              item.newsLikeNum--;
+            }
+          });
+        }
+      } else {
+        Message.error("操作失败！");
+      }
+    },
+    // 点赞最热资讯
+    async likeHotArt(id) {
+      const data = await this.$axios.post("/newslike/like", {
+        newsId: id
+      });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.hotList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = true;
+              item.newsLikeNum++;
+            }
+          });
+        } else if (data.data === "cancel") {
+          this.hotList.forEach(item => {
+            if (item.id === id) {
+              item.isLike = true;
+              item.newsLikeNum--;
+            }
+          });
+        }
+      } else {
+        Message.error("操作失败！");
+      }
+    },
+    // 打开投递“资讯”页
+    publishNews() {
+      window.open("/writing?type=news", "_blank");
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.dealWithPosition);
   }
 };
 </script>
