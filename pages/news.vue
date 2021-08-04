@@ -2,40 +2,64 @@
   <div class="news-wrapper">
     <div class="news-type-line">
       <div class="news-type-line-box">
-        <div class="type-item" v-for="(item, index) in typeList" :key="index">
-          {{ item.name }}
+        <div
+          class="type-item"
+          @click="selectTag(item.tag_type)"
+          v-for="(item, index) in tagList"
+          :key="index"
+          :style="{
+            color: item.tag_type === selectedTag ? '#00c58e' : '#4e5969'
+          }"
+        >
+          {{ item.tag_name }}
         </div>
       </div>
     </div>
     <div class="news-content-box">
       <div class="list-box">
         <div class="list-box-header">
-          <div class="list-box-header-item">最新</div>
-          <div class="list-box-header-item">热榜</div>
+          <div
+            class="list-box-header-item"
+            :style="{ color: rankingType === 'new' ? '#00c58e' : '#4e5969' }"
+            @click="selectStatus('new')"
+          >
+            最新
+          </div>
+          <div
+            class="list-box-header-item"
+            :style="{ color: rankingType === 'hot' ? '#00c58e' : '#4e5969' }"
+            @click="selectStatus('hot')"
+          >
+            热榜
+          </div>
         </div>
         <ul class="infinite-list" v-infinite-scroll="loadData">
           <li
-            v-for="(item, index) in newsList"
+            v-for="(item, index) in listData"
             :key="index"
             class="infinite-list-item"
-            @click="toNewsPage"
+            @click="toNewsPage(item.id)"
           >
             <div class="list-item-content">
               <h3 class="item-content-title">
-                iPhone手机再现 Wi-Fi 漏洞，更易中招且更难修复
+                {{ item.title }}
               </h3>
               <div class="item-content-desc">
-                发现该漏洞的安全研究员表示，新的漏洞会让一个仅仅处于名为"%secretclub%power
-                "网络范围内的iPhone手机失去所有WiFi功能，中招之后必须完全重置手机才能恢复。
+                {{ item.description }}
               </div>
               <div class="item-content-line">
-                <div class="line-author">最新鲜的大厂新闻</div>
+                <div class="line-author">{{ item.User.nickname }}</div>
                 <div class="line-time">9小时前</div>
-                <div class="like">1点赞&nbsp;·&nbsp;2评论</div>
+                <div class="like">
+                  {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
+                    item.newsReadNum
+                  }}阅读
+                </div>
               </div>
             </div>
             <img
-              src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6f6586f017084f5eb01976427fcee587~tplv-k3u1fbpfcp-zoom-mark-crop-v2:0:0:486:342.awebp"
+              v-if="item.titlePic"
+              :src="item.titlePic"
               class="list-item-pic"
             />
           </li>
@@ -96,31 +120,97 @@ export default {
   layout: "default",
   data() {
     return {
-      typeList: [
-        {
-          name: "全部"
-        },
-        {
-          name: "行业动态"
-        },
-        {
-          name: "软件更新"
-        },
-        {
-          name: "编程语言"
-        }
-      ],
-      newsList: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      selectedTag: 0, //当前选中的标签
+      pageSize: 15, //页容量
+      pageIndex: 2, // 当前页
+      listData: [], // 博客列表
+      rankingType: "new" // 获取文章的排列顺序，最新/最热
     };
   },
+  async asyncData({ $axios }) {
+    const data = await $axios.get("/newstype/list");
+
+    if (data.error_code === 0) {
+      const listData = await $axios.get("/news/list", {
+        params: {
+          tag: data.data.rows[0].tag_type,
+          rankingType: "new",
+          pageSize: 15,
+          pageIndex: 1
+        }
+      });
+
+      if (listData.error_code === 0) {
+        return {
+          tagList: data.data.rows,
+          listData: listData.data.rows,
+          countNum: listData.data.count
+        };
+      } else {
+        Message.error("数据获取失败");
+      }
+    } else {
+      Message.error("标签类型获取失败");
+    }
+  },
+  created() {
+    // 设置默认选中标签类型：
+    this.selectedTag = this.tagList[0].tag_type;
+  },
   methods: {
-    loadData() {},
-    toNewsPage() {
-      window.open("/news-detail", "_blank");
+    // 获取博客列表
+    async getNewsList() {
+      const listData = await this.$axios.get("/news/list", {
+        params: {
+          tag: this.selectedTag,
+          rankingType: this.rankingType,
+          pageSize: this.pageSize,
+          pageIndex: this.pageIndex
+        }
+      });
+
+      if (listData.error_code === 0) {
+        listData.data.rows.forEach(item => {
+          this.listData.push(item);
+        });
+
+        // 当前页数+1
+        this.pageIndex += 1;
+      } else {
+        Message.error("更多文章获取失败！");
+      }
+    },
+    loadData() {
+      // 当前页大于总页数时停止请求数据：
+      if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
+
+      // 下拉加载更多：
+      this.getNewsList();
+    },
+    toNewsPage(id) {
+      window.open(`/news-detail?id=${id}`, "_blank");
     },
     // 打开投递“资讯”页
     publishNews() {
       window.open("/writing?type=news", "_blank");
+    },
+    async selectTag(value) {
+      this.selectedTag = value;
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
+      this.getNewsList();
+    },
+    selectStatus(value) {
+      this.rankingType = value;
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
+      this.getNewsList();
     }
   }
 };

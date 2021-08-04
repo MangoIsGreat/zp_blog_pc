@@ -36,6 +36,7 @@
         @publish="publish"
         @cancel="cancelShowPanel"
         v-if="isShowPanel"
+        :type="uploadType"
       />
     </no-ssr>
   </div>
@@ -49,6 +50,7 @@ export default {
   data() {
     return {
       editType: null, // 编辑的内容类型
+      uploadType: "", // 上传图片类型
       handbook: "",
       articleTitle: "", // 文章标题
       avatarUrl: "",
@@ -64,8 +66,18 @@ export default {
     } else {
       Message.error("编辑的文章类型是必填参数！");
     }
+
+    // 获取发布文章类型
+    this.getPublishType();
   },
   methods: {
+    getPublishType() {
+      if (this.$route.query.type === "article") {
+        this.uploadType = "article";
+      } else if (this.$route.query.type === "news") {
+        this.uploadType = "news";
+      }
+    },
     cancelShowPanel() {
       // 关闭弹框
       if (!this.isShowPanel) return;

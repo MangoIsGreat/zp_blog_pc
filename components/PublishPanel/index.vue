@@ -114,6 +114,7 @@ import { encode } from "@/utils/encode";
 import { Message } from "element-ui";
 
 export default {
+  props: ["type"],
   data() {
     return {
       editType: null, // 编辑的内容类型
@@ -136,25 +137,15 @@ export default {
     // 获取token
     this.getToken();
 
-    // 获取要发布的文章类型
-    this.getArtType();
-
     // 设置上传文件类型
     this.setUploadType();
   },
   methods: {
     setUploadType() {
-      if (this.$route.query.type === "article") {
+      if (this.type === "article") {
         this.uploadType = "article";
-      } else if (this.$route.query.type === "news") {
+      } else if (this.type === "news") {
         this.uploadType = "news";
-      }
-    },
-    getArtType() {
-      if (this.$route.query.type) {
-        this.editType = this.$route.query.type;
-      } else {
-        Message.error("编辑的文章类型是必填参数！");
       }
     },
     publish() {
@@ -185,7 +176,7 @@ export default {
     },
     async getTagList() {
       let path = "/tag/list";
-      if (this.editType === "news") {
+      if (this.type === "news") {
         path = "/newstype/list";
       }
 

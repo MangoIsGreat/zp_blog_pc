@@ -192,11 +192,15 @@ export default {
         }
       });
 
-      return {
-        tagList: data.data.rows,
-        listData: listData.data.rows,
-        countNum: listData.data.count
-      };
+      if (listData.error_code === 0) {
+        return {
+          tagList: data.data.rows,
+          listData: listData.data.rows,
+          countNum: listData.data.count
+        };
+      } else {
+        Message.error("数据获取失败");
+      }
     } else {
       Message.error("标签类型获取失败");
     }

@@ -16,91 +16,7 @@
           src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1d2fe1184be4deaae589cc683144613~tplv-k3u1fbpfcp-watermark.image"
           alt=""
         />
-        <div class="markdown-body">
-          苹果并不是唯一一个打击主要泄密者的科技巨头。
-          正如Reddit用户所指出的，AllAboutSamsung的Max
-          Jambor警告说，三星正在利用版权索赔来警告泄密者。
-          Jambor说，一些图片将在几天内消失，据说这
-          "只是开始"。据称，三星只是在追捕原始传播者，而不是报道这些泄密事件的媒体。小米在最近几天也对泄密事件进行了打击。
-          像这样的举动并不令人惊讶。泄密通常是对公司机密的破坏。泄密者通常未经许可分享内部材料。但每次出现泄密事件时，三星声称会使公司名誉受损，认为它们抢走了事件的风头，甚至抑制了销售。
-          三星打击泄密事件在实践中是否有很大的影响可能是另一回事。毕竟，泄密事件往往传播得很快，而且可能不需要很长时间就能传播照片和新闻照片，同时删除源帖子。这对阻止基于泄密也没有什么作用。
-          作者：科技热点 链接：https://juejin.cn/news/6982450163197411341
-          来源：掘金
-          著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
-        </div>
-        <div class="comment-body-wrapper">
-          <div class="comment-body-innerBox">
-            <div class="make-comments">
-              <div class="first-line">
-                <img
-                  src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
-                  alt=""
-                  class="avatar"
-                />
-                <el-input
-                  class="input-btn"
-                  v-model="comment"
-                  placeholder="输入评论..."
-                ></el-input>
-              </div>
-              <div class="second-line">
-                <div class="emoj">表情</div>
-                <el-button size="small" type="primary">评论</el-button>
-              </div>
-            </div>
-            <div class="comments-main-body">
-              <div class="comments-main-body-innerBox">
-                <img
-                  class="avatar"
-                  src="https://sf3-ttcdn-tos.pstatp.com/img/user-avatar/96edaca0277d56b4232e2aebafa2d982~300x300.image"
-                  alt=""
-                />
-                <div class="comments-main-body-innerBox-right">
-                  <div class="user-line">
-                    <div class="user-line-name">彭道宽</div>
-                    <div class="user-line-sign">
-                      前端小兵成长营前端小兵成长营
-                    </div>
-                  </div>
-                  <div class="comments-line">已阅</div>
-                  <div class="bottom-line">
-                    <div class="time">52分钟前</div>
-                    <div class="bottom-line-right">
-                      <i class="iconfont icon-dianzan"></i>
-                      <i class="iconfont icon-liaotian">&nbsp;回复</i>
-                    </div>
-                  </div>
-                  <div class="comments-reply-body">
-                    <div class="comments-reply-body-line">
-                      <img
-                        class="avatar"
-                        src="https://sf1-ttcdn-tos.pstatp.com/img/user-avatar/bce60f0d6d1bc92907c435bb69b4f9c1~300x300.image"
-                        alt=""
-                      />
-                      <div class="comments-reply-body-line-right">
-                        <div class="reply-line-author-info">
-                          <div class="username">橘猫很方</div>
-                          <div class="identity">(作者)</div>
-                          <div class="sign">前端小兵成长营前端小兵成长营</div>
-                        </div>
-                        <div class="reply-line-comments-body">
-                          已阅
-                        </div>
-                        <div class="reply-line-bottom">
-                          <div class="time">48分钟前</div>
-                          <div class="bottom-right">
-                            <i class="iconfont icon-dianzan"></i>
-                            <i class="iconfont icon-liaotian">&nbsp;回复</i>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="markdown-body" v-html="mdContent"></div>
       </div>
       <div class="more-article-list">
         <div class="more-article-list-header">
@@ -108,7 +24,7 @@
         </div>
         <ul class="infinite-list list-wrapper" v-infinite-scroll="loadData">
           <li
-            v-for="(item, index) in newsList"
+            v-for="(item, index) in moreList"
             :key="index"
             class="infinite-list-item list-item"
             @click="toNewsPage"
@@ -146,7 +62,7 @@
         <div class="more-article-content">
           <div
             class="more-article-content-item"
-            v-for="(item, index) in newNewsList"
+            v-for="(item, index) in hotList"
             :key="index"
           >
             <div class="content-item-title">
@@ -164,7 +80,7 @@
         <div class="more-article-content">
           <div
             class="more-article-content-item"
-            v-for="(item, index) in hotNewsList"
+            v-for="(item, index) in hotList"
             :key="index"
           >
             <div class="content-item-title">
@@ -188,14 +104,51 @@
 </template>
 
 <script>
+import marked from "marked";
+import { Message } from "element-ui";
+
 export default {
   layout: "default",
   data() {
     return {
-      newsList: [1, 1, 1, 1],
-      newNewsList: [1, 1, 1, 1, 1],
-      hotNewsList: [1, 1, 1, 1, 1],
-      comment: ""
+      hotList: [], // 热门文章推荐
+      moreList: [], // 相关文章推荐
+    };
+  },
+  async asyncData({ query, $axios }) {
+    console.log(111, query)
+    // 获取文章详情
+    const data = await $axios.get("/news/article", {
+      params: { id: query.id }
+    });
+
+    if (data.error_code !== 0) {
+      Message.error("获取文章失败！");
+    }
+
+    const mdContent = marked(data.data.content || "");
+
+    // 获取热门文章推荐
+    const hotList = await $axios.get("/news/hot", { params: { id: query.id } });
+
+    if (hotList.error_code !== 0) {
+      Message.error("获取热门文章推荐失败！");
+    }
+
+    // 获取相关文章推荐
+    const moreList = await $axios.get("/news/more", {
+      params: { id: query.id, pageIndex: 1, pageSize: 10 }
+    });
+
+    if (moreList.error_code !== 0) {
+      Message.error("获取相关文章推荐失败！");
+    }
+
+    return {
+      mdContent, // 博客内容
+      articleInfo: data.data, // 作者信息
+      hotList: hotList.data.rows, // 热门文章推荐
+      moreList: moreList.data.rows // 更多相关文章推荐
     };
   },
   methods: {
