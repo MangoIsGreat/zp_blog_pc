@@ -96,7 +96,7 @@
         <div class="content-right">
           <div class="author-list">
             <div class="author-list-item author-list-title">
-              <i class="iconfont icon-xunzhang1"></i>
+              <i class="iconfont icon-xunzhang"></i>
               <span>作者榜</span>
             </div>
             <div class="author-list-item author-list-content">
@@ -109,7 +109,6 @@
                 <div class="author-info">
                   <div class="author-name">
                     <span>{{ item.nickname }}</span>
-                    <i>+</i>
                   </div>
                   <div class="author-desc">{{ item.signature }}</div>
                 </div>

@@ -177,7 +177,7 @@
                         <div class="details-job">
                           {{ item.userInfo.profession }}
                         </div>
-                        &nbsp; ·&nbsp;
+                        &nbsp; <span v-if="item.userInfo.profession">·</span>&nbsp;
                         <div class="details-time">一分钟前</div>
                       </div>
                     </div>
@@ -297,13 +297,13 @@
                           >
                           <i
                             class="iconfont icon-pinglun"
-                            @click.stop="showReply = true"
+                            @click.stop="showReply = itm.id"
                             >&nbsp;回复</i
                           >
                         </div>
                       </div>
                       <!-- 回复评论 -->
-                      <div v-if="showReply" class="make-comments" @click.stop>
+                      <div v-if="showReply === itm.id" class="make-comments" @click.stop>
                         <div class="first-line">
                           <img
                             src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
@@ -420,7 +420,11 @@
         </div>
       </div>
       <div class="circle-info">
-        <div class="circle-info-authorInfo" v-if="userInfo">
+        <div
+          @click="toUserPage(userInfo.id)"
+          class="circle-info-authorInfo"
+          v-if="userInfo"
+        >
           <div class="authorInfo-top">
             <img :src="userInfo.avatar" class="authorInfo-top-avatar" />
             <div class="authorInfo-top-info">
@@ -876,6 +880,10 @@ export default {
     // 跳转至动态详情页
     toDetailPage(id) {
       window.open(`/circle-detail?id=${id}`);
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user?id=${id}`);
     },
     // 选中标签类型
     setMenu(value) {
