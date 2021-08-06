@@ -1,6 +1,8 @@
 @import "/assets/css/config/common.scss";
 
 .user-wrapper {
+  height: calc(100% - 60px);
+
   .user-wrapper-innerBox {
     width: 960px;
     margin: 20px auto;
@@ -66,17 +68,86 @@
           display: flex;
           border-bottom: 1px solid $border-color;
           color: $article-fontcolor;
-          font-size: 16px;
+          font-size: 15px;
           background-color: #fff;
 
           .content-type-item {
+            position: relative;
             line-height: 50px;
             padding: 0 20px;
             cursor: pointer;
+
+            .iconfont {
+              font-size: 12px;
+              color: #b2bac2;
+            }
+
+            .like-panel,
+            .more-panel {
+              position: absolute;
+              top: 60px;
+              width: 92px;
+              padding: 7px 0;
+              background-color: #fff;
+              box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+              border: 1px solid #f3f3f4;
+              color: #4e5969;
+
+              .like-panel-item {
+                line-height: 20px;
+                padding: 7px 0;
+                text-align: center;
+                cursor: pointer;
+
+                &:hover {
+                  background-color: #fafafa;
+                }
+              }
+
+              &::before {
+                @include triangle(10px, 10px, 45px);
+                border-color: #f3f3f4;
+              }
+            }
           }
         }
 
         .innerBox-content-content-list {
+          // 文章头部
+          .innerBox-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            font-size: 15px;
+            line-height: 50px;
+            background-color: #fff;
+            border-bottom: 1px solid $border-color;
+
+            .innerBox-content-header-name {
+              font-weight: 700;
+              color: $article-title-color2;
+            }
+
+            .innerBox-content-header-type {
+              display: flex;
+              color: $font-color-gray;
+              align-items: center;
+
+              .header-type-item {
+                padding-left: 10px;
+                cursor: pointer;
+              }
+
+              .header-line {
+                width: 1px;
+                height: 14px;
+                background-color: #d9dde1;
+                margin-left: 10px;
+              }
+            }
+          }
+
           .list-wrapper {
             width: 100%;
 
@@ -478,6 +549,148 @@
                 }
               }
             }
+
+            // 资讯列表
+            .infinite-list-item-news {
+              display: flex;
+              width: 100%;
+              box-sizing: border-box;
+              padding: 16px 20px;
+              border-bottom: 1px solid $border-color;
+              cursor: pointer;
+              background-color: #fff;
+
+              &:nth-last-child(1) {
+                border: none;
+              }
+
+              .list-item-pic {
+                width: 162px;
+                height: 114px;
+              }
+
+              .list-item-content {
+                flex: 1;
+                padding-right: 20px;
+
+                .item-content-title {
+                  font-size: $fontSize-normal;
+                  font-weight: 700;
+                  margin-bottom: 12px;
+                  color: $article-title-color;
+                  @include ellipsis();
+                }
+
+                .item-content-desc {
+                  margin-bottom: 20px;
+                  font-size: $fontSize-middle;
+                  color: $article-fontcolor;
+                  line-height: 22px;
+                  @include ellipsis2();
+                }
+
+                .item-content-line {
+                  display: flex;
+                  font-size: $fontSize-small;
+                  color: $font-color-gray;
+
+                  .line-author {
+                    padding-right: 10px;
+                    cursor: pointer;
+                  }
+
+                  .like {
+                    padding-left: 10px;
+                    cursor: pointer;
+                  }
+
+                  .line-time {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    border-left: 1px solid $border-color;
+                    border-right: 1px solid $border-color;
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
+
+            // 更多-收藏
+            .infinite-list-item-collection {
+              display: flex;
+              justify-content: space-between;
+              padding: 10px 30px;
+              box-sizing: border-box;
+              line-height: 40px;
+              cursor: pointer;
+              font-size: 14px;
+              color: $article-title-color;
+              border-bottom: 1px solid $border-color;
+              background-color: #fff;
+
+              &:hover {
+                background-color: #fafafa;
+              }
+
+              &:nth-last-child(1) {
+                border: none;
+              }
+
+              .list-item-num {
+                font-size: 13px;
+                color: $font-color-gray;
+              }
+            }
+
+            // 更多-关注
+            .infinite-list-item-attention {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 17px 30px;
+              box-sizing: border-box;
+              cursor: pointer;
+              border-bottom: 1px solid $border-color;
+              background-color: #fff;
+
+              &:hover {
+                background-color: #fafafa;
+              }
+
+              &:nth-last-child(1) {
+                border: none;
+              }
+
+              .userinfo {
+                display: flex;
+
+                .avatar {
+                  width: 45px;
+                  height: 45px;
+                  margin-right: 10px;
+                  border-radius: 45%;
+                }
+
+                .info {
+                  .info-name {
+                    font-size: 16px;
+                    font-weight: 700;
+                    margin-bottom: 3px;
+                    color: $article-title-color2;
+                  }
+
+                  .info-job {
+                    font-size: 12px;
+                    color: $font-color-gray;
+                  }
+                }
+              }
+
+              .make-attention {
+                border: 1px solid $primary-color;
+                color: $primary-color;
+              }
+            }
           }
         }
       }
@@ -494,7 +707,11 @@
     box-shadow: inset 0 -2px 0 $primary-color;
 
     .iconfont {
-      color: $primary-color;
+      color: $primary-color !important;
     }
+  }
+
+  .list-type-item-active {
+    color: $primary-color;
   }
 }

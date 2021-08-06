@@ -1,5 +1,5 @@
 <template>
-  <div class="user-wrapper" @click.stop="hiddenCommenBtn">
+  <div class="user-wrapper" @click.stop="hiddenBtn">
     <div class="user-wrapper-innerBox">
       <div class="user-wrapper-innerBox-content">
         <div class="innerBox-content-user">
@@ -38,10 +38,14 @@
             </div>
             <div
               :class="[
-                { 'list-type-active': selectItem === 'article' },
+                {
+                  'list-type-active': ['articleNew', 'articleHot'].includes(
+                    selectItem
+                  )
+                },
                 'content-type-item'
               ]"
-              @click="checkType('article')"
+              @click="checkType('articleHot')"
             >
               文章
             </div>
@@ -54,21 +58,205 @@
             >
               互动
             </div>
-            <div class="content-type-item">
-              赞&nbsp;<span>184</span><i class="iconfont icon-xiangxia"></i>
+            <div
+              class="content-type-item"
+              :class="[
+                {
+                  'list-type-active': [
+                    'likeArt',
+                    'likeChat',
+                    'likeNews'
+                  ].includes(selectItem)
+                },
+                'content-type-item'
+              ]"
+              @click.stop="
+                showLikePanel = true;
+                showMorePanel = false;
+              "
+            >
+              赞&nbsp;<span>184</span>&nbsp;<span
+                class="iconfont icon-xiangxia"
+              ></span>
+              <div class="like-panel" v-if="showLikePanel">
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeArt' },
+                    'like-panel-item'
+                  ]"
+                  @click.stop="checkType('likeArt')"
+                >
+                  文章&nbsp;180
+                </div>
+                <div
+                  @click.stop="checkType('likeChat')"
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeChat' },
+                    'like-panel-item'
+                  ]"
+                >
+                  沸点&nbsp;4
+                </div>
+                <div
+                  @click.stop="checkType('likeNews')"
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeNews' },
+                    'like-panel-item'
+                  ]"
+                >
+                  资讯&nbsp;0
+                </div>
+              </div>
             </div>
-            <div class="content-type-item">
-              更多<i class="iconfont icon-xiangxia"></i>
+            <div
+              class="content-type-item"
+              :class="[
+                {
+                  'list-type-active': [
+                    'collection',
+                    'attention',
+                    'beAttention'
+                  ].includes(selectItem)
+                },
+                'content-type-item'
+              ]"
+              @click.stop="
+                showMorePanel = true;
+                showLikePanel = false;
+              "
+            >
+              更多&nbsp;<span class="iconfont icon-xiangxia"></span>
+              <div class="more-panel" v-if="showMorePanel">
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'collection' },
+                    'like-panel-item'
+                  ]"
+                  @click.stop="checkType('collection')"
+                  class="like-panel-item"
+                >
+                  收藏集
+                </div>
+                <div
+                  :class="[
+                    {
+                      'list-type-item-active': [
+                        'attention',
+                        'beAttention'
+                      ].includes(selectItem)
+                    },
+                    'like-panel-item'
+                  ]"
+                  @click.stop="checkType('attention')"
+                  class="like-panel-item"
+                >
+                  关注
+                </div>
+              </div>
             </div>
           </div>
           <div class="innerBox-content-content-list">
+            <!-- 文章头部 -->
+            <div
+              class="innerBox-content-header"
+              v-if="['articleHot', 'articleNew'].includes(selectItem)"
+            >
+              <div class="innerBox-content-header-name">文章</div>
+              <div class="innerBox-content-header-type">
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'articleHot' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('articleHot')"
+                >
+                  热门
+                </div>
+                <div class="header-line"></div>
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'articleNew' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('articleNew')"
+                >
+                  最新
+                </div>
+              </div>
+            </div>
+            <!-- 赞头部 -->
+            <div
+              class="innerBox-content-header"
+              v-if="['likeArt', 'likeChat', 'likeNews'].includes(selectItem)"
+            >
+              <div class="innerBox-content-header-name">赞</div>
+              <div class="innerBox-content-header-type">
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeArt' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('likeArt')"
+                >
+                  文章( 180 )
+                </div>
+                <div class="header-line"></div>
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeChat' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('likeChat')"
+                >
+                  动态( 4 )
+                </div>
+                <div class="header-line"></div>
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'likeNews' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('likeNews')"
+                >
+                  资讯( 4 )
+                </div>
+              </div>
+            </div>
+            <!-- 更多头部 -->
+            <div
+              class="innerBox-content-header"
+              v-if="['attention', 'beAttention'].includes(selectItem)"
+            >
+              <div class="innerBox-content-header-name">关注</div>
+              <div class="innerBox-content-header-type">
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'beAttention' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('beAttention')"
+                >
+                  关注的用户
+                </div>
+                <div class="header-line"></div>
+                <div
+                  :class="[
+                    { 'list-type-item-active': selectItem === 'attention' },
+                    'header-type-item'
+                  ]"
+                  @click.stop="checkType('attention')"
+                >
+                  关注者
+                </div>
+              </div>
+            </div>
             <div
               class="infinite-list list-wrapper"
               v-infinite-scroll="loadData"
               :infinite-scroll-delay="500"
               :infinite-scroll-distance="60"
             >
-              <!-- 动态 -->
+              <!-- 动态&赞-动态 -->
               <div
                 v-if="selectItem === 'dynamic'"
                 class="list-wrapper-innerBox list-wrapper-innerBox-dynamic"
@@ -80,9 +268,9 @@
                   @click="toArticle(item.id)"
                 ></div>
               </div>
-              <!-- 文章 -->
+              <!-- 文章&赞-文章 -->
               <div
-                v-if="selectItem === 'article'"
+                v-if="selectItem === 'article' || selectItem === 'likeArt'"
                 class="list-wrapper-innerBox list-wrapper-innerBox-article"
               >
                 <div
@@ -130,9 +318,9 @@
                   </div>
                 </div>
               </div>
-              <!-- 互动 -->
+              <!-- 互动&赞-互动 -->
               <div
-                v-if="selectItem === 'chat'"
+                v-if="selectItem === 'chat' || selectItem === 'likeChat'"
                 class="list-wrapper-innerBox list-wrapper-innerBox-chat"
               >
                 <div
@@ -155,7 +343,8 @@
                             <div class="details-job">
                               {{ item.userInfo.profession }}
                             </div>
-                            &nbsp; <span v-if="item.userInfo.profession">·</span>&nbsp;
+                            &nbsp;
+                            <span v-if="item.userInfo.profession">·</span>&nbsp;
                             <div class="details-time">一分钟前</div>
                           </div>
                         </div>
@@ -166,8 +355,13 @@
                         size="mini"
                         class="list-item-info-follow"
                       >
-                        <span v-if="!item.isAttention">关注</span
-                        ><span class="not-attention" v-else>已关注</span>
+                        <span v-if="!item.isAttention && !item.isSelf"
+                          >关注</span
+                        ><span
+                          class="not-attention"
+                          v-if="item.isAttention && !item.isSelf"
+                          >已关注</span
+                        >
                       </el-button>
                     </div>
                     <div class="list-item-desc">
@@ -411,68 +605,6 @@
                   </div>
                 </div>
               </div>
-              <!-- 赞-文章 -->
-              <div
-                v-if="selectItem === 'likeArt'"
-                class="list-wrapper-innerBox"
-              >
-                <div
-                  v-for="(item, index) in listData"
-                  :key="index"
-                  class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                >
-                  <div class="item-info">
-                    <div class="author-name">{{ item.User.nickname }}</div>
-                    <div class="time">一小时前</div>
-                    <div class="tag-type">{{ item.Tag.tagName }}</div>
-                  </div>
-                  <div class="item-content">
-                    <div class="content-left">
-                      <h3 class="title">{{ item.title }}</h3>
-                      <div class="desc">
-                        {{ item.description }}
-                      </div>
-                      <div class="operate">
-                        <div class="operate-item">
-                          <i class="iconfont icon-yanjing"
-                            >&nbsp;{{ item.blogReadNum }}</i
-                          >
-                        </div>
-                        <div
-                          class="operate-item"
-                          @click.stop="likeBlog(item.id)"
-                          :style="{
-                            color: item.isLike ? '#2de938' : '#4e5969'
-                          }"
-                        >
-                          <i class="iconfont icon-dianzan1"
-                            >&nbsp;{{ item.blogLikeNum }}</i
-                          >
-                        </div>
-                        <div @click.stop="comment(item.id)">
-                          <i class="iconfont icon-pinglun"
-                            >&nbsp;{{ item.commentNum }}</i
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <img class="content-right" :src="item.titlePic" />
-                  </div>
-                </div>
-              </div>
-              <!-- 赞-互动 -->
-              <div
-                v-if="selectItem === 'likeChat'"
-                class="list-wrapper-innerBox"
-              >
-                <div
-                  v-for="(item, index) in listData"
-                  :key="index"
-                  class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                ></div>
-              </div>
               <!-- 赞-资讯 -->
               <div
                 v-if="selectItem === 'likeNews'"
@@ -481,33 +613,68 @@
                 <div
                   v-for="(item, index) in listData"
                   :key="index"
-                  class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                ></div>
+                  class="infinite-list-item list-item infinite-list-item-news"
+                  @click="toNewsPage(item.id)"
+                >
+                  <div class="list-item-content">
+                    <h3 class="item-content-title">
+                      {{ item.title }}
+                    </h3>
+                    <div class="item-content-desc">
+                      {{ item.description }}
+                    </div>
+                    <div class="item-content-line">
+                      <div class="line-author">{{ item.User.nickname }}</div>
+                      <div class="line-time">9小时前</div>
+                      <div class="like">
+                        {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
+                          item.newsReadNum
+                        }}阅读
+                      </div>
+                    </div>
+                  </div>
+                  <img
+                    v-if="item.titlePic"
+                    :src="item.titlePic"
+                    class="list-item-pic"
+                  />
+                </div>
               </div>
               <!-- 更多-收藏集 -->
               <div
-                v-if="selectItem === 'moreCollection'"
+                v-if="selectItem === 'collection'"
                 class="list-wrapper-innerBox"
               >
                 <div
                   v-for="(item, index) in listData"
                   :key="index"
-                  class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                ></div>
+                  class="infinite-list-item list-item infinite-list-item-collection"
+                >
+                  <div class="list-item-name">{{ item.type }}</div>
+                  <div class="list-item-num">{{ item.number }}篇</div>
+                </div>
               </div>
               <!-- 更多-关注 -->
               <div
-                v-if="selectItem === 'moreAttention'"
+                v-if="['attention', 'beAttention'].includes(selectItem)"
                 class="list-wrapper-innerBox"
               >
                 <div
                   v-for="(item, index) in listData"
                   :key="index"
-                  class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                ></div>
+                  class="infinite-list-item list-item infinite-list-item-attention"
+                >
+                  <div class="userinfo">
+                    <img class="avatar" :src="item.avatar" alt="" />
+                    <div class="info">
+                      <div class="info-name">{{ item.nickname }}</div>
+                      <div class="info-job">{{ item.profession }}</div>
+                    </div>
+                  </div>
+                  <el-button class="make-attention" size="mini" plain
+                    >关注</el-button
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -540,7 +707,9 @@ export default {
       replyComment: "", // 回复评论
       replyToReplyValue: "", // 回复评论回复
       showReply: false, // 是否展示评论回复输入框
-      showReplyToReply: "" // 是否展示回复评论输入框
+      showReplyToReply: "", // 是否展示回复评论输入框
+      showLikePanel: false, // 展示“赞”面板
+      showMorePanel: false // 展示“更多”面板
     };
   },
   methods: {
@@ -551,53 +720,106 @@ export default {
       // 清空数据
       this.listData = [];
 
+      // 关闭“赞”&“更多”的浮窗
+      if (["likeArt", "likeChat", "likeNews"].includes(value)) {
+        this.showLikePanel = false;
+      }
+
+      if (["collection", "attention"].includes(value)) {
+        this.showMorePanel = false;
+      }
+
+      this.getArtData();
+    },
+    // 获取文章列表数据
+    async getArtData() {
+      let path = "";
+
+      // 要传递的参数
+      const params = {
+        uid: this.$route.query.id,
+        pageIndex: 1,
+        pageSize: this.pageSize
+      };
+
       switch (this.selectItem) {
-        case "article":
-          this.getArtData();
+        case "articleHot":
+          params.type = "hot";
+          path = "/author/artlist"; // 文章列表 - 热
+          break;
+        case "articleNew":
+          params.type = "new";
+          path = "/author/artlist"; // 文章列表 - 新
           break;
         case "chat":
-          this.getChatData();
+          path = "/author/dynlist"; // 动态列表
+          break;
+        case "likeArt":
+          path = "/author/likeBlog"; // "赞 - 文章"列表
+          break;
+        case "likeChat":
+          path = "/author/likeDyn"; // 赞-动态
+          break;
+        case "likeNews":
+          path = "/author/likeNews"; // 赞-资讯
+          break;
+        case "collection":
+          path = "/author/collection"; // 更多-收藏集
+          break;
+        case "attention":
+          path = "/author/followers"; // 更多-粉丝
+          break;
+        case "beAttention":
+          path = "/author/byfollowers"; // 更多-idol
           break;
         default:
           break;
       }
-    },
-    // 获取文章列表数据
-    async getArtData() {
-      const data = await this.$axios.get("/author/artlist", {
-        params: {
-          uid: this.$route.query.id,
-          pageIndex: this.pageIndex,
-          pageSize: this.pageSize
-        }
+
+      const data = await this.$axios.get(path, {
+        params
       });
 
       if (data.error_code === 0) {
-        this.listData = data.data.rows;
-      } else {
-        Message.error("文章数据获取失败");
-      }
-    },
-    // 获取动态列表数据
-    async getChatData() {
-      const data = await this.$axios.get("/author/dynlist", {
-        params: {
-          uid: this.$route.query.id,
-          pageIndex: this.pageIndex,
-          pageSize: this.pageSize
+        if (["article", "collection"].includes(this.selectItem)) {
+          this.listData = data.data.rows;
+        } else if (this.selectItem === "chat") {
+          data.data.rows.forEach(item => {
+            if (item.picUrl) {
+              item.picUrl = JSON.parse(item.picUrl);
+            }
+          });
+
+          this.listData = data.data.rows;
+        } else if (this.selectItem === "likeChat") {
+          data.data.forEach(item => {
+            if (item.picUrl) {
+              item.picUrl = JSON.parse(item.picUrl);
+            }
+          });
+
+          this.listData = data.data;
+        } else if (this.selectItem === "likeArt") {
+          this.listData = data.data;
+        } else if (this.selectItem === "attention") {
+          const result = [];
+
+          data.data.rows.forEach(item => {
+            result.push(item.attention);
+          });
+
+          this.listData = result;
+        } else if (this.selectItem === "beAttention") {
+          const result = [];
+
+          data.data.rows.forEach(item => {
+            result.push(item.beAttention);
+          });
+
+          this.listData = result;
         }
-      });
-
-      if (data.error_code === 0) {
-        data.data.rows.forEach(item => {
-          if (item.picUrl) {
-            item.picUrl = JSON.parse(item.picUrl);
-          }
-        });
-
-        this.listData = data.data.rows;
       } else {
-        Message.error("文章数据获取失败");
+        Message.error("数据获取失败");
       }
     },
     // 跳转到文章页
@@ -708,7 +930,7 @@ export default {
       this.commentList = [];
     },
     // 隐藏评论按钮
-    hiddenCommenBtn() {
+    hiddenBtn() {
       // 隐藏“动态”评论输入框
       this.showComment = false;
       // 隐藏"动态评论"回复输入框
@@ -719,6 +941,11 @@ export default {
       this.showTheme = false;
       // 隐藏图片上传按钮
       this.showUpload = false;
+
+      // 隐藏“赞”面板
+      this.showLikePanel = false;
+      // 隐藏“更多”面板
+      this.showMorePanel = false;
     },
     // 评论"动态评论"
     async replyToComment(comment, dynamic) {
@@ -851,6 +1078,9 @@ export default {
     },
     toComment(id) {
       window.open(`/article?id=${id}#make_comments`, "_blank");
+    },
+    toNewsPage(id) {
+      window.open(`/news-detai?id=${id}`, "_blank");
     },
     // 隐藏评论输入框
     hiddenToComment() {}

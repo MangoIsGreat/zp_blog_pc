@@ -1,6 +1,7 @@
 const dev = require("./env");
 
 export default {
+  loading: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "得到",

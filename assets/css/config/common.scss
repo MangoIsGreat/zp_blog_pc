@@ -94,6 +94,22 @@ $fontSize-small: 12px;
 }
 
 // 画三角
+@mixin triangle($width: 12px, $height: 12px, $left: 60px, $top: -7px) {
+  content: "";
+  position: absolute;
+  margin-left: -6px;
+  top: $top;
+  left: $left;
+  width: $width;
+  height: $height;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-bottom: none;
+  transform: rotate(45deg);
+}
+
+// 画三角
 // &::before {
 //   content: "";
 //   position: absolute;
