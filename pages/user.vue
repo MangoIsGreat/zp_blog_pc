@@ -665,14 +665,19 @@
                   class="infinite-list-item list-item infinite-list-item-attention"
                 >
                   <div class="userinfo">
-                    <img class="avatar" :src="item.avatar" alt="" />
+                    <img class="avatar" :src="item.userInfo.avatar" alt="" />
                     <div class="info">
-                      <div class="info-name">{{ item.nickname }}</div>
-                      <div class="info-job">{{ item.profession }}</div>
+                      <div class="info-name">{{ item.userInfo.nickname }}</div>
+                      <div class="info-job">{{ item.userInfo.profession }}</div>
                     </div>
                   </div>
-                  <el-button class="make-attention" size="mini" plain
-                    >关注</el-button
+                  <el-button
+                    @click="follow(item.userInfo.id)"
+                    class="make-attention"
+                    size="mini"
+                    plain
+                    ><span v-if="!item.isAttention">关注</span
+                    ><span style="color: #909090" v-else>已关注</span></el-button
                   >
                 </div>
               </div>
@@ -805,7 +810,10 @@ export default {
           const result = [];
 
           data.data.rows.forEach(item => {
-            result.push(item.attention);
+            let obj = {};
+            obj.userInfo = item.attention;
+            obj.isAttention = item.isAttention;
+            result.push(obj);
           });
 
           this.listData = result;
@@ -813,7 +821,10 @@ export default {
           const result = [];
 
           data.data.rows.forEach(item => {
-            result.push(item.beAttention);
+            let obj = {};
+            obj.userInfo = item.beAttention;
+            obj.isAttention = item.isAttention;
+            result.push(obj);
           });
 
           this.listData = result;
@@ -859,6 +870,7 @@ export default {
           this.listData.forEach(item => {
             if (item.userInfo.id === id) {
               item.isAttention = true;
+              console.log(11, this.listData)
             }
           });
         } else if (data.data === "cancel") {
