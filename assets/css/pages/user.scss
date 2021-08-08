@@ -151,6 +151,146 @@
           .list-wrapper {
             width: 100%;
 
+            // 动态列表
+            .list-wrapper-innerBox-dynamic {
+              .list-item {
+                border-bottom: 1px solid $border-color;
+                display: flex;
+                background-color: #fff;
+                cursor: pointer;
+                line-height: 20px;
+
+                &:hover {
+                  background-color: #fafafa;
+                }
+
+                &:nth-last-child(1) {
+                  border-bottom: none;
+                }
+
+                // 发表的文章/动态/资讯等
+                .list-item-innerBox {
+                  display: flex;
+                  padding: 20px;
+                  box-sizing: border-box;
+
+                  .avatar {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                  }
+
+                  .list-item-right {
+                    font-size: 13px;
+
+                    .list-item-right-title {
+                      margin-bottom: 6px;
+
+                      .list-item-right-title-name {
+                        color: $primary-color;
+                      }
+                    }
+
+                    .list-item-right-time {
+                      font-size: 12px;
+                    }
+                  }
+                }
+
+                // 点赞列表
+                .list-item-like-innerBox {
+                  width: 100%;
+
+                  .list-item-like-innerBox-header {
+                    display: flex;
+                    width: 100%;
+                    padding: 0 20px;
+                    font-size: 13px;
+                    line-height: 40px;
+                    color: $font-color-gray;
+                    border-bottom: 1px solid $border-color;
+                    box-sizing: border-box;
+
+                    .header-name {
+                      color: $article-title-color2;
+                    }
+                  }
+
+                  .list-item-like-innerBox-content {
+                    display: flex;
+                    padding: 20px;
+                    box-sizing: border-box;
+
+                    .avatar {
+                      width: 45px;
+                      height: 45px;
+                      margin-right: 10px;
+                      border-radius: 50%;
+                    }
+
+                    .like-innerBox-content-right {
+                      .like-innerBox-content-right-title {
+                        font-size: 13px;
+                        font-weight: 700;
+                        line-height: 20px;
+                      }
+
+                      .like-innerBox-content-right-job {
+                        margin-bottom: 3px;
+                        font-size: 12px;
+                        color: $font-color-gray;
+
+                        .time {
+                          padding-left: 12px;
+                        }
+                      }
+
+                      .like-innerBox-content-right-headline {
+                        font-size: 14px;
+                        color: $primary-color;
+                        cursor: pointer;
+                        @include ellipsis();
+                      }
+                    }
+                  }
+                }
+
+                // 关注列表
+                .list-item-attention-innerBox {
+                  display: flex;
+                  padding: 20px;
+                  box-sizing: border-box;
+
+                  .avatar {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                  }
+
+                  .list-item-attention-innerBox-right {
+                    font-size: 15px;
+                    color: $font-color-gray;
+
+                    .attention-innerBox-right-title {
+                      line-height: 24px;
+                      display: flex;
+
+                      .attention-innerBox-right-title-nickname {
+                        font-weight: 700;
+                        color: $article-title-color2;
+                      }
+                    }
+
+                    .attention-innerBox-right-job {
+                      font-size: 12px;
+                    }
+                  }
+                }
+              }
+            }
+
             // 文章列表
             .list-wrapper-innerBox-article {
               .list-item {

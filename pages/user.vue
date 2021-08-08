@@ -75,9 +75,8 @@
                 showMorePanel = false;
               "
             >
-              赞&nbsp;<span>184</span>&nbsp;<span
-                class="iconfont icon-xiangxia"
-              ></span>
+              赞&nbsp;<span>{{ likeNumData && likeNumData.like_count }}</span
+              >&nbsp;<span class="iconfont icon-xiangxia"></span>
               <div class="like-panel" v-if="showLikePanel">
                 <div
                   :class="[
@@ -86,7 +85,7 @@
                   ]"
                   @click.stop="checkType('likeArt')"
                 >
-                  文章&nbsp;180
+                  文章&nbsp;{{ likeNumData.like_blog_num }}
                 </div>
                 <div
                   @click.stop="checkType('likeChat')"
@@ -95,7 +94,7 @@
                     'like-panel-item'
                   ]"
                 >
-                  沸点&nbsp;4
+                  沸点&nbsp;{{ likeNumData.like_dyn_num }}
                 </div>
                 <div
                   @click.stop="checkType('likeNews')"
@@ -104,7 +103,7 @@
                     'like-panel-item'
                   ]"
                 >
-                  资讯&nbsp;0
+                  资讯&nbsp;{{ likeNumData.like_news_num }}
                 </div>
               </div>
             </div>
@@ -256,7 +255,7 @@
               :infinite-scroll-delay="500"
               :infinite-scroll-distance="60"
             >
-              <!-- 动态&赞-动态 -->
+              <!-- 动态 -->
               <div
                 v-if="selectItem === 'dynamic'"
                 class="list-wrapper-innerBox list-wrapper-innerBox-dynamic"
@@ -265,8 +264,108 @@
                   v-for="(item, index) in listData"
                   :key="index"
                   class="infinite-list-item list-item"
-                  @click="toArticle(item.id)"
-                ></div>
+                >
+                  <div
+                    class="list-item-innerBox"
+                    v-if="[100, 200, 300].includes(item.type)"
+                  >
+                    <img
+                      class="avatar"
+                      src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/180/h/180/q/85/format/webp/interlace/1"
+                      alt=""
+                    />
+                    <div class="list-item-right">
+                      <!-- 发表过的文章 -->
+                      <div
+                        class="list-item-right-title"
+                        v-if="item.type === 100"
+                      >
+                        橘猫很方发布了文章<span
+                          class="list-item-right-title-name"
+                          >前端跨域解决方案</span
+                        >
+                      </div>
+                      <!-- 发表过的动态 -->
+                      <div
+                        class="list-item-right-title"
+                        v-if="item.type === 200"
+                      >
+                        橘猫很方发布了动态<span
+                          class="list-item-right-title-name"
+                          >今天天气真好</span
+                        >
+                      </div>
+                      <!-- 发表过的资讯 -->
+                      <div
+                        class="list-item-right-title"
+                        v-if="item.type === 300"
+                      >
+                        橘猫很方发布了资讯<span
+                          class="list-item-right-title-name"
+                          >前端跨域解决方案</span
+                        >
+                      </div>
+                      <div class="list-item-right-time">6月前</div>
+                    </div>
+                  </div>
+                  <!-- 赞过的文章 -->
+                  <!-- 赞过的动态 -->
+                  <!-- 赞过的资讯 -->
+                  <div
+                    class="list-item-like-innerBox"
+                    v-if="[400, 500, 600].includes(item.type)"
+                  >
+                    <div class="list-item-like-innerBox-header">
+                      <div class="header-name">橘猫横放</div>
+                      &nbsp;赞了这篇<span v-if="item.type === 400">文章</span
+                      ><span v-if="item.type === 500">动态</span
+                      ><span v-if="item.type === 600">资讯</span>
+                    </div>
+                    <div class="list-item-like-innerBox-content">
+                      <img
+                        class="avatar"
+                        src="https://sf6-ttcdn-tos.pstatp.com/img/user-avatar/b963d484d05cba9ce3e0aa029561fa2b~300x300.image"
+                        alt=""
+                      />
+                      <div class="like-innerBox-content-right">
+                        <div class="like-innerBox-content-right-title">
+                          橘猫橘猫
+                        </div>
+                        <div class="like-innerBox-content-right-job">
+                          前端开发工程师<span class="time">11天前</span>
+                        </div>
+                        <div class="like-innerBox-content-right-headline">
+                          百万PV商城实践系列-前端图片资源优化
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 关注的用户 -->
+                  <div
+                    class="list-item-attention-innerBox"
+                    v-if="item.type === 700"
+                  >
+                    <img
+                      class="avatar"
+                      src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/18/16fb901f1bac3975~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp"
+                      alt=""
+                    />
+                    <div class="list-item-attention-innerBox-right">
+                      <div class="attention-innerBox-right-title">
+                        <div class="attention-innerBox-right-title-nickname">
+                          橘猫很方
+                        </div>
+                        &nbsp;关注了&nbsp;
+                        <div class="attention-innerBox-right-title-nickname">
+                          执鸢者
+                        </div>
+                      </div>
+                      <div class="attention-innerBox-right-job">
+                        前端开发工程师
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <!-- 文章&赞-文章 -->
               <div
@@ -677,7 +776,9 @@
                     size="mini"
                     plain
                     ><span v-if="!item.isAttention">关注</span
-                    ><span style="color: #909090" v-else>已关注</span></el-button
+                    ><span style="color: #909090" v-else
+                      >已关注</span
+                    ></el-button
                   >
                 </div>
               </div>
@@ -714,8 +815,16 @@ export default {
       showReply: false, // 是否展示评论回复输入框
       showReplyToReply: "", // 是否展示回复评论输入框
       showLikePanel: false, // 展示“赞”面板
-      showMorePanel: false // 展示“更多”面板
+      showMorePanel: false, // 展示“更多”面板
+      likeNumData: null // 点赞数据量
     };
+  },
+  created() {
+    // 请求列表数据
+    this.getArtData();
+
+    // 获取用户赞过的文章/动态/资讯
+    this.getLikeNum();
   },
   methods: {
     loadData() {},
@@ -776,6 +885,8 @@ export default {
           break;
         case "beAttention":
           path = "/author/byfollowers"; // 更多-idol
+        case "dynamic":
+          path = "/author/dynamic"; // 更多-idol
           break;
         default:
           break;
@@ -804,7 +915,7 @@ export default {
           });
 
           this.listData = data.data;
-        } else if (this.selectItem === "likeArt") {
+        } else if (["likeArt", "dynamic"].includes(this.selectItem)) {
           this.listData = data.data;
         } else if (this.selectItem === "attention") {
           const result = [];
@@ -831,6 +942,20 @@ export default {
         }
       } else {
         Message.error("数据获取失败");
+      }
+    },
+    // 获取点赞数据
+    async getLikeNum() {
+      const data = await this.$axios.get("/author/likeNum", {
+        params: {
+          uid: this.$route.query.id
+        }
+      });
+
+      if (data.error_code === 0) {
+        this.likeNumData = data.data;
+      } else {
+        Message.error("获取点赞数据失败");
       }
     },
     // 跳转到文章页
@@ -870,7 +995,7 @@ export default {
           this.listData.forEach(item => {
             if (item.userInfo.id === id) {
               item.isAttention = true;
-              console.log(11, this.listData)
+              console.log(11, this.listData);
             }
           });
         } else if (data.data === "cancel") {
