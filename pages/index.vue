@@ -167,7 +167,6 @@ export default {
     return {
       pageSize: 15, //页容量
       pageIndex: 2, // 当前页
-      infoList: [1, 1, 1, 1, 1, 1, 1],
       authorList: [],
       selectedTag: 0, //当前选中的标签
       rankingType: "hot", // 获取文章的排列顺序，最新/最热

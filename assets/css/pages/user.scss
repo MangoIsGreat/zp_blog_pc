@@ -29,6 +29,10 @@
           }
 
           .user-detail-right {
+            .iconfont {
+              color: #b2bac2;
+            }
+
             .user-detail-right-nickname {
               margin-bottom: 12px;
               color: $article-title-color;
@@ -838,6 +842,98 @@
 
     .user-wrapper-innerBox-aside {
       width: 240px;
+
+      .innerBox-aside-userinfo {
+        margin-bottom: 12px;
+        background-color: #fff;
+
+        .innerBox-aside-userinfo-title {
+          padding: 16px;
+          box-sizing: border-box;
+          font-weight: 700;
+          color: #31445b;
+          border-bottom: 1px solid $border-color;
+        }
+
+        .innerBox-aside-userinfo-content {
+          padding: 16px;
+          box-sizing: border-box;
+
+          .innerBox-aside-userinfo-content-item {
+            display: flex;
+
+            &:nth-child(1) {
+              margin-bottom: 6px;
+            }
+
+            .aside-userinfo-content-item-icon {
+              width: 24px;
+              height: 24px;
+              margin-right: 10px;
+              border-radius: 50%;
+              background-color: #eaeaea;
+              text-align: center;
+              line-height: 24px;
+
+              .iconfont {
+                color: #b2bac2;
+              }
+            }
+          }
+        }
+      }
+
+      .innerBox-aside-attention {
+        position: relative;
+        margin-bottom: 12px;
+        padding: 16px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+
+        .innerBox-aside-attention-item {
+          flex: 1;
+          text-align: center;
+          color: #31445b;
+          cursor: pointer;
+
+          .innerBox-aside-attention-item-tit {
+            line-height: 22px;
+          }
+
+          .innerBox-aside-attention-item-num {
+            font-weight: 700;
+          }
+        }
+
+        .innerBox-aside-attention-line {
+          left: 50%;
+          top: 50%;
+          transform: translate(-1px, -19px);
+          position: absolute;
+          width: 1px;
+          height: 38px;
+          background-color: $border-color;
+        }
+      }
+
+      .innerBox-aside-footer {
+        font-size: 15px;
+
+        .innerBox-aside-footer-item {
+          padding: 15px 5px;
+          box-sizing: border-box;
+          display: flex;
+          justify-content: space-between;
+          cursor: pointer;
+          border-bottom: 1px solid $border-color;
+
+          &:nth-child(1) {
+            border-top: 1px solid $border-color;
+          }
+        }
+      }
     }
   }
 

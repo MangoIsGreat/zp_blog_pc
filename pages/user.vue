@@ -4,18 +4,20 @@
       <div class="user-wrapper-innerBox-content">
         <div class="innerBox-content-user">
           <div class="innerBox-content-user-detail">
-            <img
-              class="avatar"
-              src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/180/h/180/q/85/format/webp/interlace/1"
-              alt=""
-            />
+            <img class="avatar" :src="userInfo.avatar" alt="" />
             <div class="user-detail-right">
-              <div class="user-detail-right-nickname">橘猫横放</div>
+              <div class="user-detail-right-nickname">
+                {{ userInfo.nickname }}
+              </div>
               <div class="user-detail-right-job">
-                <i class="iconfont icon-work" />&nbsp;&nbsp;前端开发工程师
+                <i class="iconfont icon-zimouzhiyeshenqing" />&nbsp;&nbsp;{{
+                  userInfo.profession
+                }}
               </div>
               <div class="user-detail-right-desc">
-                <i class="iconfont icon-mingpian" />&nbsp;&nbsp;你会变强的
+                <i class="iconfont icon-name-card-full" />&nbsp;&nbsp;{{
+                  userInfo.signature
+                }}
               </div>
             </div>
           </div>
@@ -787,9 +789,52 @@
         </div>
       </div>
       <div class="user-wrapper-innerBox-aside">
-        <div class="innerBox-aside-userinfo"></div>
-        <div class="innerBox-aside-attention"></div>
-        <div class="innerBox-aside-footer"></div>
+        <div class="innerBox-aside-userinfo">
+          <div class="innerBox-aside-userinfo-title">个人成就</div>
+          <div class="innerBox-aside-userinfo-content">
+            <div class="innerBox-aside-userinfo-content-item">
+              <div class="aside-userinfo-content-item-icon">
+                <i class="iconfont icon-yanjing-tianchong"></i>
+              </div>
+              <div class="aside-userinfo-content-item-word">
+                文章被阅读&nbsp;{{ userInfo.blogReadNum }}
+              </div>
+            </div>
+            <div class="innerBox-aside-userinfo-content-item">
+              <div class="aside-userinfo-content-item-icon">
+                <i class="iconfont icon-dianzan_"></i>
+              </div>
+              <div class="aside-userinfo-content-item-word">
+                文章被点赞&nbsp;{{ userInfo.blogLikeNum }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="innerBox-aside-attention">
+          <div class="innerBox-aside-attention-item" @click="getUserIdols">
+            <div class="innerBox-aside-attention-item-tit">关注了</div>
+            <div class="innerBox-aside-attention-item-num">
+              {{ userInfo.idolNum }}
+            </div>
+          </div>
+          <div class="innerBox-aside-attention-line"></div>
+          <div class="innerBox-aside-attention-item" @click="getUserFans">
+            <div class="innerBox-aside-attention-item-tit">关注者</div>
+            <div class="innerBox-aside-attention-item-num">
+              {{ userInfo.fansNum }}
+            </div>
+          </div>
+        </div>
+        <div class="innerBox-aside-footer">
+          <div class="innerBox-aside-footer-item" @click="getUserCollection">
+            <span>收藏集</span>
+            <span>{{ userInfo.collections_num }}</span>
+          </div>
+          <div class="innerBox-aside-footer-item">
+            <span>加入于</span>
+            <span>2019-07-16</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -805,7 +850,7 @@ export default {
       selectItem: "dynamic", // 选中的类型
       listData: [], // 列表数据
       pageSize: 15,
-      pageIndex: 2,
+      pageIndex: 1,
       comment: "", // "动态"评论
       commentList: [], // 评论列表
       dynamicId: "", // 当前选中的“动态”id号
@@ -819,6 +864,19 @@ export default {
       likeNumData: null // 点赞数据量
     };
   },
+  async asyncData({ $axios, query }) {
+    const data = await $axios.get("/author/userinfo", {
+      params: { uid: query.id }
+    });
+
+    if (data.error_code === 0) {
+      return {
+        userInfo: data.data
+      };
+    } else {
+      Message.error("用户信息获取失败");
+    }
+  },
   created() {
     // 请求列表数据
     this.getArtData();
@@ -827,12 +885,50 @@ export default {
     this.getLikeNum();
   },
   methods: {
-    loadData() {},
+    loadData() {
+      // 当前页大于总页数时停止请求数据：
+      if (this.pageIndex > Math.ceil(this.listData.length / this.pageSize))
+        return;
+
+      // 下拉加载更多：
+      this.getArtData();
+    },
+    // 查看收藏夹
+    getUserCollection() {
+      this.selectItem = "collection";
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
+      this.getArtData();
+    },
+    // 查看用户粉丝
+    getUserFans() {
+      this.selectItem = "attention";
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
+      this.getArtData();
+    },
+    // 查看用户idol
+    getUserIdols() {
+      this.selectItem = "beAttention";
+
+      // 重置数据
+      this.listData = [];
+      this.pageIndex = 1;
+
+      this.getArtData();
+    },
     // 选中的要展示的数据
     checkType(value) {
       this.selectItem = value;
       // 清空数据
       this.listData = [];
+      this.pageIndex = 1;
 
       // 关闭“赞”&“更多”的浮窗
       if (["likeArt", "likeChat", "likeNews"].includes(value)) {
@@ -897,6 +993,9 @@ export default {
       });
 
       if (data.error_code === 0) {
+        // 当前页数+1
+        this.pageIndex += 1;
+
         if (["article", "collection"].includes(this.selectItem)) {
           this.listData = data.data.rows;
         } else if (this.selectItem === "chat") {

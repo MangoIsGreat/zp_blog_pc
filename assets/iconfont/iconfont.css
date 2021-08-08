@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2666177 */
-  src: url('iconfont.woff2?t=1628134513245') format('woff2'),
-       url('iconfont.woff?t=1628134513245') format('woff'),
-       url('iconfont.ttf?t=1628134513245') format('truetype');
+  src: url('iconfont.woff2?t=1628409390724') format('woff2'),
+       url('iconfont.woff?t=1628409390724') format('woff'),
+       url('iconfont.ttf?t=1628409390724') format('truetype');
 }
 
 .iconfont {
@@ -13,24 +13,36 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-yanjing-tianchong:before {
+  content: "\e67b";
+}
+
+.icon-dianzan_:before {
+  content: "\e63c";
+}
+
+.icon-zimouzhiyeshenqing:before {
+  content: "\e612";
+}
+
+.icon-dianzanfuben:before {
+  content: "\e60b";
+}
+
+.icon-mingpian:before {
+  content: "\edaa";
+}
+
+.icon-name-card-full:before {
+  content: "\e8a7";
+}
+
 .icon-xiangxia:before {
   content: "\e62d";
 }
 
-.icon-work:before {
-  content: "\e6e6";
-}
-
-.icon-mingpian:before {
-  content: "\e61e";
-}
-
 .icon-mingpian1:before {
   content: "\e671";
-}
-
-.icon-gongzuobao:before {
-  content: "\e621";
 }
 
 .icon-paiming:before {
