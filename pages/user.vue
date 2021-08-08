@@ -22,7 +22,11 @@
             </div>
           </div>
           <div class="innerBox-content-user-right">
-            <el-button class="edit-userinfo" size="small" plain
+            <el-button
+              @click="editUserInfo"
+              class="edit-userinfo"
+              size="small"
+              plain
               >编辑个人资料</el-button
             >
           </div>
@@ -892,6 +896,10 @@ export default {
 
       // 下拉加载更多：
       this.getArtData();
+    },
+    // 跳转到编辑用户信息页
+    editUserInfo() {
+      this.$router.push(`/edit-user/${this.$route.query.id}`);
     },
     // 查看收藏夹
     getUserCollection() {
