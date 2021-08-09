@@ -177,7 +177,8 @@
                         <div class="details-job">
                           {{ item.userInfo.profession }}
                         </div>
-                        &nbsp; <span v-if="item.userInfo.profession">·</span>&nbsp;
+                        &nbsp;
+                        <span v-if="item.userInfo.profession">·</span>&nbsp;
                         <div class="details-time">一分钟前</div>
                       </div>
                     </div>
@@ -303,7 +304,11 @@
                         </div>
                       </div>
                       <!-- 回复评论 -->
-                      <div v-if="showReply === itm.id" class="make-comments" @click.stop>
+                      <div
+                        v-if="showReply === itm.id"
+                        class="make-comments"
+                        @click.stop
+                      >
                         <div class="first-line">
                           <img
                             src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
@@ -531,7 +536,8 @@ export default {
       showTheme: false, // 是否显示话题选择面板
       themeList: [], // 话题列表
       selectedTheme: "", // 选中的主题
-      showUpload: false // 是否展示图片上传按钮
+      showUpload: false, // 是否展示图片上传按钮
+      userInfo: null // 用户信息页
     };
   },
   async asyncData({ $axios }) {
@@ -575,26 +581,32 @@ export default {
       Message.error("动态类型获取失败");
     }
 
-    // 获取“用户信息”
-    const userInfo = await $axios.get("/user/userInfo");
-
-    if (theme.error_code !== 0) {
-      Message.error("动态类型获取失败");
-    }
-
     return {
       listData: data.data, // 动态列表数据
       countNum: data.data.count, // 总"动态"条数
       messageList: favList.data, // 精选留言
-      menuList: theme.data, // 动态类型
-      userInfo: userInfo.data // 用户信息
+      menuList: theme.data // 动态类型
     };
   },
   created() {
     // 获取token
     this.getToken();
+
+    // 获取用户信息
+    this.getUserInfo();
   },
   methods: {
+    // 获取用户信息
+    async getUserInfo() {
+      // 获取“用户信息”
+      const userInfo = await this.$axios.get("/user/userInfo");
+
+      if (theme.error_code !== 0) {
+        return (this.userInfo = null);
+      }
+
+      this.userInfo = userInfo.data;
+    },
     getToken() {
       const token = getCookie(this, "user_token");
       // 将获取到token加入到请求头中

@@ -1,38 +1,55 @@
 <template>
   <div class="header-wrapper">
-    <div class="left-wrapper">
-      <h1 class="logo">得到</h1>
-      <div v-for="(item, index) in titleList" :key="index" class="item">
-        <nuxt-link :to="item.route">{{ item.name }}</nuxt-link>
+    <div class="header-wrapper-top">
+      <div class="header-wrapper-top-box">
+        <div class="left-wrapper">
+          <h1 @click="$router.push('/')" class="logo">得到</h1>
+          <div
+            @click="selectPath = item.route"
+            v-for="(item, index) in titleList"
+            :key="index"
+            class="item"
+          >
+            <nuxt-link
+              :style="{
+                color: selectPath === item.route ? '#00c58e' : '#4e5969'
+              }"
+              class="item-link"
+              :to="item.route"
+              >{{ item.name }}</nuxt-link
+            >
+          </div>
+        </div>
+        <div class="right-wrapper">
+          <el-input
+            class="item"
+            size="small"
+            v-model="input"
+            suffix-icon="el-icon-search"
+            placeholder="探索得到"
+          ></el-input>
+          <el-button
+            class="item"
+            @click="openPage('/writing')"
+            type="primary"
+            size="small"
+            >写文章</el-button
+          >
+          <el-badge :value="3" class="item">
+            <i class="el-icon-bell"></i>
+          </el-badge>
+          <div @click.stop="login">
+            <el-avatar
+              class="avatar item"
+              :src="userInfo ? userInfo.avatar : ''"
+            ></el-avatar>
+          </div>
+        </div>
+        <!-- 用户面板 -->
+        <user-info v-if="isShowInfo" />
       </div>
     </div>
-    <div class="right-wrapper">
-      <el-input
-        class="item"
-        size="small"
-        v-model="input"
-        suffix-icon="el-icon-search"
-        placeholder="探索得到"
-      ></el-input>
-      <el-button
-        class="item"
-        @click="openPage('/writing')"
-        type="primary"
-        size="small"
-        >写文章</el-button
-      >
-      <el-badge :value="3" class="item">
-        <i class="el-icon-bell"></i>
-      </el-badge>
-      <div @click.stop="login">
-        <el-avatar
-          class="avatar item"
-          :src="userInfo ? userInfo.avatar : ''"
-        ></el-avatar>
-      </div>
-    </div>
-    <!-- 用户面板 -->
-    <user-info v-if="isShowInfo" />
+    <div class="header-wrapper-bottom"></div>
   </div>
 </template>
 
@@ -45,6 +62,7 @@ export default {
   data() {
     return {
       userInfo: null, // 用户信息
+      selectPath: "/", // 选中的路径
       input: "",
       circleUrl: "",
       titleList: [

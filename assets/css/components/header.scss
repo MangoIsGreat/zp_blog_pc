@@ -1,92 +1,111 @@
 .header-wrapper {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  width: 1200px;
-  height: 100%;
+  background-color: #fff;
 
-  .left-wrapper,
-  .right-wrapper {
-    display: flex;
-  }
+  .header-wrapper-top {
+    height: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #f1f1f1;
 
-  .left-wrapper {
-    .logo {
-      font-size: 30px;
-      font-weight: 600;
-      line-height: 60px;
-      margin-right: 15px;
-      color: #00c58e;
-      cursor: pointer;
+    .header-wrapper-top-box {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 auto;
+      width: 1200px;
+      height: 100%;
     }
 
-    .item {
-      line-height: 60px;
-      padding: 0 15px;
-      cursor: pointer;
+    .left-wrapper,
+    .right-wrapper {
+      display: flex;
+    }
 
-      a:hover {
+    .left-wrapper {
+      .logo {
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 60px;
+        margin-right: 15px;
         color: #00c58e;
+        cursor: pointer;
+      }
+
+      .item {
+        line-height: 60px;
+        padding: 0 15px;
+        cursor: pointer;
+
+        a:hover {
+          color: #00c58e!important;
+        }
       }
     }
-  }
 
-  .right-wrapper {
-    align-items: center;
+    .right-wrapper {
+      align-items: center;
 
-    .item {
-      margin-left: 20px;
-      cursor: pointer;
-    }
-
-    .avatar {
-      // width: 60px;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: #ccc;
-    }
-  }
-
-  // 用户信息面板
-  .header-userinfo-wrapper {
-    position: fixed;
-    right: 170px;
-    top: 55px;
-    width: 150px;
-    background-color: #fff;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(177, 180, 185, 0.45);
-    border-radius: 4px;
-
-    .content-first-line,
-    .content-second-line,
-    .content-third-line {
-      padding: 12px 0;
-      box-sizing: border-box;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-      line-height: 30px;
-      color: #4e5969;
-      font-size: 14px;
-
-      .content-first-line-item {
+      .item {
+        margin-left: 20px;
         cursor: pointer;
-        padding: 0 12px;
+      }
 
-        &:hover {
-          background-color: #f8f8f8;
+      .avatar {
+        // width: 60px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: #ccc;
+      }
+    }
+
+    // 用户信息面板
+    .header-userinfo-wrapper {
+      position: fixed;
+      right: 170px;
+      top: 55px;
+      width: 150px;
+      background-color: #fff;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(177, 180, 185, 0.45);
+      border-radius: 4px;
+
+      .content-first-line,
+      .content-second-line,
+      .content-third-line {
+        padding: 12px 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        line-height: 30px;
+        color: #4e5969;
+        font-size: 14px;
+
+        .content-first-line-item {
+          cursor: pointer;
+          padding: 0 12px;
+
+          &:hover {
+            background-color: #f8f8f8;
+          }
+        }
+
+        .iconfont {
+          font-size: 15px;
+          color: #86909c;
+          margin-right: 10px;
         }
       }
 
-      .iconfont {
-        font-size: 15px;
-        color: #86909c;
-        margin-right: 10px;
+      .content-third-line {
+        border: none;
       }
     }
+  }
 
-    .content-third-line {
-      border: none;
-    }
+  .header-wrapper-bottom {
+    width: 100%;
+    height: 60px;
   }
 }

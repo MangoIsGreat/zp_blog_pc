@@ -33,11 +33,12 @@
             </el-button>
           </div>
           <div class="list-item-desc">
-            {{ dynData.content }}
+            <span class="list-item-desc-theme" v-if="dynData.theme">{{ `#${dynData.theme}#` }}</span
+            >&nbsp;{{ dynData.content }}
           </div>
-          <div class="list-item-theme" v-if="dynData.theme">
+          <!-- <div class="list-item-theme" v-if="dynData.theme">
             {{ `#${dynData.theme}#` }}
-          </div>
+          </div> -->
           <div class="list-item-photo">
             <img
               :src="pic"
@@ -269,11 +270,11 @@
                   </div>
                 </div>
               </div>
-              <img
+              <div
+                :style="{ backgroundImage: `url(${item.picUrl[0]})` }"
                 v-if="item.picUrl"
-                :src="item.picUrl[0]"
                 class="content-pic"
-              />
+              ></div>
             </div>
           </div>
         </div>

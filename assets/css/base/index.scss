@@ -8,7 +8,7 @@ body {
   padding: 0;
   background-color: $bg-color-gray;
   color: $article-fontcolor;
-  overflow: auto;
+  // overflow: auto;
 }
 
 h1,
@@ -52,7 +52,7 @@ a:active {
 .wrapper,
 .el-container {
   width: 100%;
-  height: 100%;
+  // height: 100%;
 }
 
 .el-header {
@@ -68,6 +68,8 @@ a:active {
 }
 
 .to-top {
+  opacity: 0;
+  transition: all .2s;
   @include setTopComment(30px, 80px, 40px, 40px);
 }
 

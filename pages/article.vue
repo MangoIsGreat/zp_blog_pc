@@ -38,16 +38,6 @@
                 <div class="type-name">{{ articleInfo.Tag.tagName }}</div>
                 &nbsp;&nbsp;&nbsp;&nbsp;
               </div>
-              <div class="tag">
-                文章标签&nbsp;&nbsp;&nbsp;
-                <div
-                  v-for="(item, index) in articleTagList"
-                  :key="index"
-                  class="tag-name"
-                >
-                  {{ articleInfo.Tag.tagName }}
-                </div>
-              </div>
             </div>
             <div class="author-bottom-info">
               <div class="author-bottom-info-left">
