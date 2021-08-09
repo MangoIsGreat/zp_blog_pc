@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="article-wrapper-aside">
-      <div class="send-news">
+      <div class="send-news" id="news_detail_send_news">
         <div class="sen-news-t">
           <div class="send-news-title">资讯投递</div>
           <el-button
@@ -67,7 +67,7 @@
           欢迎投递行业动态、软件更新、编程语言相关资讯线索
         </div>
       </div>
-      <div class="new-news">
+      <div class="new-news" id="news_detail_new">
         <div class="more-article-header">最新资讯</div>
         <div class="more-article-content">
           <div

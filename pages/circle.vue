@@ -468,7 +468,7 @@
             </div>
           </div>
         </div>
-        <div class="circle-info-great">
+        <div class="circle-info-great" id="circle_info_great">
           <div class="great-title">精选留言</div>
           <div class="great-wrapper">
             <div
@@ -497,7 +497,7 @@
             </div>
           </div>
         </div>
-        <div class="circle-poster"></div>
+        <div class="circle-poster" id="circle_poster"></div>
       </div>
     </div>
   </div>

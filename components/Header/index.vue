@@ -4,13 +4,9 @@
       <div class="header-wrapper-top-box">
         <div class="left-wrapper">
           <h1 @click="$router.push('/')" class="logo">得到</h1>
-          <div
-            @click="selectPath = item.route"
-            v-for="(item, index) in titleList"
-            :key="index"
-            class="item"
-          >
+          <div v-for="(item, index) in titleList" :key="index" class="item">
             <nuxt-link
+              @click="selectPath = item.route"
               :style="{
                 color: selectPath === item.route ? '#00c58e' : '#4e5969'
               }"

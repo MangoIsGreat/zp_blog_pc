@@ -136,11 +136,12 @@
       width: 240px;
 
       .send-news {
-        width: 100%;
+        width: 240px;
         padding: 16px 20px;
         margin-bottom: 10px;
         box-sizing: border-box;
         background-color: $bg-color-white;
+        transition: .2s;
 
         .sen-news-t {
           width: 100%;
@@ -168,7 +169,8 @@
         display: flex;
         box-sizing: border-box;
         margin-bottom: 20px;
-        @include setBgColorAndPadding(100%, 12px);
+        @include setBgColorAndPadding(240px, 12px);
+        transition: .2s;
 
         .qr-code {
           @include setBgImg(50px, 50px, "@/assets/img/download_qrcode.png");

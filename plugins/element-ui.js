@@ -26,6 +26,7 @@ Vue.use(Main);
 Vue.use(InfiniteScroll);
 Vue.use(Form);
 Vue.use(FormItem);
-Vue.use(Message);
+// Vue.use(Message);
+Vue.component(Message.name, Message)
 Vue.use(Upload);
 Vue.use(Dialog);

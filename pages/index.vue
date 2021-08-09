@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="content-right">
-          <div class="author-list">
+          <div class="author-list" id="author_ranking">
             <div class="author-list-item author-list-title">
               <i class="iconfont icon-xunzhang"></i>
               <span>作者榜</span>
@@ -104,6 +104,7 @@
                 class="author-item"
                 v-for="(item, index) in authorList"
                 :key="index"
+                @click="toUserPage(item.id)"
               >
                 <img class="avatar" :src="item.avatar" />
                 <div class="author-info">
@@ -121,8 +122,8 @@
               完整榜单 &gt;
             </div>
           </div>
-          <div class="home-page-poster"></div>
-          <div class="qr-code-wrapper">
+          <div class="home-page-poster" id="home_poster"></div>
+          <div class="qr-code-wrapper" id="home_qr_code">
             <div class="qr-code"></div>
             <div class="qr-code-desc">
               <div class="qr-code-desc-title">下载得到客户端</div>
@@ -296,6 +297,10 @@ export default {
     },
     getAuthorList() {
       window.open("/author-list", "_blank");
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user?id=${id}`);
     }
   }
 };

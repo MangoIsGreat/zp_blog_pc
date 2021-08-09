@@ -308,9 +308,10 @@
       width: 300px;
 
       .circle-info-great {
-        width: 100%;
+        width: 300px;
         margin-bottom: 10px;
         background-color: $bg-color-white;
+        transition: .3s;
 
         .great-title {
           width: 100%;

@@ -322,7 +322,7 @@
         </div>
       </div>
       <div class="article-wrapper-aside">
-        <div class="aside-author">
+        <div class="aside-author" id="article_author_info">
           <div class="aside-author-title">关于作者</div>
           <div class="aside-author-body">
             <div class="aside-author-body-top">
@@ -358,7 +358,7 @@
           </div>
         </div>
         <div class="home-page-poster"></div>
-        <div class="more-article">
+        <div class="more-article" id="article_more_art">
           <div class="more-article-header">相关文章</div>
           <div class="more-article-content">
             <div

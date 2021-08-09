@@ -335,11 +335,12 @@
     margin-left: 20px;
 
     .send-news {
-      width: 100%;
+      width: 240px;
       padding: 16px 20px;
       margin-bottom: 10px;
       box-sizing: border-box;
       background-color: $bg-color-white;
+      transition: all .2s;
 
       .sen-news-t {
         width: 100%;
@@ -365,9 +366,10 @@
 
     .new-news,
     .hot-news {
-      width: 100%;
+      width: 240px;
       background-color: $bg-color-white;
       margin-bottom: 10px;
+      transition: all .2s;
 
       .more-article-header {
         color: $article-title-color2;

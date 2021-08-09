@@ -531,9 +531,10 @@
     margin-left: 20px;
 
     .aside-author {
-      width: 100%;
+      width: 240px;
       margin-bottom: 20px;
       background-color: $bg-color-white;
+      transition: all .2s;
 
       .aside-author-title {
         width: 100%;
@@ -640,8 +641,9 @@
     }
 
     .more-article {
-      width: 100%;
+      width: 240px;
       background-color: $bg-color-white;
+      transition: all .2s;
 
       .more-article-header {
         width: 100%;

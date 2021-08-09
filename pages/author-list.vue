@@ -1,6 +1,5 @@
 <template>
   <div class="author-list-wrapper">
-    <!-- <header-type :typeData="typeList" /> -->
     <div class="author-list-wrapper-body">
       <div class="list-content">
         <ul class="infinite-list" v-infinite-scroll="loadData">
@@ -8,6 +7,7 @@
             v-for="(item, index) in listData"
             :key="index"
             class="infinite-list-item"
+            @click="toUserPage(item.id)"
           >
             <div class="item-left">
               <img class="avatar" :src="item.avatar" alt="" />
@@ -22,7 +22,7 @@
               </div>
             </div>
             <el-button
-              @click="follow(item.id)"
+              @click.stop="follow(item.id)"
               v-if="!item.isSelf"
               class="pay-attention"
               size="mini"
@@ -111,6 +111,10 @@ export default {
       } else {
         Message.error("关注失败！");
       }
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user?id=${id}`);
     }
   }
 };

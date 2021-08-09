@@ -203,7 +203,7 @@
                   ]"
                   @click.stop="checkType('likeArt')"
                 >
-                  文章( 180 )
+                  文章( {{ likeNumData.like_blog_num }} )
                 </div>
                 <div class="header-line"></div>
                 <div
@@ -213,7 +213,7 @@
                   ]"
                   @click.stop="checkType('likeChat')"
                 >
-                  动态( 4 )
+                  动态( {{ likeNumData.like_dyn_num }} )
                 </div>
                 <div class="header-line"></div>
                 <div
@@ -223,7 +223,7 @@
                   ]"
                   @click.stop="checkType('likeNews')"
                 >
-                  资讯( 4 )
+                  资讯( {{ likeNumData.like_news_num }} )
                 </div>
               </div>
             </div>
@@ -275,20 +275,16 @@
                     class="list-item-innerBox"
                     v-if="[100, 200, 300].includes(item.type)"
                   >
-                    <img
-                      class="avatar"
-                      src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/180/h/180/q/85/format/webp/interlace/1"
-                      alt=""
-                    />
+                    <img class="avatar" :src="item.User.avatar" alt="" />
                     <div class="list-item-right">
                       <!-- 发表过的文章 -->
                       <div
                         class="list-item-right-title"
                         v-if="item.type === 100"
                       >
-                        橘猫很方发布了文章<span
+                        {{ item.User.nickname }}发布了文章<span
                           class="list-item-right-title-name"
-                          >前端跨域解决方案</span
+                          >{{ item.title }}</span
                         >
                       </div>
                       <!-- 发表过的动态 -->
@@ -306,12 +302,14 @@
                         class="list-item-right-title"
                         v-if="item.type === 300"
                       >
-                        橘猫很方发布了资讯<span
+                        {{ item.User.nickname }}发布了资讯<span
                           class="list-item-right-title-name"
-                          >前端跨域解决方案</span
+                          >{{ item.title }}</span
                         >
                       </div>
-                      <div class="list-item-right-time">6月前</div>
+                      <div class="list-item-right-time">
+                        {{ item.created_at }}月前
+                      </div>
                     </div>
                   </div>
                   <!-- 赞过的文章 -->
@@ -375,7 +373,9 @@
               </div>
               <!-- 文章&赞-文章 -->
               <div
-                v-if="selectItem === 'article' || selectItem === 'likeArt'"
+                v-if="
+                  ['articleHot', 'likeArt', 'articleNew'].includes(selectItem)
+                "
                 class="list-wrapper-innerBox list-wrapper-innerBox-article"
               >
                 <div
@@ -793,7 +793,7 @@
         </div>
       </div>
       <div class="user-wrapper-innerBox-aside">
-        <div class="innerBox-aside-userinfo">
+        <div class="innerBox-aside-userinfo" id="user_aside_userinfo">
           <div class="innerBox-aside-userinfo-title">个人成就</div>
           <div class="innerBox-aside-userinfo-content">
             <div class="innerBox-aside-userinfo-content-item">
@@ -814,7 +814,7 @@
             </div>
           </div>
         </div>
-        <div class="innerBox-aside-attention">
+        <div class="innerBox-aside-attention" id="user_aside_attention">
           <div class="innerBox-aside-attention-item" @click="getUserIdols">
             <div class="innerBox-aside-attention-item-tit">关注了</div>
             <div class="innerBox-aside-attention-item-num">
@@ -829,7 +829,7 @@
             </div>
           </div>
         </div>
-        <div class="innerBox-aside-footer">
+        <div class="innerBox-aside-footer" id="user_aside_footer">
           <div class="innerBox-aside-footer-item" @click="getUserCollection">
             <span>收藏集</span>
             <span>{{ userInfo.collections_num }}</span>
@@ -872,6 +872,8 @@ export default {
     const data = await $axios.get("/author/userinfo", {
       params: { uid: query.id }
     });
+
+    console.log(7788, data);
 
     if (data.error_code === 0) {
       return {
@@ -989,6 +991,7 @@ export default {
           break;
         case "beAttention":
           path = "/author/byfollowers"; // 更多-idol
+          break;
         case "dynamic":
           path = "/author/dynamic"; // 更多-idol
           break;
@@ -1004,7 +1007,9 @@ export default {
         // 当前页数+1
         this.pageIndex += 1;
 
-        if (["article", "collection"].includes(this.selectItem)) {
+        if (
+          ["collection", "articleHot", "articleNew"].includes(this.selectItem)
+        ) {
           this.listData = data.data.rows;
         } else if (this.selectItem === "chat") {
           data.data.rows.forEach(item => {
@@ -1022,7 +1027,9 @@ export default {
           });
 
           this.listData = data.data;
-        } else if (["likeArt", "dynamic"].includes(this.selectItem)) {
+        } else if (
+          ["likeArt", "dynamic", "likeNews"].includes(this.selectItem)
+        ) {
           this.listData = data.data;
         } else if (this.selectItem === "attention") {
           const result = [];

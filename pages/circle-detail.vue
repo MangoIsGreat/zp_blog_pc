@@ -36,9 +36,6 @@
             <span class="list-item-desc-theme" v-if="dynData.theme">{{ `#${dynData.theme}#` }}</span
             >&nbsp;{{ dynData.content }}
           </div>
-          <!-- <div class="list-item-theme" v-if="dynData.theme">
-            {{ `#${dynData.theme}#` }}
-          </div> -->
           <div class="list-item-photo">
             <img
               :src="pic"
@@ -249,7 +246,7 @@
         </div>
       </div>
       <div class="wrapper-innerBox-great">
-        <div class="circle-info-great">
+        <div class="circle-info-great" id="circle_detail_greate">
           <div class="great-title">精选留言</div>
           <div class="great-wrapper">
             <div
