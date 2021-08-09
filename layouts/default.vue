@@ -32,7 +32,7 @@ export default {
     // 监听scroll事件
     window.addEventListener(
       "scroll",
-      throttle(this.listenerScroll, 200, {
+      throttle(this.listenerScroll, 150, {
         leading: true,
         trailing: false
       })
@@ -101,15 +101,15 @@ export default {
         // 首页
         if (pathname === "/") {
           author_ranking.style.position = "fixed";
-          author_ranking.style.right = "267px";
+          author_ranking.style.right = "278px";
           author_ranking.style.top = "85px";
 
           home_poster.style.position = "fixed";
-          home_poster.style.right = "267px";
+          home_poster.style.right = "278px";
           home_poster.style.top = "395px";
 
           home_qr_code.style.position = "fixed";
-          home_qr_code.style.right = "267px";
+          home_qr_code.style.right = "278px";
           home_qr_code.style.top = "605px";
         }
 

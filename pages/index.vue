@@ -52,7 +52,12 @@
                   @click="toArticle(item.id)"
                 >
                   <div class="item-info">
-                    <div class="author-name">{{ item.User.nickname }}</div>
+                    <div
+                      @click.stop="toUserPage(item.User.id)"
+                      class="author-name"
+                    >
+                      {{ item.User.nickname }}
+                    </div>
                     <div class="time">一小时前</div>
                     <div class="tag-type">{{ item.Tag.tagName }}</div>
                   </div>

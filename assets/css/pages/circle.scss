@@ -45,7 +45,7 @@
   }
 
   .circle-content {
-    flex: 1;
+    width: 712px;
     padding: 0 15px 0 127px;
     box-sizing: border-box;
 
@@ -462,6 +462,7 @@
 
   .circle-info {
     width: 248px;
+    min-height: 800px;
 
     .circle-info-authorInfo {
       width: 100%;
