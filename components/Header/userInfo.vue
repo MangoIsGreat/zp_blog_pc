@@ -9,7 +9,10 @@
       </div>
     </div>
     <div class="content-second-line">
-      <div class="content-first-line-item">
+      <div
+        @click="toUserPage(currentUserInfo.id)"
+        class="content-first-line-item"
+      >
         <i class="iconfont icon-wode"></i>我的主页
       </div>
       <div class="content-first-line-item">
@@ -34,7 +37,17 @@
 import { removeLocalStorage } from "@/utils/store";
 import { removeCookie } from "@/utils/cookie";
 export default {
+  computed: {
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
+    }
+  },
   methods: {
+    toUserPage(id) {
+      window.open(`/user/${id}`);
+
+      this.$store.commit("login/isShowInfo", false);
+    },
     writing() {
       window.open("/writing/article", "_blank");
     },

@@ -30,7 +30,8 @@ export default {
     "@/plugins/element-ui",
     "@/plugins/axios",
     "@/plugins/lazyload",
-    { src: "@/plugins/mavon-editor", ssr: false }
+    { src: "@/plugins/mavon-editor", ssr: false },
+    { src: "@/plugins/viewer", ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

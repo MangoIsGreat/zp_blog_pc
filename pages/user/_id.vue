@@ -23,7 +23,7 @@
           </div>
           <div class="innerBox-content-user-right">
             <el-button
-              @click="editUserInfo"
+              @click="$router.push(`/edit-user/${$route.params.id}`)"
               class="edit-userinfo"
               size="small"
               plain
@@ -917,9 +917,10 @@ export default {
       this.getArtData();
     },
     // 跳转到编辑用户信息页
-    editUserInfo() {
-      this.$router.push(`/edit-user/${this.$route.params.id}`);
-    },
+    // editUserInfo() {
+    //   console.log(88899)
+    //   this.$router.push(`/edit-user/${this.$route.params.id}`);
+    // },
     // 查看收藏夹
     getUserCollection() {
       this.selectItem = "collection";

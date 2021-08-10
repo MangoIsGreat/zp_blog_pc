@@ -55,6 +55,8 @@ export default {
       // 隐藏用户登录信息浮窗面板
       if (!this.$store.state.login.isShowInfo) return;
 
+      console.log("hidden");
+
       this.$store.commit("login/toggleInfoOpen", false);
     },
     toTop() {

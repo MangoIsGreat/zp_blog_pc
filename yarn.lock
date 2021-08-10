@@ -4945,6 +4945,11 @@ he@1.2.0, he@^1.1.0, he@^1.2.0:
   resolved "https://registry.nlark.com/he/download/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha1-hK5l+n6vsWX922FWauFLrwVmTw8=
 
+hevue-img-preview@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.nlark.com/hevue-img-preview/download/hevue-img-preview-5.0.0.tgz#dd1ce6703de943bb663d62494e45ea859779f1b0"
+  integrity sha1-3RzmcD3pQ7tmPWJJTkXqhZd58bA=
+
 hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.nlark.com/hex-color-regex/download/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"

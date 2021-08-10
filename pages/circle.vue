@@ -206,10 +206,11 @@
               </div>
               <div class="list-item-photo">
                 <img
-                  v-lazy="pic"
                   class="list-item-photo-t"
+                  v-lazy="pic"
                   v-for="(pic, picIndex) in item.picUrl"
                   :key="picIndex"
+                  @click="previewImg(pic)"
                 />
               </div>
               <div class="list-item-operate">
@@ -454,7 +455,7 @@
       </div>
       <div class="circle-info">
         <div
-          @click="toUserPage(userInfo.id)"
+          @click="toUserPage(currentUserInfo.id)"
           class="circle-info-authorInfo"
           v-if="currentUserInfo"
         >
@@ -630,6 +631,14 @@ export default {
     // this.getUserInfo();
   },
   methods: {
+    previewImg(url) {
+      this.$hevueImgPreview({
+        url,
+        clickMaskCLose: true,
+        closeBtn: false,
+        controlBar: false
+      });
+    },
     // 获取用户信息
     // async getUserInfo() {
     //   // 获取“用户信息”
