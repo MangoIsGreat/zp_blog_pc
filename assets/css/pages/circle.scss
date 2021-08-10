@@ -30,8 +30,8 @@
       cursor: pointer;
 
       &:hover {
-        background-color: $bg-color-hover;
-        color: $primary-color;
+        background-color: $bg-color-hover !important;
+        color: $primary-color !important;
       }
 
       &:nth-child(1) {
@@ -177,6 +177,7 @@
                   height: 45px;
                   margin-right: 10px;
                   border-radius: 45px;
+                  cursor: pointer;
                 }
 
                 .list-item-info-left-info {
@@ -185,6 +186,7 @@
                     font-size: $fontSize-bigger;
                     color: $article-title-color;
                     line-height: 20px;
+                    cursor: pointer;
                   }
 
                   .list-item-info-left-info-details {
@@ -327,6 +329,7 @@
                   height: 32px;
                   margin-right: 10px;
                   border-radius: 50%;
+                  cursor: pointer;
                 }
 
                 .main-body-innerBox-right {
@@ -339,6 +342,7 @@
 
                     .right-firstline-nickname {
                       margin-right: 10px;
+                      cursor: pointer;
                     }
 
                     .identity {
@@ -368,7 +372,7 @@
 
                     .right-bottomline-reply {
                       .icon-pinglun {
-                        padding: 0  20px 0 44px;
+                        padding: 0 20px 0 44px;
                       }
 
                       .iconfont {
@@ -409,6 +413,7 @@
 
                         .right-firstline-nickname {
                           margin-right: 10px;
+                          cursor: pointer;
                         }
 
                         .right-firstline-job {
@@ -419,6 +424,7 @@
                       .body-innerBox-right-content {
                         line-height: 22px;
                         padding: 6px 0;
+                        cursor: pointer;
                       }
 
                       .body-innerBox-right-bottomline {
@@ -610,7 +616,7 @@
     .circle-poster {
       @include setBgImg(248px, 200px, "@/assets/img/circle-page-poster.jpg");
       cursor: pointer;
-      transition: all .2s;
+      transition: all 0.2s;
     }
   }
 }

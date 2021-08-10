@@ -29,6 +29,7 @@ export default {
   plugins: [
     "@/plugins/element-ui",
     "@/plugins/axios",
+    "@/plugins/lazyload",
     { src: "@/plugins/mavon-editor", ssr: false }
   ],
 
@@ -51,13 +52,13 @@ export default {
   modules: [
     "@nuxtjs/axios",
     "cookie-universal-nuxt",
-    ['cookie-universal-nuxt', { alias: 'cookiz' }],
+    ["cookie-universal-nuxt", { alias: "cookiz" }]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: dev[process.env.NODE_ENV].ENV_API,
-    timeOut: 1000,
+    timeOut: 1000
     // proxy: true, // 开启代理
     // prefix: "/api", // 请求url加前缀
     // credentials: true // 跨域请求时是否需要凭证

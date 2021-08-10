@@ -311,7 +311,7 @@
         width: 300px;
         margin-bottom: 10px;
         background-color: $bg-color-white;
-        transition: .3s;
+        transition: 0.3s;
 
         .great-title {
           width: 100%;
@@ -325,16 +325,20 @@
 
         .great-wrapper {
           width: 100%;
-          padding: 0 16px;
+          // padding: 0 16px;
           box-sizing: border-box;
 
           .great-wrapper-item {
             display: flex;
             width: 100%;
-            padding: 12px 0;
+            padding: 12px 16px;
             box-sizing: border-box;
             border-bottom: 1px solid $border-color;
             cursor: pointer;
+
+            &:hover {
+              background-color: #fafafa;
+            }
 
             &:nth-last-child(1) {
               border: none;

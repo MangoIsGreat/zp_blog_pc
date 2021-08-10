@@ -196,37 +196,37 @@ export default {
 
         // 资讯页
         if (pathname === "/news") {
-          news_send_news.style.position = null;
+          news_send_news.style = null;
 
-          news_qr_code.style.position = null;
+          news_qr_code.style = null;
         }
 
         // 文章页
         if (pathname.indexOf("/article") > -1) {
-          article_author_info.style.position = null;
+          article_author_info.style = null;
 
-          article_more_art.style.position = null;
+          article_more_art.style = null;
         }
 
         // 互动详情页
         if (pathname.indexOf("/circle-detail") > -1) {
-          circle_detail_greate.style.position = null;
+          circle_detail_greate.style = null;
         }
 
         // 资讯详情页
         if (pathname.indexOf("/news-detail") > -1) {
-          news_detail_send_news.style.position = null;
+          news_detail_send_news.style = null;
 
-          news_detail_new.style.position = null;
+          news_detail_new.style = null;
         }
 
         // 用户详情页
         if (pathname.indexOf("/user") > -1) {
-          user_aside_userinfo.style.position = null;
+          user_aside_userinfo.style = null;
 
-          user_aside_attention.style.position = null;
+          user_aside_attention.style = null;
 
-          user_aside_footer.style.position = null;
+          user_aside_footer.style = null;
         }
       }
     }

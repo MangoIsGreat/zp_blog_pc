@@ -8,9 +8,10 @@
               <img
                 :src="dynData.User.avatar"
                 class="list-item-info-left-avatar"
+                @click="toUserPage(dynData.User.id)"
               />
               <div class="list-item-info-left-info">
-                <div class="list-item-info-left-info-title">
+                <div @click="toUserPage(dynData.User.id)" class="list-item-info-left-info-title">
                   {{ dynData.User.nickname }}
                 </div>
                 <div class="list-item-info-left-info-details">
@@ -98,10 +99,10 @@
               v-for="(itm, idx) in commentList"
               :key="idx"
             >
-              <img class="avatar" :src="itm.userInfo.avatar" alt="" />
+              <img @click="toUserPage(itm.userInfo.id)" class="avatar" :src="itm.userInfo.avatar" alt="" />
               <div class="main-body-innerBox-right">
                 <div class="body-innerBox-right-firstline">
-                  <div class="right-firstline-nickname">
+                  <div @click="toUserPage(itm.userInfo.id)" class="right-firstline-nickname">
                     {{ itm.userInfo.nickname }}
                   </div>
                   <div class="right-firstline-job">
@@ -167,10 +168,10 @@
                   v-for="(t, i) in itm.child"
                   :key="i"
                 >
-                  <img class="avatar" :src="t.from.avatar" alt="" />
+                  <img @click="toUserPage(t.from.id)" class="avatar" :src="t.from.avatar" alt="" />
                   <div class="main-body-innerBox-right">
                     <div class="body-innerBox-right-firstline">
-                      <div class="right-firstline-nickname">
+                      <div @click="toUserPage(t.from.id)" class="right-firstline-nickname">
                         {{ t.from.nickname }}
                       </div>
                       <div
@@ -184,7 +185,7 @@
                       </div>
                     </div>
                     <div class="body-innerBox-right-content">
-                      回复&nbsp;<span class="reply">{{ t.to.nickname }}</span
+                      回复&nbsp;<span @click.stop="toUserPage(t.to.id)" class="reply">{{ t.to.nickname }}</span
                       >：{{ t.content }}
                     </div>
                     <div class="body-innerBox-right-bottomline">
@@ -294,11 +295,11 @@ export default {
       showReply: "" // 是否展示回复评论
     };
   },
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, params }) {
     // 获取"动态"列表数据
     const data = await $axios.get("/dynamic/dynamic", {
       params: {
-        id: query.id
+        id: params.id
       }
     });
 
@@ -325,7 +326,7 @@ export default {
 
     // 获取评论列表
     const commentList = await $axios.get("/dcomment/list", {
-      params: { dynamicId: query.id }
+      params: { dynamicId: params.id }
     });
 
     if (commentList.error_code !== 0) {
@@ -362,7 +363,7 @@ export default {
       if (!this.comment) return;
 
       const data = await this.$axios.post("/dcomment/comment", {
-        dynamic: this.$route.query.id,
+        dynamic: this.$route.params.id,
         content: this.comment
       });
 
@@ -386,7 +387,7 @@ export default {
     async getReplyList() {
       // 获取评论列表
       const commentList = await this.$axios.get("/dcomment/list", {
-        params: { dynamicId: this.$route.query.id }
+        params: { dynamicId: this.$route.params.id }
       });
 
       if (commentList.error_code !== 0) {
@@ -529,8 +530,12 @@ export default {
     },
     // 跳转至动态详情页
     toDetailPage(id) {
-      window.open(`/circle-detail?id=${id}`);
-    }
+      window.open(`/circle-detail/${id}`);
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user/${id}`);
+    },
   }
 };
 </script>

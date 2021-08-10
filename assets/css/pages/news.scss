@@ -75,13 +75,16 @@
           border-bottom: 1px solid $border-color;
           cursor: pointer;
 
+          &:hover {
+            background-color: #fafafa;
+          }
+
           &:nth-last-child(1) {
             border: none;
           }
 
           .list-item-pic {
-            width: 162px;
-            height: 114px;
+            @include setBgImg2(162px, 114px);
           }
 
           .list-item-content {

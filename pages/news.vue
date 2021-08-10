@@ -57,11 +57,11 @@
                 </div>
               </div>
             </div>
-            <img
+            <div
+              v-lazy:background-image="item.titlePic"
               v-if="item.titlePic"
-              :src="item.titlePic"
               class="list-item-pic"
-            />
+            ></div>
           </li>
         </ul>
       </div>
@@ -188,7 +188,7 @@ export default {
       this.getNewsList();
     },
     toNewsPage(id) {
-      window.open(`/news-detail?id=${id}`, "_blank");
+      window.open(`/news-detail/${id}`, "_blank");
     },
     // 打开投递“资讯”页
     publishNews() {

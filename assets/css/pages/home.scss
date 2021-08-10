@@ -80,7 +80,7 @@
 
       .content-body {
         width: 100%;
-        padding: 0 15px;
+        // padding: 0 15px;
         box-sizing: border-box;
 
         .body {
@@ -89,7 +89,13 @@
           .list-wrapper {
             width: 100%;
 
+            .infinite-list-item:hover {
+              background-color: #fafafa;
+            }
+
             .list-item {
+              padding: 0 15px;
+              box-sizing: border-box;
               width: 100%;
               border-bottom: 1px solid $border-color;
               font-size: 13px;
@@ -128,10 +134,10 @@
                 }
               }
 
-              .item-content {
+              .item-content-t {
                 display: flex;
 
-                .content-left {
+                .content-left-t {
                   flex: 1;
                   width: calc(100% - 120px);
                   padding-right: 15px;
@@ -167,10 +173,7 @@
                 }
 
                 .content-right {
-                  width: auto;
-                  height: auto;
-                  max-width: 120px;
-                  max-height: 80px;
+                  @include setBgImg2(120px, 80px);
                   padding: 0;
                 }
               }
@@ -188,7 +191,7 @@
         width: 260px;
         margin-bottom: 20px;
         background-color: $bg-color-white;
-        transition: all .3s;
+        transition: all 0.3s;
 
         .author-list-item {
           padding: 12px 16px;
@@ -238,7 +241,7 @@
       }
 
       .home-page-poster {
-        transition: all .3s;
+        transition: all 0.3s;
         @include setBgImg(260px, 200px, "@/assets/img/home-page-poster.jpg");
         margin-bottom: 20px;
       }
@@ -248,7 +251,7 @@
         box-sizing: border-box;
         margin-bottom: 20px;
         @include setBgColorAndPadding(260px, 12px);
-        transition: all .3s;
+        transition: all 0.3s;
 
         .qr-code {
           @include setBgImg(50px, 50px, "@/assets/img/download_qrcode.png");

@@ -168,9 +168,10 @@
                     <img
                       :src="item.userInfo.avatar"
                       class="list-item-info-left-avatar"
+                      @click="toUserPage(item.userInfo.id)"
                     />
                     <div class="list-item-info-left-info">
-                      <div class="list-item-info-left-info-title">
+                      <div @click="toUserPage(item.userInfo.id)" class="list-item-info-left-info-title">
                         {{ item.userInfo.nickname }}
                       </div>
                       <div class="list-item-info-left-info-details">
@@ -202,7 +203,7 @@
               </div>
               <div class="list-item-photo">
                 <img
-                  :src="pic"
+                  v-lazy="pic"
                   class="list-item-photo-t"
                   v-for="(pic, picIndex) in item.picUrl"
                   :key="picIndex"
@@ -268,10 +269,10 @@
                     v-for="(itm, idx) in commentList"
                     :key="idx"
                   >
-                    <img class="avatar" :src="itm.userInfo.avatar" alt="" />
+                    <img @click="toUserPage(itm.userInfo.id)" class="avatar" :src="itm.userInfo.avatar" alt="" />
                     <div class="main-body-innerBox-right">
                       <div class="body-innerBox-right-firstline">
-                        <div class="right-firstline-nickname">
+                        <div @click="toUserPage(itm.userInfo.id)" class="right-firstline-nickname">
                           {{ itm.userInfo.nickname }}
                         </div>
                         <div class="right-firstline-job">
@@ -340,7 +341,7 @@
                         <img class="avatar" :src="t.from.avatar" alt="" />
                         <div class="main-body-innerBox-right">
                           <div class="body-innerBox-right-firstline">
-                            <div class="right-firstline-nickname">
+                            <div @click="toUserPage(t.from.id)" class="right-firstline-nickname">
                               {{ t.from.nickname }}
                             </div>
                             <div
@@ -354,7 +355,7 @@
                             </div>
                           </div>
                           <div class="body-innerBox-right-content">
-                            回复&nbsp;<span class="reply">{{
+                            回复&nbsp;<span @click.stop="toUserPage(t.to.id)" class="reply">{{
                               t.to.nickname
                             }}</span
                             >：{{ t.content }}
@@ -891,11 +892,11 @@ export default {
     },
     // 跳转至动态详情页
     toDetailPage(id) {
-      window.open(`/circle-detail?id=${id}`);
+      window.open(`/circle-detail/${id}`);
     },
     // 跳转至用户页
     toUserPage(id) {
-      window.open(`/user?id=${id}`);
+      window.open(`/user/${id}`);
     },
     // 选中标签类型
     setMenu(value) {

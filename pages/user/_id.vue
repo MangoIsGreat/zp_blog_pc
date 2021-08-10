@@ -419,7 +419,7 @@
                         </div>
                       </div>
                     </div>
-                    <img class="content-right" :src="item.titlePic" />
+                    <img v-lazy="item.titlePic" class="content-right" />
                   </div>
                 </div>
               </div>
@@ -478,7 +478,7 @@
                   </div>
                   <div class="list-item-photo">
                     <img
-                      :src="pic"
+                      v-lazy="pic"
                       class="list-item-photo-t"
                       v-for="(pic, picIndex) in item.picUrl"
                       :key="picIndex"
@@ -740,7 +740,7 @@
                   </div>
                   <img
                     v-if="item.titlePic"
-                    :src="item.titlePic"
+                    v-lazy="item.titlePic"
                     class="list-item-pic"
                   />
                 </div>
@@ -868,12 +868,10 @@ export default {
       likeNumData: null // 点赞数据量
     };
   },
-  async asyncData({ $axios, query }) {
+  async asyncData({ $axios, params }) {
     const data = await $axios.get("/author/userinfo", {
-      params: { uid: query.id }
+      params: { uid: params.id }
     });
-
-    console.log(7788, data);
 
     if (data.error_code === 0) {
       return {
@@ -901,7 +899,7 @@ export default {
     },
     // 跳转到编辑用户信息页
     editUserInfo() {
-      this.$router.push(`/edit-user/${this.$route.query.id}`);
+      this.$router.push(`/edit-user/${this.$route.params.id}`);
     },
     // 查看收藏夹
     getUserCollection() {
@@ -957,7 +955,7 @@ export default {
 
       // 要传递的参数
       const params = {
-        uid: this.$route.query.id,
+        uid: this.$route.params.id,
         pageIndex: 1,
         pageSize: this.pageSize
       };
@@ -1062,7 +1060,7 @@ export default {
     async getLikeNum() {
       const data = await this.$axios.get("/author/likeNum", {
         params: {
-          uid: this.$route.query.id
+          uid: this.$route.params.id
         }
       });
 
@@ -1074,7 +1072,7 @@ export default {
     },
     // 跳转到文章页
     toArticle(id) {
-      window.open(`/article?id=${id}`, "_blank");
+      window.open(`/article/${id}`, "_blank");
     },
     // 点赞博客
     async likeBlog(blogId) {
@@ -1325,13 +1323,13 @@ export default {
     },
     // 跳转至动态详情页
     toDetailPage(id) {
-      window.open(`/circle-detail?id=${id}`);
+      window.open(`/circle-detail/${id}`);
     },
     toComment(id) {
-      window.open(`/article?id=${id}#make_comments`, "_blank");
+      window.open(`/article/${id}#make_comments`, "_blank");
     },
     toNewsPage(id) {
-      window.open(`/news-detai?id=${id}`, "_blank");
+      window.open(`/news-detai/${id}`, "_blank");
     },
     // 隐藏评论输入框
     hiddenToComment() {}

@@ -61,8 +61,8 @@
                     <div class="time">一小时前</div>
                     <div class="tag-type">{{ item.Tag.tagName }}</div>
                   </div>
-                  <div class="item-content">
-                    <div class="content-left">
+                  <div class="item-content-t">
+                    <div class="content-left-t">
                       <h3 class="title">{{ item.title }}</h3>
                       <div class="desc">
                         {{ item.description }}
@@ -91,7 +91,7 @@
                         </div>
                       </div>
                     </div>
-                    <img class="content-right" :src="item.titlePic" />
+                    <div v-lazy:background-image="item.titlePic" class="content-right"></div>
                   </div>
                 </li>
               </ul>
@@ -295,10 +295,10 @@ export default {
       }
     },
     toArticle(id) {
-      window.open(`/article?id=${id}`, "_blank");
+      window.open(`/article/${id}`, "_blank");
     },
     comment(id) {
-      window.open(`/article?id=${id}#make_comments`, "_blank");
+      window.open(`/article/${id}#make_comments`, "_blank");
     },
     getAuthorList() {
       window.open("/author-list", "_blank");

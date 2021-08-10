@@ -23,6 +23,7 @@
 
         .innerBox-left {
           display: flex;
+          cursor: pointer;
 
           .avatar {
             height: 40px;
@@ -153,6 +154,8 @@
             }
 
             .info-left-author-detail {
+              cursor: pointer;
+
               .author-detail-info {
                 display: flex;
 
@@ -241,6 +244,7 @@
                 height: 32px;
                 border-radius: 50%;
                 margin-right: 10px;
+                cursor: pointer;
               }
 
               .comments-main-body-innerBox-right {
@@ -250,6 +254,7 @@
                 .user-line {
                   display: flex;
                   font-size: $fontSize-middle;
+                  cursor: pointer;
 
                   .user-line-name {
                     margin-right: 8px;
@@ -330,11 +335,13 @@
                       height: 32px;
                       margin-right: 10px;
                       border-radius: 50%;
+                      cursor: pointer;
                     }
 
                     .comments-reply-body-line-right {
                       flex: 1;
                       border-bottom: 1px solid $border-color;
+                      cursor: pointer;
 
                       .reply-line-author-info {
                         display: flex;
@@ -455,6 +462,7 @@
               .time {
                 pointer-events: none;
                 border-right: 1px solid $border-color;
+                cursor: pointer;
               }
 
               .author-name {
@@ -513,10 +521,7 @@
               }
 
               .content-right {
-                width: auto;
-                height: auto;
-                max-width: 120px;
-                max-height: 80px;
+                @include setBgImg2(120px, 80px);
                 padding: 0;
               }
             }
@@ -534,7 +539,7 @@
       width: 240px;
       margin-bottom: 20px;
       background-color: $bg-color-white;
-      transition: all .2s;
+      transition: all 0.2s;
 
       .aside-author-title {
         width: 100%;
@@ -552,6 +557,7 @@
 
         .aside-author-body-top {
           display: flex;
+          cursor: pointer;
 
           .avatar {
             width: 50px;
@@ -643,7 +649,7 @@
     .more-article {
       width: 240px;
       background-color: $bg-color-white;
-      transition: all .2s;
+      transition: all 0.2s;
 
       .more-article-header {
         width: 100%;

@@ -60,6 +60,15 @@ $fontSize-small: 12px;
   background-position: center;
 }
 
+// 设置背景图片
+@mixin setBgImg2($width, $height) {
+  width: $width;
+  height: $height;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 // 设置背景色及padding值
 @mixin setBgColorAndPadding($width, $padding) {
   width: $width;

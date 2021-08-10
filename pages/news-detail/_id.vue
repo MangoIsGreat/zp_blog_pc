@@ -6,7 +6,10 @@
           {{ articleInfo.title }}
         </h1>
         <div class="news-article-desc">
-          <div class="news-article-desc-item">
+          <div
+            @click="toUserPage(articleInfo.User.id)"
+            class="news-article-desc-item"
+          >
             {{ articleInfo.User.nickname }}
           </div>
           <div class="news-article-desc-item">
@@ -163,10 +166,10 @@ export default {
       fixedTop: 160 // 左侧点赞面板距离顶部位置
     };
   },
-  async asyncData({ query, $axios }) {
+  async asyncData({ params, $axios }) {
     // 获取文章详情
     const data = await $axios.get("/news/article", {
-      params: { id: query.id }
+      params: { id: params.id }
     });
 
     if (data.error_code !== 0) {
@@ -176,14 +179,14 @@ export default {
     const mdContent = marked(data.data.content || "");
 
     // 获取热门文章推荐
-    const hotList = await $axios.get("/news/hot", { params: { id: query.id } });
+    const hotList = await $axios.get("/news/hot", { params: { id: params.id } });
 
     if (hotList.error_code !== 0) {
       Message.error("获取热门文章推荐失败！");
     }
 
     // 获取最新文章推荐
-    const newList = await $axios.get("/news/new", { params: { id: query.id } });
+    const newList = await $axios.get("/news/new", { params: { id: params.id } });
 
     if (newList.error_code !== 0) {
       Message.error("获取热门文章推荐失败！");
@@ -191,7 +194,7 @@ export default {
 
     // 获取相关文章推荐
     const moreList = await $axios.get("/news/more", {
-      params: { id: query.id, pageIndex: 1, pageSize: 10 }
+      params: { id: params.id, pageIndex: 1, pageSize: 10 }
     });
 
     if (moreList.error_code !== 0) {
@@ -227,13 +230,13 @@ export default {
       this.getMoreNews();
     },
     toNewsPage(id) {
-      window.open(`/news-detail?id=${id}`, "_blank");
+      window.open(`/news-detail/${id}`, "_blank");
     },
     // 获取更多资讯列表
     async getMoreNews() {
       const listData = await this.$axios.get("/news/more", {
         params: {
-          id: this.$route.query.id,
+          id: this.$route.params.id,
           pageIndex: this.pageIndex,
           pageSize: this.pageSize
         }
@@ -253,7 +256,7 @@ export default {
     // 点赞该篇资讯
     async likeArt() {
       const data = await this.$axios.post("/newslike/like", {
-        newsId: this.$route.query.id
+        newsId: this.$route.params.id
       });
 
       if (data.error_code === 0) {
@@ -323,7 +326,11 @@ export default {
     // 打开投递“资讯”页
     publishNews() {
       window.open("/writing?type=news", "_blank");
-    }
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user/${id}`);
+    },
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.dealWithPosition);

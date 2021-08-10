@@ -4,7 +4,7 @@
       <div class="article-wrapper-content">
         <div class="content-innerBox">
           <div class="innerBox-author">
-            <div class="innerBox-left">
+            <div class="innerBox-left" @click="toUserPage(articleInfo.User.id)">
               <img :src="articleInfo.User.avatar" class="avatar" />
               <div class="author-info">
                 <div class="author-name">{{ articleInfo.User.nickname }}</div>
@@ -45,7 +45,10 @@
                   class="avatar bottom-avatar"
                   :src="articleInfo.User.avatar"
                 />
-                <div class="info-left-author-detail">
+                <div
+                  class="info-left-author-detail"
+                  @click="toUserPage(articleInfo.User.id)"
+                >
                   <div class="author-detail-info">
                     <div class="author-detail-info-name">
                       {{ articleInfo.User.nickname }}
@@ -113,9 +116,14 @@
                   :key="index"
                   v-for="(item, index) in commentList"
                 >
-                  <img class="avatar" :src="item.comment.avatar" alt="" />
+                  <img
+                    @click="toUserPage(item.comment.id)"
+                    class="avatar"
+                    :src="item.comment.avatar"
+                    alt=""
+                  />
                   <div class="comments-main-body-innerBox-right">
-                    <div class="user-line">
+                    <div class="user-line" @click="toUserPage(item.comment.id)">
                       <div class="user-line-name">
                         {{ item.comment.nickname }}
                       </div>
@@ -182,8 +190,16 @@
                         v-for="(t, i) in item.child"
                         @click.stop
                       >
-                        <img class="avatar" :src="t.from.avatar" alt="" />
-                        <div class="comments-reply-body-line-right">
+                        <img
+                          @click="toUserPage(t.from.id)"
+                          class="avatar"
+                          :src="t.from.avatar"
+                          alt=""
+                        />
+                        <div
+                          @click="toUserPage(t.from.id)"
+                          class="comments-reply-body-line-right"
+                        >
                           <div class="reply-line-author-info">
                             <div class="username">{{ t.from.nickname }}</div>
                             <div
@@ -195,9 +211,10 @@
                             <div class="sign">{{ t.from.profession }}</div>
                           </div>
                           <div class="reply-line-comments-body">
-                            回复&nbsp;<span class="reply">{{
-                              t.to.nickname
-                            }}</span
+                            回复&nbsp;<span
+                              @click.stop="toUserPage(t.to.id)"
+                              class="reply"
+                              >{{ t.to.nickname }}</span
                             >：{{ t.content }}
                           </div>
                           <div class="reply-line-bottom">
@@ -280,7 +297,12 @@
             >
               <div class="list-item-wrapper">
                 <div class="item-info">
-                  <div class="author-name">{{ item.User.nickname }}</div>
+                  <div
+                    @click.stop="toUserPage(item.User.id)"
+                    class="author-name"
+                  >
+                    {{ item.User.nickname }}
+                  </div>
                   <div class="time">一小时前</div>
                   <div class="tag-type">{{ item.Tag.tagName }}</div>
                 </div>
@@ -314,7 +336,10 @@
                       </div>
                     </div>
                   </div>
-                  <img class="content-right" :src="item.titlePic" />
+                  <div
+                    v-lazy:background-image="item.titlePic"
+                    class="content-right"
+                  ></div>
                 </div>
               </div>
             </li>
@@ -325,7 +350,10 @@
         <div class="aside-author" id="article_author_info">
           <div class="aside-author-title">关于作者</div>
           <div class="aside-author-body">
-            <div class="aside-author-body-top">
+            <div
+              class="aside-author-body-top"
+              @click="toUserPage(articleInfo.User.id)"
+            >
               <img class="avatar" :src="articleInfo.User.avatar" alt="" />
               <div class="author-body-top-info">
                 <div class="top-info-name">{{ articleInfo.User.nickname }}</div>
@@ -491,10 +519,10 @@ export default {
       collectionType: "" // 输入的新建收藏集名称
     };
   },
-  async asyncData({ query, $axios }) {
+  async asyncData({ params, $axios }) {
     // 获取文章详情
     const data = await $axios.get("/blog/article", {
-      params: { id: query.id }
+      params: { id: params.id }
     });
 
     if (data.error_code !== 0) {
@@ -504,7 +532,9 @@ export default {
     const mdContent = marked(data.data.content || "");
 
     // 获取热门文章推荐
-    const hotList = await $axios.get("/blog/hot", { params: { id: query.id } });
+    const hotList = await $axios.get("/blog/hot", {
+      params: { id: params.id }
+    });
 
     if (hotList.error_code !== 0) {
       Message.error("获取热门文章推荐失败！");
@@ -512,7 +542,7 @@ export default {
 
     // 获取相关文章推荐
     const moreList = await $axios.get("/blog/more", {
-      params: { id: query.id, pageIndex: 1, pageSize: 10 }
+      params: { id: params.id, pageIndex: 1, pageSize: 10 }
     });
 
     if (moreList.error_code !== 0) {
@@ -521,7 +551,7 @@ export default {
 
     // 获取评论列表
     const commentList = await $axios.get("/bcomment/list", {
-      params: { blog: query.id }
+      params: { blog: params.id }
     });
 
     if (commentList.error_code !== 0) {
@@ -544,7 +574,7 @@ export default {
   methods: {
     // 跳转至评论页面
     toComment(id) {
-      window.open(`/article?id=${id}#make_comments`, "_blank");
+      window.open(`/article/${id}#make_comments`, "_blank");
     },
     loadData() {
       // 当前页大于总页数时停止请求数据：
@@ -557,7 +587,7 @@ export default {
     async getMoreBlog() {
       const listData = await this.$axios.get("/blog/more", {
         params: {
-          id: this.$route.query.id,
+          id: this.$route.params.id,
           pageIndex: this.pageIndex,
           pageSize: this.pageSize
         }
@@ -578,7 +608,7 @@ export default {
     async getReplyList() {
       // 获取评论列表
       const commentList = await this.$axios.get("/bcomment/list", {
-        params: { blog: this.$route.query.id }
+        params: { blog: this.$route.params.id }
       });
 
       if (commentList.error_code !== 0) {
@@ -591,10 +621,10 @@ export default {
       window.addEventListener("resize", this.dealWithPosition);
     },
     toArticle(id) {
-      window.open(`/article?id=${id}`, "_blank");
+      window.open(`/article/${id}`, "_blank");
     },
     toHotArticle(id) {
-      window.open(`/article?id=${id}#make_comments`, "_blank");
+      window.open(`/article/${id}#make_comments`, "_blank");
     },
     dealWithPosition() {
       this.fixedLeft = document.body.clientWidth * 0.1042;
@@ -603,7 +633,7 @@ export default {
     // 评论博客
     async makeComment() {
       const data = await this.$axios.post("/bcomment/comment", {
-        blog: this.$route.query.id,
+        blog: this.$route.params.id,
         content: this.comment
       });
 
@@ -641,7 +671,7 @@ export default {
     // 评论"博客评论"
     async replyToComment(value) {
       const data = await this.$axios.post("/bcomment/reply", {
-        blog: this.$route.query.id,
+        blog: this.$route.params.id,
         comment: value.id,
         content: this.replyComment,
         toUid: value.comment.id
@@ -660,7 +690,7 @@ export default {
     // 回复"博客评论"
     async replyToReply(value, item) {
       const data = await this.$axios.post("/bcomment/reply", {
-        blog: this.$route.query.id,
+        blog: this.$route.params.id,
         comment: item.id,
         content: this.replyContent,
         toUid: value.from.id
@@ -732,7 +762,7 @@ export default {
     // 点赞该篇博客
     async likeArt() {
       const data = await this.$axios.post("/blike/like", {
-        blog: this.$route.query.id
+        blog: this.$route.params.id
       });
 
       if (data.error_code === 0) {
@@ -854,7 +884,7 @@ export default {
     // 收藏博客
     async collectBlog(data) {
       const result = await this.$axios.post("/collect/blog", {
-        blogId: this.$route.query.id,
+        blogId: this.$route.params.id,
         collectionId: data.id,
         collectType: data.type
       });
@@ -896,6 +926,10 @@ export default {
       } else {
         Message.error("操作失败！");
       }
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user/${id}`);
     }
   },
   beforeDestroy() {
