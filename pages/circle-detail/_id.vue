@@ -11,7 +11,10 @@
                 @click="toUserPage(dynData.User.id)"
               />
               <div class="list-item-info-left-info">
-                <div @click="toUserPage(dynData.User.id)" class="list-item-info-left-info-title">
+                <div
+                  @click="toUserPage(dynData.User.id)"
+                  class="list-item-info-left-info-title"
+                >
                   {{ dynData.User.nickname }}
                 </div>
                 <div class="list-item-info-left-info-details">
@@ -34,7 +37,9 @@
             </el-button>
           </div>
           <div class="list-item-desc">
-            <span class="list-item-desc-theme" v-if="dynData.theme">{{ `#${dynData.theme}#` }}</span
+            <span class="list-item-desc-theme" v-if="dynData.theme">{{
+              `#${dynData.theme}#`
+            }}</span
             >&nbsp;{{ dynData.content }}
           </div>
           <div class="list-item-photo">
@@ -72,7 +77,7 @@
           <div class="make-comments" @click.stop>
             <div class="first-line">
               <img
-                src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                :src="currentUserInfo ? currentUserInfo.avatar : defaultAvatar"
                 alt=""
                 class="avatar"
               />
@@ -99,10 +104,18 @@
               v-for="(itm, idx) in commentList"
               :key="idx"
             >
-              <img @click="toUserPage(itm.userInfo.id)" class="avatar" :src="itm.userInfo.avatar" alt="" />
+              <img
+                @click="toUserPage(itm.userInfo.id)"
+                class="avatar"
+                :src="itm.userInfo.avatar"
+                alt=""
+              />
               <div class="main-body-innerBox-right">
                 <div class="body-innerBox-right-firstline">
-                  <div @click="toUserPage(itm.userInfo.id)" class="right-firstline-nickname">
+                  <div
+                    @click="toUserPage(itm.userInfo.id)"
+                    class="right-firstline-nickname"
+                  >
                     {{ itm.userInfo.nickname }}
                   </div>
                   <div class="right-firstline-job">
@@ -142,7 +155,9 @@
                 >
                   <div class="first-line">
                     <img
-                      src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                      :src="
+                        currentUserInfo ? currentUserInfo.avatar : defaultAvatar
+                      "
                       alt=""
                       class="avatar"
                     />
@@ -168,10 +183,18 @@
                   v-for="(t, i) in itm.child"
                   :key="i"
                 >
-                  <img @click="toUserPage(t.from.id)" class="avatar" :src="t.from.avatar" alt="" />
+                  <img
+                    @click="toUserPage(t.from.id)"
+                    class="avatar"
+                    :src="t.from.avatar"
+                    alt=""
+                  />
                   <div class="main-body-innerBox-right">
                     <div class="body-innerBox-right-firstline">
-                      <div @click="toUserPage(t.from.id)" class="right-firstline-nickname">
+                      <div
+                        @click="toUserPage(t.from.id)"
+                        class="right-firstline-nickname"
+                      >
                         {{ t.from.nickname }}
                       </div>
                       <div
@@ -185,7 +208,10 @@
                       </div>
                     </div>
                     <div class="body-innerBox-right-content">
-                      回复&nbsp;<span @click.stop="toUserPage(t.to.id)" class="reply">{{ t.to.nickname }}</span
+                      回复&nbsp;<span
+                        @click.stop="toUserPage(t.to.id)"
+                        class="reply"
+                        >{{ t.to.nickname }}</span
                       >：{{ t.content }}
                     </div>
                     <div class="body-innerBox-right-bottomline">
@@ -218,7 +244,11 @@
                     >
                       <div class="first-line">
                         <img
-                          src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                          :src="
+                            currentUserInfo
+                              ? currentUserInfo.avatar
+                              : defaultAvatar
+                          "
                           alt=""
                           class="avatar"
                         />
@@ -282,10 +312,13 @@
 </template>
 
 <script>
+import dev from "@/env";
+
 export default {
   layout: "default",
   data() {
     return {
+      defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       comment: "", // 评论动态
       replyComment: "", // 回复评论动态
       replyToReplyValue: "", // 回复评论回复动态
@@ -338,6 +371,11 @@ export default {
       messageList: favList.data, // 精选留言
       commentList: commentList.data // 评论列表数据
     };
+  },
+  computed: {
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
+    }
   },
   methods: {
     // 关注作者
@@ -535,7 +573,7 @@ export default {
     // 跳转至用户页
     toUserPage(id) {
       window.open(`/user/${id}`);
-    },
+    }
   }
 };
 </script>

@@ -86,7 +86,7 @@
               <div class="make-comments" id="make_comments" @click.stop>
                 <div class="first-line">
                   <img
-                    src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                    :src="currentUserInfo ? currentUserInfo.avatar : defaultAvatar"
                     alt=""
                     class="avatar"
                   />
@@ -491,6 +491,7 @@
 </template>
 
 <script>
+import dev from "@/env";
 import marked from "marked";
 import { Message } from "element-ui";
 
@@ -498,7 +499,7 @@ export default {
   layout: "default",
   data() {
     return {
-      articleTagList: [2, 1, 1, 1],
+      defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       commentList: [], // 评论列表
       hotList: [], // 热门文章推荐
       moreList: [], // 相关文章推荐
@@ -566,6 +567,11 @@ export default {
       countNum: moreList.data.count, // 更多文章总文章数
       commentList: commentList.data // 评论列表
     };
+  },
+  computed: {
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
+    }
   },
   mounted() {
     // 实时更新左侧操作面板的位置：

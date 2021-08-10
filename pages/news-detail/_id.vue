@@ -325,7 +325,7 @@ export default {
     },
     // 打开投递“资讯”页
     publishNews() {
-      window.open("/writing?type=news", "_blank");
+      window.open("/writing/news", "_blank");
     },
     // 跳转至用户页
     toUserPage(id) {

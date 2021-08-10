@@ -168,6 +168,8 @@ export default {
 
             setCookie(this, "user_token", data.token);
             setLocalStorage("user_info", data.data);
+
+            this.$store.commit("login/saveUserInfo", data.data);
           }
         } else {
           // 验证失败
@@ -205,17 +207,17 @@ export default {
       this.isRegister = true;
       this.title = "注册账号";
       this.placeUserName = "请填写正确的Email";
-      this.username = "";
-      this.password1 = "";
+      this.form.username = "";
+      this.form.password1 = "";
     },
     toLogin() {
       this.isRegister = false;
       this.title = "用户登录";
       this.placeUserName = "请输入账号";
-      this.username = "";
-      this.password1 = "";
-      this.password2 = "";
-      this.nickname = "";
+      this.form.username = "";
+      this.form.password1 = "";
+      this.form.password2 = "";
+      this.form.nickname = "";
     }
   }
 };

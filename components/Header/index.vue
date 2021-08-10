@@ -41,12 +41,12 @@
           <div @click.stop="login">
             <el-avatar
               class="avatar item"
-              :src="userInfo ? userInfo.avatar : ''"
+              :src="currentUserInfo ? currentUserInfo.avatar : ''"
             ></el-avatar>
           </div>
+          <!-- 用户面板 -->
+          <UserInfo v-if="isShowInfo" />
         </div>
-        <!-- 用户面板 -->
-        <user-info v-if="isShowInfo" />
       </div>
     </div>
     <div class="header-wrapper-bottom"></div>
@@ -55,13 +55,13 @@
 
 <script>
 import { getLocalStorage } from "@/utils/store";
-import userInfo from "./userInfo.vue";
+import { getCookie } from "@/utils/cookie";
+import UserInfo from "./userInfo.vue";
 
 export default {
-  components: { userInfo },
+  components: { UserInfo },
   data() {
     return {
-      userInfo: null, // 用户信息
       selectPath: this.$route.path, // 选中的路径
       input: "",
       circleUrl: "",
@@ -87,28 +87,20 @@ export default {
     },
     isShowInfo() {
       return this.$store.state.login.isShowInfo;
+    },
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
     }
-  },
-  watch: {
-    isLogin() {
-      this.getUserInfo();
-    }
-  },
-  mounted() {
-    // 获取用户信息：
-    this.getUserInfo();
   },
   methods: {
-    getUserInfo() {
-      const userInfo = getLocalStorage("user_info");
-
-      this.userInfo = userInfo;
-    },
     openPage(path) {
-      window.open(`${path}?type=article`, "_blank");
+      window.open(`${path}/article`, "_blank");
     },
     login() {
-      const isLogin = getLocalStorage("user_token") ? true : false;
+      const isLogin =
+        getLocalStorage("user_info") && getCookie(this, "user_token")
+          ? true
+          : false;
 
       if (!isLogin) {
         return this.$store.commit("login/toggleOpen", true);

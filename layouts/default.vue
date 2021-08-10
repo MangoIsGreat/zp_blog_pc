@@ -21,12 +21,18 @@
 
 <script>
 import throttle from "lodash/throttle";
+import { getLocalStorage } from "@/utils/store";
+import { getCookie } from "@/utils/cookie";
 
 export default {
   computed: {
     isLogin() {
       return this.$store.state.login.isLogin;
     }
+  },
+  created() {
+    // 保存用户信息至vuex
+    this.saveUserInfo();
   },
   mounted() {
     // 监听scroll事件
@@ -39,6 +45,12 @@ export default {
     );
   },
   methods: {
+    // 保存用户信息至vuex
+    saveUserInfo() {
+      if (getLocalStorage("user_info") && getCookie(this, "user_token")) {
+        this.$store.commit("login/saveUserInfo", getLocalStorage("user_info"));
+      }
+    },
     hidden() {
       // 隐藏用户登录信息浮窗面板
       if (!this.$store.state.login.isShowInfo) return;

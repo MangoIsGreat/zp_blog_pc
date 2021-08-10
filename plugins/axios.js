@@ -1,8 +1,8 @@
-import { getLocalStorage } from "@/utils/store";
+// import { getLocalStorage } from "@/utils/store";
 import { getCookie } from "@/utils/cookie";
 import { encode } from "@/utils/encode";
 
-export default ({ $axios, app }) => {
+export default ({ $axios, app, store }) => {
   // 设置基地址
   // $axios.defaults.baseURL = 'http://XXX/api';
   // 请求拦截器
@@ -18,6 +18,10 @@ export default ({ $axios, app }) => {
 
   // 响应拦截器
   $axios.onResponse(response => {
+    if (response.data.error_code === 10006) {
+      store.commit("login/toggleOpen", true);
+    }
+
     return response.data;
   });
 

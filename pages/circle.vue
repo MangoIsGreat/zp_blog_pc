@@ -171,7 +171,10 @@
                       @click="toUserPage(item.userInfo.id)"
                     />
                     <div class="list-item-info-left-info">
-                      <div @click="toUserPage(item.userInfo.id)" class="list-item-info-left-info-title">
+                      <div
+                        @click="toUserPage(item.userInfo.id)"
+                        class="list-item-info-left-info-title"
+                      >
                         {{ item.userInfo.nickname }}
                       </div>
                       <div class="list-item-info-left-info-details">
@@ -241,7 +244,11 @@
                   <div class="make-comments" @click.stop>
                     <div class="first-line">
                       <img
-                        src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                        :src="
+                          currentUserInfo
+                            ? currentUserInfo.avatar
+                            : defaultAvatar
+                        "
                         alt=""
                         class="avatar"
                       />
@@ -269,10 +276,18 @@
                     v-for="(itm, idx) in commentList"
                     :key="idx"
                   >
-                    <img @click="toUserPage(itm.userInfo.id)" class="avatar" :src="itm.userInfo.avatar" alt="" />
+                    <img
+                      @click="toUserPage(itm.userInfo.id)"
+                      class="avatar"
+                      :src="itm.userInfo.avatar"
+                      alt=""
+                    />
                     <div class="main-body-innerBox-right">
                       <div class="body-innerBox-right-firstline">
-                        <div @click="toUserPage(itm.userInfo.id)" class="right-firstline-nickname">
+                        <div
+                          @click="toUserPage(itm.userInfo.id)"
+                          class="right-firstline-nickname"
+                        >
                           {{ itm.userInfo.nickname }}
                         </div>
                         <div class="right-firstline-job">
@@ -312,7 +327,11 @@
                       >
                         <div class="first-line">
                           <img
-                            src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                            :src="
+                              currentUserInfo
+                                ? currentUserInfo.avatar
+                                : defaultAvatar
+                            "
                             alt=""
                             class="avatar"
                           />
@@ -341,7 +360,10 @@
                         <img class="avatar" :src="t.from.avatar" alt="" />
                         <div class="main-body-innerBox-right">
                           <div class="body-innerBox-right-firstline">
-                            <div @click="toUserPage(t.from.id)" class="right-firstline-nickname">
+                            <div
+                              @click="toUserPage(t.from.id)"
+                              class="right-firstline-nickname"
+                            >
                               {{ t.from.nickname }}
                             </div>
                             <div
@@ -355,9 +377,10 @@
                             </div>
                           </div>
                           <div class="body-innerBox-right-content">
-                            回复&nbsp;<span @click.stop="toUserPage(t.to.id)" class="reply">{{
-                              t.to.nickname
-                            }}</span
+                            回复&nbsp;<span
+                              @click.stop="toUserPage(t.to.id)"
+                              class="reply"
+                              >{{ t.to.nickname }}</span
                             >：{{ t.content }}
                           </div>
                           <div class="body-innerBox-right-bottomline">
@@ -390,7 +413,11 @@
                           >
                             <div class="first-line">
                               <img
-                                src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                                :src="
+                                  currentUserInfo
+                                    ? currentUserInfo.avatar
+                                    : defaultAvatar
+                                "
                                 alt=""
                                 class="avatar"
                               />
@@ -429,16 +456,16 @@
         <div
           @click="toUserPage(userInfo.id)"
           class="circle-info-authorInfo"
-          v-if="userInfo"
+          v-if="currentUserInfo"
         >
           <div class="authorInfo-top">
-            <img :src="userInfo.avatar" class="authorInfo-top-avatar" />
+            <img :src="currentUserInfo.avatar" class="authorInfo-top-avatar" />
             <div class="authorInfo-top-info">
               <div class="authorInfo-top-info-name">
-                {{ userInfo.nickname }}
+                {{ currentUserInfo.nickname }}
               </div>
               <div class="authorInfo-top-info-job">
-                {{ userInfo.profession }}
+                {{ currentUserInfo.profession }}
               </div>
             </div>
           </div>
@@ -447,7 +474,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo.idolNum }}
+                  {{ currentUserInfo.idolNum }}
                 </div>
               </div>
             </div>
@@ -455,7 +482,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注者</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo.fansNum }}
+                  {{ currentUserInfo.fansNum }}
                 </div>
               </div>
             </div>
@@ -463,7 +490,7 @@
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">获赞</div>
                 <div class="authorInfo-bottom-item-num">
-                  {{ userInfo.blogLikeNum }}
+                  {{ currentUserInfo.blogLikeNum }}
                 </div>
               </div>
             </div>
@@ -514,6 +541,7 @@ export default {
   layout: "default",
   data() {
     return {
+      defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       uploadURL: dev[process.env.NODE_ENV].ENV_API + "/upload", // 图片上传地址
       token: "", // token
       menuList: [],
@@ -589,25 +617,30 @@ export default {
       menuList: theme.data // 动态类型
     };
   },
+  computed: {
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
+    }
+  },
   created() {
     // 获取token
     this.getToken();
 
     // 获取用户信息
-    this.getUserInfo();
+    // this.getUserInfo();
   },
   methods: {
     // 获取用户信息
-    async getUserInfo() {
-      // 获取“用户信息”
-      const userInfo = await this.$axios.get("/user/userInfo");
+    // async getUserInfo() {
+    //   // 获取“用户信息”
+    //   const userInfo = await this.$axios.get("/user/userInfo");
 
-      if (theme.error_code !== 0) {
-        return (this.userInfo = null);
-      }
+    //   if (theme.error_code !== 0) {
+    //     return (this.userInfo = null);
+    //   }
 
-      this.userInfo = userInfo.data;
-    },
+    //   this.userInfo = userInfo.data;
+    // },
     getToken() {
       const token = getCookie(this, "user_token");
       // 将获取到token加入到请求头中

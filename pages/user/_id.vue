@@ -519,7 +519,11 @@
                       <div class="make-comments" @click.stop>
                         <div class="first-line">
                           <img
-                            src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                            :src="
+                              currentUserInfo
+                                ? currentUserInfo.avatar
+                                : defaultAvatar
+                            "
                             alt=""
                             class="avatar"
                           />
@@ -592,7 +596,11 @@
                           >
                             <div class="first-line">
                               <img
-                                src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                                :src="
+                                  currentUserInfo
+                                    ? currentUserInfo.avatar
+                                    : defaultAvatar
+                                "
                                 alt=""
                                 class="avatar"
                               />
@@ -674,7 +682,11 @@
                               >
                                 <div class="first-line">
                                   <img
-                                    src="https://user-gold-cdn.xitu.io/2020/1/18/16fb901f1bac3975?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1"
+                                    :src="
+                                      currentUserInfo
+                                        ? currentUserInfo.avatar
+                                        : defaultAvatar
+                                    "
                                     alt=""
                                     class="avatar"
                                   />
@@ -845,12 +857,14 @@
 </template>
 
 <script>
+import dev from "@/env";
 import { Message } from "element-ui";
 
 export default {
   layout: "default",
   data() {
     return {
+      defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       selectItem: "dynamic", // 选中的类型
       listData: [], // 列表数据
       pageSize: 15,
@@ -879,6 +893,11 @@ export default {
       };
     } else {
       Message.error("用户信息获取失败");
+    }
+  },
+  computed: {
+    currentUserInfo() {
+      return this.$store.state.login.userinfo;
     }
   },
   created() {

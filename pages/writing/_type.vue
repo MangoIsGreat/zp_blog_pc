@@ -61,8 +61,8 @@ export default {
     };
   },
   created() {
-    if (this.$route.query.type) {
-      this.editType = this.$route.query.type;
+    if (this.$route.params.type) {
+      this.editType = this.$route.params.type;
     } else {
       Message.error("编辑的文章类型是必填参数！");
     }
@@ -72,9 +72,9 @@ export default {
   },
   methods: {
     getPublishType() {
-      if (this.$route.query.type === "article") {
+      if (this.$route.params.type === "article") {
         this.uploadType = "article";
-      } else if (this.$route.query.type === "news") {
+      } else if (this.$route.params.type === "news") {
         this.uploadType = "news";
       }
     },

@@ -36,16 +36,17 @@ import { removeCookie } from "@/utils/cookie";
 export default {
   methods: {
     writing() {
-      window.open("/writing", "_blank");
+      window.open("/writing/article", "_blank");
     },
     logout() {
       removeCookie(this, "user_token");
       removeLocalStorage("user_info");
 
       this.$store.commit("login/toggleInfoOpen", false);
-      // this.$store.commit("login/toggleLogin", false);
 
       this.$store.commit("login/toggleOpen", false);
+
+      this.$store.commit("login/clearUserInfo");
     }
   }
 };
