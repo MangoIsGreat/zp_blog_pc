@@ -7,18 +7,19 @@
           <span class="body-item-left-required">*</span>&nbsp;分类：
         </div>
         <div class="panel-wrapper-body-item-right">
-          <div
-            @click="selectTag(item.tag_type)"
-            class="body-item-right-tag"
-            v-for="(item, index) in tagList"
-            :style="{
-              backgroundColor:
-                item.tag_type === selectedTagType ? '#e6f9f4' : '#f4f5f5',
-              color: item.tag_type === selectedTagType ? '#00c58e' : '#86909c'
-            }"
-            :key="index"
-          >
-            {{ item.tag_name }}
+          <div v-for="(item, index) in tagList" :key="index">
+            <div
+              v-if="![10000, 10001, 20000].includes(item.tag_type)"
+              @click="selectTag(item.tag_type)"
+              class="body-item-right-tag"
+              :style="{
+                backgroundColor:
+                  item.tag_type === selectedTagType ? '#e6f9f4' : '#f4f5f5',
+                color: item.tag_type === selectedTagType ? '#00c58e' : '#86909c'
+              }"
+            >
+              {{ item.tag_name }}
+            </div>
           </div>
         </div>
       </div>

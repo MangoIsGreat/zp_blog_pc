@@ -137,24 +137,21 @@ export default {
       this.writeContent = content.substr(0, 100);
     },
     // 绑定@imgAdd event
-    $imgAdd(pos, $file) {
+    async $imgAdd(pos, $file) {
       // 第一步.将图片上传到服务器.
-      var formdata = new FormData();
-      formdata.append("image", $file);
-      axios({
-        url: "server url",
-        method: "post",
-        data: formdata,
-        headers: { "Content-Type": "multipart/form-data" }
-      }).then(url => {
-        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-        /**
-         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-         */
-        $vm.$img2Url(pos, url);
+      let formData = new FormData();
+      formData.append("file", $file);
+      formData.append("type", "content");
+
+      const data = await this.$axios.post("/upload", formData, {
+        headers: { contentType: false, processData: false }
       });
+
+      if (data.error_code === 0) {
+        this.$refs.md.$imglst2Url([[pos, data.url]]);
+      } else {
+        Message.error("上传失败");
+      }
     }
   }
 };

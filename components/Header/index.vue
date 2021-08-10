@@ -21,20 +21,26 @@
           </div>
         </div>
         <div class="right-wrapper">
-          <el-input
-            class="item"
-            size="small"
-            v-model="input"
-            suffix-icon="el-icon-search"
-            placeholder="探索得到"
-          ></el-input>
-          <el-button
-            class="item"
-            @click="openPage('/writing')"
-            type="primary"
-            size="small"
-            >写文章</el-button
-          >
+          <div class="input-wrapper">
+            <el-input
+              :style="{ width: !showWrite ? '280px' : '203px' }"
+              class="item input-wrapper-item"
+              size="small"
+              v-model="input"
+              suffix-icon="el-icon-search"
+              placeholder="探索得到"
+              @focus="showWrite = false"
+              @blur="showWrite = true"
+            ></el-input>
+            <el-button
+              v-if="showWrite"
+              class="item input-wrapper-item"
+              @click="openPage('/writing')"
+              type="primary"
+              size="small"
+              >写文章</el-button
+            >
+          </div>
           <el-badge :value="3" class="item">
             <i class="el-icon-bell"></i>
           </el-badge>
@@ -63,6 +69,7 @@ export default {
   data() {
     return {
       selectPath: this.$route.path, // 选中的路径
+      showWrite: true, // 是否展示“写文章”按钮
       input: "",
       circleUrl: "",
       titleList: [

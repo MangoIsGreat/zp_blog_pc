@@ -39,14 +39,25 @@
         cursor: pointer;
 
         a:hover {
-          color: #00c58e!important;
+          color: #00c58e !important;
         }
       }
     }
 
     .right-wrapper {
+      width: 400px;
       align-items: center;
       position: relative;
+
+      .input-wrapper {
+        width: 310px;
+        display: flex;
+        align-items: center;
+
+        .input-wrapper-item {
+          transition: all 0.4s;
+        }
+      }
 
       .item {
         margin-left: 20px;
