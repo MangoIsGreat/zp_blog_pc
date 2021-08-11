@@ -49,7 +49,9 @@
               </div>
               <div class="item-content-line">
                 <div class="line-author">{{ item.User.nickname }}</div>
-                <div class="line-time">9小时前</div>
+                <div class="line-time">
+                  {{ item.created_at | relativeTime }}
+                </div>
                 <div class="like">
                   {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
                     item.newsReadNum

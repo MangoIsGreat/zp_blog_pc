@@ -15,7 +15,9 @@
           <div class="news-article-desc-item">
             {{ articleInfo.NewsType.tagName }}
           </div>
-          <div class="news-article-desc-item">18小时前</div>
+          <div class="news-article-desc-item">
+            {{ articleInfo.created_at | relativeTime }}
+          </div>
           <div class="news-article-desc-item">
             阅读&nbsp;{{ articleInfo.newsReadNum }}
           </div>
@@ -41,7 +43,7 @@
                   <div class="name bottom-line-item">
                     {{ item.User.nickname }}
                   </div>
-                  <div class="time bottom-line-item">20小时前</div>
+                  <div class="time bottom-line-item">{{item.created_at | relativeTime}}</div>
                   <div class="like bottom-line-item">
                     {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
                       item.newsReadNum
@@ -179,14 +181,18 @@ export default {
     const mdContent = marked(data.data.content || "");
 
     // 获取热门文章推荐
-    const hotList = await $axios.get("/news/hot", { params: { id: params.id } });
+    const hotList = await $axios.get("/news/hot", {
+      params: { id: params.id }
+    });
 
     if (hotList.error_code !== 0) {
       Message.error("获取热门文章推荐失败！");
     }
 
     // 获取最新文章推荐
-    const newList = await $axios.get("/news/new", { params: { id: params.id } });
+    const newList = await $axios.get("/news/new", {
+      params: { id: params.id }
+    });
 
     if (newList.error_code !== 0) {
       Message.error("获取热门文章推荐失败！");
@@ -330,7 +336,7 @@ export default {
     // 跳转至用户页
     toUserPage(id) {
       window.open(`/user/${id}`);
-    },
+    }
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.dealWithPosition);

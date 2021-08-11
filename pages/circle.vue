@@ -183,7 +183,9 @@
                         </div>
                         &nbsp;
                         <span v-if="item.userInfo.profession">·</span>&nbsp;
-                        <div class="details-time">一分钟前</div>
+                        <div class="details-time">
+                          {{ item.created_at | relativeTime }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -299,7 +301,9 @@
                         {{ itm.content }}
                       </div>
                       <div class="body-innerBox-right-bottomline">
-                        <div class="right-bottomline-time">两天前</div>
+                        <div class="right-bottomline-time">
+                          {{ item.created_at | relativeTime }}
+                        </div>
                         <div class="right-bottomline-reply">
                           <i
                             @click.stop="likeComment(itm.id)"
@@ -385,7 +389,9 @@
                             >：{{ t.content }}
                           </div>
                           <div class="body-innerBox-right-bottomline">
-                            <div class="right-bottomline-time">两天前</div>
+                            <div class="right-bottomline-time">
+                              {{ t.created_at | relativeTime }}
+                            </div>
                             <div class="right-bottomline-reply">
                               <i
                                 :class="

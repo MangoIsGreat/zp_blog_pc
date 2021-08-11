@@ -9,7 +9,9 @@
               <div class="author-info">
                 <div class="author-name">{{ articleInfo.User.nickname }}</div>
                 <div class="author-info-detail">
-                  <div class="detail-time">2021年07月01日</div>
+                  <div class="detail-time">
+                    {{ articleInfo.created_at | formatTime }}
+                  </div>
                   &nbsp;&nbsp;
                   <div class="read-times">
                     阅读&nbsp;{{ articleInfo.User.blogReadNum }}
@@ -86,7 +88,9 @@
               <div class="make-comments" id="make_comments" @click.stop>
                 <div class="first-line">
                   <img
-                    :src="currentUserInfo ? currentUserInfo.avatar : defaultAvatar"
+                    :src="
+                      currentUserInfo ? currentUserInfo.avatar : defaultAvatar
+                    "
                     alt=""
                     class="avatar"
                   />
@@ -133,7 +137,9 @@
                     </div>
                     <div class="comments-line">{{ item.content }}</div>
                     <div class="bottom-line">
-                      <div class="time">52分钟前</div>
+                      <div class="time">
+                        {{ item.created_at | relativeTime }}
+                      </div>
                       <div class="bottom-line-right">
                         <div>
                           <i
@@ -218,7 +224,9 @@
                             >：{{ t.content }}
                           </div>
                           <div class="reply-line-bottom">
-                            <div class="time">48分钟前</div>
+                            <div class="time">
+                              {{ t.created_at | relativeTime }}
+                            </div>
                             <div class="bottom-right">
                               <div>
                                 <i
@@ -303,7 +311,7 @@
                   >
                     {{ item.User.nickname }}
                   </div>
-                  <div class="time">一小时前</div>
+                  <div class="time">{{ item.created_at | relativeTime }}</div>
                   <div class="tag-type">{{ item.Tag.tagName }}</div>
                 </div>
                 <div class="item-content">

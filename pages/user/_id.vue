@@ -308,7 +308,7 @@
                         >
                       </div>
                       <div class="list-item-right-time">
-                        {{ item.created_at }}月前
+                        {{ item.created_at | relativeTime }}
                       </div>
                     </div>
                   </div>
@@ -336,7 +336,9 @@
                           橘猫橘猫
                         </div>
                         <div class="like-innerBox-content-right-job">
-                          前端开发工程师<span class="time">11天前</span>
+                          前端开发工程师<span class="time">{{
+                            item.created_at | relativeTime
+                          }}</span>
                         </div>
                         <div class="like-innerBox-content-right-headline">
                           百万PV商城实践系列-前端图片资源优化
@@ -386,7 +388,7 @@
                 >
                   <div class="item-info">
                     <div class="author-name">{{ item.User.nickname }}</div>
-                    <div class="time">一小时前</div>
+                    <div class="time">{{ item.created_at | relativeTime }}</div>
                     <div class="tag-type">{{ item.Tag.tagName }}</div>
                   </div>
                   <div class="item-content">
@@ -450,7 +452,9 @@
                             </div>
                             &nbsp;
                             <span v-if="item.userInfo.profession">·</span>&nbsp;
-                            <div class="details-time">一分钟前</div>
+                            <div class="details-time">
+                              {{ item.created_at | relativeTime }}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -565,7 +569,9 @@
                             {{ itm.content }}
                           </div>
                           <div class="body-innerBox-right-bottomline">
-                            <div class="right-bottomline-time">两天前</div>
+                            <div class="right-bottomline-time">
+                              {{ itm.created_at | relativeTime }}
+                            </div>
                             <div class="right-bottomline-reply">
                               <i
                                 @click.stop="likeComment(itm.id)"
@@ -651,7 +657,9 @@
                                 >：{{ t.content }}
                               </div>
                               <div class="body-innerBox-right-bottomline">
-                                <div class="right-bottomline-time">两天前</div>
+                                <div class="right-bottomline-time">
+                                  {{ t.created_at | relativeTime }}
+                                </div>
                                 <div class="right-bottomline-reply">
                                   <i
                                     :class="
@@ -742,7 +750,9 @@
                     </div>
                     <div class="item-content-line">
                       <div class="line-author">{{ item.User.nickname }}</div>
-                      <div class="line-time">9小时前</div>
+                      <div class="line-time">
+                        {{ item.created_at | relativeTime }}
+                      </div>
                       <div class="like">
                         {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
                           item.newsReadNum
@@ -848,7 +858,7 @@
           </div>
           <div class="innerBox-aside-footer-item">
             <span>加入于</span>
-            <span>2019-07-16</span>
+            <span>{{ userInfo.created_at | formatTime }}</span>
           </div>
         </div>
       </div>

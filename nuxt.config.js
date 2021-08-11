@@ -30,6 +30,7 @@ export default {
     "@/plugins/element-ui",
     "@/plugins/axios",
     "@/plugins/lazyload",
+    "@/plugins/timeFilter",
     { src: "@/plugins/mavon-editor", ssr: false },
     { src: "@/plugins/viewer", ssr: false }
   ],

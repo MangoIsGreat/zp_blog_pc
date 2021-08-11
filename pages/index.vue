@@ -58,7 +58,7 @@
                     >
                       {{ item.User.nickname }}
                     </div>
-                    <div class="time">一小时前</div>
+                    <div class="time">{{ item.created_at | relativeTime }}</div>
                     <div class="tag-type">{{ item.Tag.tagName }}</div>
                   </div>
                   <div class="item-content-t">
@@ -91,7 +91,10 @@
                         </div>
                       </div>
                     </div>
-                    <div v-lazy:background-image="item.titlePic" class="content-right"></div>
+                    <div
+                      v-lazy:background-image="item.titlePic"
+                      class="content-right"
+                    ></div>
                   </div>
                 </li>
               </ul>
@@ -283,7 +286,7 @@ export default {
     },
     // 跳转至用户页
     toUserPage(id) {
-      window.open(`/user?id=${id}`);
+      window.open(`/user/${id}`);
     }
   }
 };
