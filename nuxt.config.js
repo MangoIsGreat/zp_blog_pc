@@ -32,6 +32,7 @@ export default {
     "@/plugins/lazyload",
     "@/plugins/timeFilter",
     { src: "@/plugins/mavon-editor", ssr: false },
+    { src: "@/plugins/emoji", ssr: false },
     { src: "@/plugins/viewer", ssr: false }
   ],
 

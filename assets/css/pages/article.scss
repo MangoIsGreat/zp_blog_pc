@@ -218,6 +218,7 @@
             }
 
             .second-line {
+              position: relative;
               padding-left: 42px;
               box-sizing: border-box;
               display: flex;
@@ -226,6 +227,16 @@
               justify-content: space-between;
               color: $primary-color;
               font-size: $fontSize-middle;
+
+              .emoj {
+                cursor: pointer;
+              }
+
+              .emoji-picker {
+                position: absolute;
+                left: 42px;
+                top: 37px;
+              }
             }
           }
 
@@ -310,12 +321,20 @@
                   }
 
                   .second-line {
+                    position: relative;
                     display: flex;
                     justify-content: space-between;
 
                     .emoj {
                       font-size: 13px;
                       color: #00c58e;
+                      cursor: pointer;
+                    }
+
+                    .emoji-picker {
+                      position: absolute;
+                      left: 0px;
+                      top: 37px;
                     }
                   }
                 }
@@ -598,8 +617,7 @@
               height: 25px;
               margin-right: 10px;
               border-radius: 50%;
-              color: #7bb9ff;
-              background-color: #e1efff;
+              color: #b2bac2;
               line-height: 25px;
               text-align: center;
               font-size: $fontSize-large;
@@ -764,6 +782,8 @@
           overflow: auto;
 
           .collection-panel-body-item {
+            display: flex;
+            justify-content: space-between;
             padding: 6px 12px;
             box-sizing: border-box;
             cursor: pointer;
@@ -772,22 +792,32 @@
               background-color: #f8f9fa;
             }
 
-            .panel-body-item-type {
-              font-size: 12px;
-              line-height: 20px;
-              margin: 0 12px;
+            .collection-panel-body-item-left {
+              line-height: 36px;
+
+              .panel-body-item-type {
+                font-size: 12px;
+                line-height: 20px;
+                margin: 0 12px;
+              }
+
+              .panel-body-item-number {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background-color: #f2f2f2;
+                color: #b9bec2;
+                font-size: 12px;
+                text-align: center;
+                line-height: 20px;
+              }
             }
 
-            .panel-body-item-number {
-              display: inline-block;
-              width: 20px;
-              height: 20px;
-              border-radius: 10px;
-              background-color: #f2f2f2;
-              color: #b9bec2;
-              font-size: 12px;
-              text-align: center;
-              line-height: 20px;
+            .collection-panel-body-item-right {
+              .icon-xuanzhong {
+                color: #2de938;
+              }
             }
           }
         }
@@ -816,5 +846,10 @@
         }
       }
     }
+  }
+
+  // emoji表情
+  .icon-hanhan-01-01 {
+    font-size: 13px;
   }
 }

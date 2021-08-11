@@ -60,7 +60,9 @@
                     </div>
                   </div>
                   <div class="author-detail-info-desc">
-                    <div class="publish">发布了33篇文章</div>
+                    <div class="publish">
+                      粉丝数{{ articleInfo.User.fansNum }}
+                    </div>
                     &nbsp;·&nbsp;
                     <div class="like">
                       获得点赞&nbsp;{{ articleInfo.User.blogLikeNum }}
@@ -95,6 +97,7 @@
                     class="avatar"
                   />
                   <el-input
+                    id="b_comm_emoji_ipt"
                     class="input-btn"
                     v-model="comment"
                     placeholder="输入评论..."
@@ -102,7 +105,12 @@
                   ></el-input>
                 </div>
                 <div class="second-line" v-if="showCommentBtn">
-                  <div class="emoj">表情</div>
+                  <div
+                    class="emoj"
+                    @click.stop="showCommEmoji = !showCommEmoji"
+                  >
+                    <i class="iconfont icon-hanhan-01-01"></i>表情
+                  </div>
                   <el-button
                     size="small"
                     :autofocus="true"
@@ -110,6 +118,11 @@
                     @click="makeComment"
                     >评论</el-button
                   >
+                  <VEmojiPicker
+                    class="emoji-picker"
+                    v-if="showCommEmoji"
+                    @select="selectCommEmoji"
+                  />
                 </div>
               </div>
               <div class="comments-main-body">
@@ -172,6 +185,7 @@
                     >
                       <div class="first-line">
                         <el-input
+                          id="b_reply_comm_emoji_ipt"
                           size="small"
                           class="input-btn"
                           v-model="replyComment"
@@ -180,13 +194,23 @@
                         ></el-input>
                       </div>
                       <div class="second-line">
-                        <div class="emoj">表情</div>
+                        <div
+                          class="emoj"
+                          @click.stop="showReplyCommEmoji = !showReplyCommEmoji"
+                        >
+                          <i class="iconfont icon-hanhan-01-01"></i>表情
+                        </div>
                         <el-button
                           size="mini"
                           type="primary"
                           @click="replyToComment(item)"
                           >评论</el-button
                         >
+                        <VEmojiPicker
+                          class="emoji-picker"
+                          v-if="showReplyCommEmoji"
+                          @select="selectReplyCommEmoji"
+                        />
                       </div>
                     </div>
                     <div class="comments-reply-body">
@@ -261,6 +285,7 @@
                           >
                             <div class="first-line">
                               <el-input
+                                id="b_reply_reply_emoji_ipt"
                                 size="small"
                                 class="input-btn"
                                 v-model="replyContent"
@@ -269,13 +294,25 @@
                               ></el-input>
                             </div>
                             <div class="second-line">
-                              <div class="emoj">表情</div>
+                              <div
+                                @click.stop="
+                                  showReplyReplyEmoji = !showReplyReplyEmoji
+                                "
+                                class="emoj"
+                              >
+                                <i class="iconfont icon-hanhan-01-01"></i>表情
+                              </div>
                               <el-button
                                 size="mini"
                                 type="primary"
                                 @click.stop="replyToReply(t, item)"
                                 >评论</el-button
                               >
+                              <VEmojiPicker
+                                class="emoji-picker"
+                                v-if="showReplyReplyEmoji"
+                                @select="selectReplyReplyEmoji"
+                              />
                             </div>
                           </div>
                         </div>
@@ -465,8 +502,16 @@
                 @click="collectBlog(item)"
                 :key="index"
               >
-                <span class="panel-body-item-type">{{ item.type }}</span>
-                <span class="panel-body-item-number">{{ item.number }}</span>
+                <div class="collection-panel-body-item-left">
+                  <span class="panel-body-item-type">{{ item.type }}</span>
+                  <span class="panel-body-item-number">{{ item.number }}</span>
+                </div>
+                <div class="collection-panel-body-item-right">
+                  <i
+                    v-if="item.isCollection"
+                    class="iconfont icon-xuanzhong"
+                  ></i>
+                </div>
               </div>
             </div>
             <div class="collection-panel-footer">
@@ -480,6 +525,7 @@
               >
               <div v-else class="collection-panel-footer-input">
                 <el-input
+                  placeholder="请输入收藏夹名..."
                   class="collection-panel-footer-input-text"
                   v-model="collectionType"
                 ></el-input>
@@ -507,6 +553,9 @@ export default {
   layout: "default",
   data() {
     return {
+      showCommEmoji: false, // 是否展示评论emoji表情选择器
+      showReplyCommEmoji: false, // 是否展示回复评论emoji表情选择器
+      showReplyReplyEmoji: false, // 是否展示回复回复emoji表情选择器
       defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       commentList: [], // 评论列表
       hotList: [], // 热门文章推荐
@@ -586,6 +635,51 @@ export default {
     this.setFixed();
   },
   methods: {
+    // 选择评论emoji表情
+    selectCommEmoji(emoji) {
+      let input = document.getElementById("b_comm_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.comment = resultText;
+    },
+    // 选择回复评论emoji表情
+    selectReplyCommEmoji(emoji) {
+      let input = document.getElementById("b_reply_comm_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.replyComment = resultText;
+    },
+    // 选择回复回复emoji表情
+    selectReplyReplyEmoji(emoji) {
+      let input = document.getElementById("b_reply_reply_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.replyContent = resultText;
+    },
     // 跳转至评论页面
     toComment(id) {
       window.open(`/article/${id}#make_comments`, "_blank");
@@ -681,6 +775,10 @@ export default {
 
       // 新建收藏集按钮回复初始状态
       this.newCollection = false;
+
+      this.showCommEmoji = false; // 是否展示评论emoji表情选择器
+      this.showReplyCommEmoji = false; // 是否展示回复评论emoji表情选择器
+      this.showReplyReplyEmoji = false; // 是否展示回复回复emoji表情选择器
     },
     // 评论"博客评论"
     async replyToComment(value) {

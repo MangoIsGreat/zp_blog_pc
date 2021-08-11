@@ -51,6 +51,7 @@
         <div class="circle-content-innerBox">
           <div class="innerBox-publish">
             <el-input
+              id="circle_input"
               type="textarea"
               :rows="3"
               placeholder="留下你的想法，大家一起参与讨论吧..."
@@ -60,8 +61,11 @@
             </el-input>
             <div class="publish-operateLine">
               <div class="operateLine-left">
-                <el-button class="operateLine-left-item" type="text"
-                  >表情</el-button
+                <el-button
+                  @click.stop="showEmoji = !showEmoji"
+                  class="operateLine-left-item"
+                  type="text"
+                  ><i class="iconfont icon-hanhan-01-01"></i>表情</el-button
                 >
                 <el-button
                   @click.stop="showUpload = true"
@@ -107,6 +111,11 @@
               <el-button @click="publish" type="primary" size="small"
                 >发布</el-button
               >
+              <VEmojiPicker
+                class="emoji-picker"
+                v-if="showEmoji"
+                @select="selectEmoji"
+              />
             </div>
             <div class="publish-photo" @click.stop v-if="showUpload">
               <el-upload
@@ -256,6 +265,7 @@
                         class="avatar"
                       />
                       <el-input
+                        id="comm_emoji_ipt"
                         class="input-btn"
                         v-model="comment"
                         placeholder="输入评论..."
@@ -263,13 +273,23 @@
                       ></el-input>
                     </div>
                     <div class="second-line" v-if="showComment">
-                      <div class="emoj">表情</div>
+                      <div
+                        class="emoj"
+                        @click.stop="showCommEmoji = !showCommEmoji"
+                      >
+                        <i class="iconfont icon-hanhan-01-01"></i>表情
+                      </div>
                       <el-button
                         @click.stop="makeComment(item.id)"
                         size="small"
                         type="primary"
                         >评论</el-button
                       >
+                      <VEmojiPicker
+                        class="emoji-picker"
+                        v-if="showCommEmoji"
+                        @select="selectCommEmoji"
+                      />
                     </div>
                   </div>
                 </div>
@@ -341,6 +361,7 @@
                             class="avatar"
                           />
                           <el-input
+                            id="reply_comm_emoji_ipt"
                             size="small"
                             class="input-btn"
                             v-model="replyComment"
@@ -348,13 +369,25 @@
                           ></el-input>
                         </div>
                         <div class="second-line">
-                          <div class="emoj">表情</div>
+                          <div
+                            class="emoj"
+                            @click.stop="
+                              showReplyCommEmoji = !showReplyCommEmoji
+                            "
+                          >
+                            <i class="iconfont icon-hanhan-01-01"></i>表情
+                          </div>
                           <el-button
                             @click.stop="replyToComment(itm, item)"
                             size="small"
                             type="primary"
                             >评论</el-button
                           >
+                          <VEmojiPicker
+                            class="emoji-picker"
+                            v-if="showReplyCommEmoji"
+                            @select="selectReplyCommEmoji"
+                          />
                         </div>
                       </div>
                       <div
@@ -429,6 +462,7 @@
                                 class="avatar"
                               />
                               <el-input
+                                id="reply_reply_emoji_ipt"
                                 size="small"
                                 class="input-btn"
                                 v-model="replyToReplyValue"
@@ -436,13 +470,25 @@
                               ></el-input>
                             </div>
                             <div class="second-line">
-                              <div class="emoj">表情</div>
+                              <div
+                                @click.stop="
+                                  showReplyReplyEmoji = !showReplyReplyEmoji
+                                "
+                                class="emoj"
+                              >
+                                <i class="iconfont icon-hanhan-01-01"></i>表情
+                              </div>
                               <el-button
                                 @click.stop="replyToReply(t, itm, item)"
                                 size="small"
                                 type="primary"
                                 >评论</el-button
                               >
+                              <VEmojiPicker
+                                class="emoji-picker"
+                                v-if="showReplyReplyEmoji"
+                                @select="selectReplyReplyEmoji"
+                              />
                             </div>
                           </div>
                         </div>
@@ -548,6 +594,10 @@ export default {
   layout: "default",
   data() {
     return {
+      showEmoji: false, // 是否展示emoji表情选择器
+      showCommEmoji: false, // 是否展示评论emoji表情选择器
+      showReplyCommEmoji: false, // 是否展示回复评论emoji表情选择器
+      showReplyReplyEmoji: false, // 是否展示回复回复emoji表情选择器
       defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       uploadURL: dev[process.env.NODE_ENV].ENV_API + "/upload", // 图片上传地址
       token: "", // token
@@ -632,11 +682,68 @@ export default {
   created() {
     // 获取token
     this.getToken();
-
-    // 获取用户信息
-    // this.getUserInfo();
   },
   methods: {
+    // 选择emoji表情
+    selectEmoji(emoji) {
+      let input = document.getElementById("circle_input");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.content = resultText;
+    },
+    // 选择评论emoji表情
+    selectCommEmoji(emoji) {
+      let input = document.getElementById("comm_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.comment = resultText;
+    },
+    // 选择回复评论emoji表情
+    selectReplyCommEmoji(emoji) {
+      let input = document.getElementById("reply_comm_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.replyComment = resultText;
+    },
+    // 选择回复回复emoji表情
+    selectReplyReplyEmoji(emoji) {
+      let input = document.getElementById("reply_reply_emoji_ipt");
+      let startPos = input.selectionStart;
+      let endPos = input.selectionEnd;
+      let resultText =
+        input.value.substring(0, startPos) +
+        emoji.data +
+        input.value.substring(endPos);
+      input.value = resultText;
+      input.focus();
+      input.selectionStart = startPos + emoji.data.length;
+      input.selectionEnd = startPos + emoji.data.length;
+      this.replyToReplyValue = resultText;
+    },
     previewImg(url) {
       this.$hevueImgPreview({
         url,
@@ -645,17 +752,6 @@ export default {
         controlBar: false
       });
     },
-    // 获取用户信息
-    // async getUserInfo() {
-    //   // 获取“用户信息”
-    //   const userInfo = await this.$axios.get("/user/userInfo");
-
-    //   if (theme.error_code !== 0) {
-    //     return (this.userInfo = null);
-    //   }
-
-    //   this.userInfo = userInfo.data;
-    // },
     getToken() {
       const token = getCookie(this, "user_token");
       // 将获取到token加入到请求头中
@@ -812,6 +908,10 @@ export default {
       this.showTheme = false;
       // 隐藏图片上传按钮
       this.showUpload = false;
+      // 隐藏emoji表情
+      this.showEmoji = false;
+      // 隐藏评论emoji表情
+      this.showCommEmoji = false;
     },
     // 评论"动态评论"
     async replyToComment(comment, dynamic) {

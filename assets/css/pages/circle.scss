@@ -59,6 +59,7 @@
         box-sizing: border-box;
 
         .publish-operateLine {
+          position: relative;
           display: flex;
           padding: 10px 0;
           justify-content: space-between;
@@ -69,6 +70,10 @@
 
             .operateLine-left-item {
               font-size: $fontSize-middle;
+
+              .iconfont {
+                font-size: 13px;
+              }
             }
 
             .operateLine-left-item-topic {
@@ -145,6 +150,12 @@
                 }
               }
             }
+          }
+
+          .emoji-picker {
+            position: absolute;
+            top: 50px;
+            left: 0px;
           }
         }
 
@@ -308,10 +319,21 @@
               }
 
               .second-line {
+                position: relative;
                 margin-top: 10px;
                 padding-left: 42px;
                 color: #00c58e;
                 font-size: 13px;
+
+                .emoj {
+                  cursor: pointer;
+                }
+
+                .emoji-picker {
+                  position: absolute;
+                  left: 42px;
+                  top: 37px;
+                }
               }
             }
 
@@ -618,5 +640,10 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+  }
+
+  // emoji表情
+  .icon-hanhan-01-01 {
+    font-size: 13px;
   }
 }
