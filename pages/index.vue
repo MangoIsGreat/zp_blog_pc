@@ -153,10 +153,11 @@ export default {
   data() {
     return {
       pageSize: 15, //页容量
-      pageIndex: 2, // 当前页
+      pageIndex: 1, // 当前页
       authorList: [],
       selectedTag: 0, //当前选中的标签
       rankingType: "hot", // 获取文章的排列顺序，最新/最热
+      countNum: 0, // 总博客条数
       listData: [] // 博客列表
     };
   },
@@ -164,37 +165,10 @@ export default {
   async asyncData({ $axios }) {
     const data = await $axios.get("/tag/list");
 
-    const authorList = await $axios.get("/author/ranking", {
-      params: {
-        pageIndex: 1,
-        pageSize: 3
-      }
-    });
-
-    if (data.error_code !== 0) {
-      Message.error("作者榜数据获取失败");
-    }
-
     if (data.error_code === 0) {
-      const listData = await $axios.get("/blog/list", {
-        params: {
-          tag: data.data.rows[0].tag_type,
-          rankingType: "hot",
-          pageSize: 15,
-          pageIndex: 1
-        }
-      });
-
-      if (listData.error_code === 0) {
-        return {
-          tagList: data.data.rows,
-          listData: listData.data.rows,
-          authorList: authorList.data.rows,
-          countNum: listData.data.count
-        };
-      } else {
-        Message.error("数据获取失败");
-      }
+      return {
+        tagList: data.data.rows
+      };
     } else {
       Message.error("标签类型获取失败");
     }
@@ -202,8 +176,28 @@ export default {
   created() {
     // 设置默认选中标签类型：
     this.selectedTag = this.tagList[0].tag_type;
+
+    // 获取博客列表数据
+    this.getBlogList();
+
+    // 作者排行榜
+    this.getAuthorRanking();
   },
   methods: {
+    async getAuthorRanking() {
+      const authorList = await this.$axios.get("/author/ranking", {
+        params: {
+          pageIndex: 1,
+          pageSize: 3
+        }
+      });
+
+      if (authorList.error_code !== 0) {
+        return Message.error("作者榜数据获取失败");
+      }
+
+      this.authorList = authorList.data.rows;
+    },
     // 获取博客列表
     async getBlogList() {
       const listData = await this.$axios.get("/blog/list", {
@@ -216,14 +210,14 @@ export default {
       });
 
       if (listData.error_code === 0) {
-        listData.data.rows.forEach(item => {
-          this.listData.push(item);
-        });
+        this.listData.push(...listData.data.rows);
+
+        this.countNum = listData.data.count;
 
         // 当前页数+1
         this.pageIndex += 1;
       } else {
-        Message.error("更多文章获取失败！");
+        Message.error("文章列表获取失败！");
       }
     },
     async selectTag(value) {

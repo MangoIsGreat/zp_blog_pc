@@ -370,7 +370,7 @@ export default {
     };
   },
   async asyncData({ $axios, params }) {
-    // 获取"动态"列表数据
+    // 获取"动态"数据
     const data = await $axios.get("/dynamic/dynamic", {
       params: {
         id: params.id
@@ -398,25 +398,19 @@ export default {
       }
     });
 
-    // 获取评论列表
-    const commentList = await $axios.get("/dcomment/list", {
-      params: { dynamicId: params.id }
-    });
-
-    if (commentList.error_code !== 0) {
-      Message.error("获取评论列表失败！");
-    }
-
     return {
       dynData: data.data, // 动态数据
-      messageList: favList.data, // 精选留言
-      commentList: commentList.data // 评论列表数据
+      messageList: favList.data // 精选留言
     };
   },
   computed: {
     currentUserInfo() {
       return this.$store.state.login.userinfo;
     }
+  },
+  created() {
+    // 获取动态评论
+    this.getReplyList();
   },
   methods: {
     // 选择评论emoji表情

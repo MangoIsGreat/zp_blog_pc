@@ -103,7 +103,8 @@ export default {
     return {
       selectedTag: 0, //当前选中的标签
       pageSize: 15, //页容量
-      pageIndex: 2, // 当前页
+      pageIndex: 1, // 当前页
+      countNum: 0, // 总"资讯"数量
       listData: [], // 博客列表
       rankingType: "new" // 获取文章的排列顺序，最新/最热
     };
@@ -112,24 +113,9 @@ export default {
     const data = await $axios.get("/newstype/list");
 
     if (data.error_code === 0) {
-      const listData = await $axios.get("/news/list", {
-        params: {
-          tag: data.data.rows[0].tag_type,
-          rankingType: "new",
-          pageSize: 15,
-          pageIndex: 1
-        }
-      });
-
-      if (listData.error_code === 0) {
-        return {
-          tagList: data.data.rows,
-          listData: listData.data.rows,
-          countNum: listData.data.count
-        };
-      } else {
-        Message.error("数据获取失败");
-      }
+      return {
+        tagList: data.data.rows
+      };
     } else {
       Message.error("标签类型获取失败");
     }
@@ -137,6 +123,9 @@ export default {
   created() {
     // 设置默认选中标签类型：
     this.selectedTag = this.tagList[0].tag_type;
+
+    // 获取资讯列表数据
+    this.getNewsList();
   },
   methods: {
     // 获取博客列表
@@ -151,9 +140,9 @@ export default {
       });
 
       if (listData.error_code === 0) {
-        listData.data.rows.forEach(item => {
-          this.listData.push(item);
-        });
+        this.listData.push(...listData.data.rows);
+
+        this.countNum = listData.data.count;
 
         // 当前页数+1
         this.pageIndex += 1;

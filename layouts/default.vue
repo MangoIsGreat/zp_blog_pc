@@ -130,7 +130,7 @@ export default {
           author_ranking.style.right =
             (352 * document.body.clientWidth) / 1920 + "px";
           author_ranking.style.top =
-            (85 * document.body.clientWidth) / 1920 + "px";
+            (88 * document.body.clientWidth) / 1920 + "px";
 
           home_poster.style.position = "fixed";
           home_poster.style.right =

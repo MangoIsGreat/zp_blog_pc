@@ -566,7 +566,7 @@ export default {
       fixedLeft: 200, // 左侧点赞面板距离左侧位置
       fixedTop: 160, // 左侧点赞面板距离顶部位置
       pageSize: 10, //页容量
-      pageIndex: 2, // 当前页
+      pageIndex: 1, // 当前页
       commentId: "", // 要评论的博客评论
       replyId: "", // 要回复的评论id
       showCommentBtn: false, // 是否展示评论框按钮
@@ -574,7 +574,8 @@ export default {
       showCollection: false, // 是否展示收藏集面板
       collectionList: [], // 收藏集列表
       newCollection: false, // 新建收藏集
-      collectionType: "" // 输入的新建收藏集名称
+      collectionType: "", // 输入的新建收藏集名称
+      countNum: 0 // 更多文章总文章数
     };
   },
   async asyncData({ params, $axios }) {
@@ -598,37 +599,23 @@ export default {
       Message.error("获取热门文章推荐失败！");
     }
 
-    // 获取相关文章推荐
-    const moreList = await $axios.get("/blog/more", {
-      params: { id: params.id, pageIndex: 1, pageSize: 10 }
-    });
-
-    if (moreList.error_code !== 0) {
-      Message.error("获取相关文章推荐失败！");
-    }
-
-    // 获取评论列表
-    const commentList = await $axios.get("/bcomment/list", {
-      params: { blog: params.id }
-    });
-
-    if (commentList.error_code !== 0) {
-      Message.error("获取评论列表失败！");
-    }
-
     return {
       mdContent, // 博客内容
       articleInfo: data.data, // 作者信息
-      hotList: hotList.data.rows, // 热门文章推荐
-      moreList: moreList.data.rows, // 更多相关文章推荐
-      countNum: moreList.data.count, // 更多文章总文章数
-      commentList: commentList.data // 评论列表
+      hotList: hotList.data.rows // 热门文章推荐
     };
   },
   computed: {
     currentUserInfo() {
       return this.$store.state.login.userinfo;
     }
+  },
+  created() {
+    // 获取更多博客列表
+    this.getMoreBlog();
+
+    // 获取评论列表数据
+    this.getReplyList();
   },
   mounted() {
     // 实时更新左侧操作面板的位置：
@@ -702,9 +689,9 @@ export default {
       });
 
       if (listData.error_code === 0) {
-        listData.data.rows.forEach(item => {
-          this.moreList.push(item);
-        });
+        this.moreList.push(...listData.data.rows);
+
+        this.countNum = listData.data.count; // 更多文章总文章数
 
         // 当前页数+1
         this.pageIndex += 1;
@@ -720,7 +707,7 @@ export default {
       });
 
       if (commentList.error_code !== 0) {
-        Message.error("获取评论列表失败！");
+        return Message.error("获取评论列表失败！");
       }
 
       this.commentList = commentList.data; // 评论列表

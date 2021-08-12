@@ -43,7 +43,9 @@
                   <div class="name bottom-line-item">
                     {{ item.User.nickname }}
                   </div>
-                  <div class="time bottom-line-item">{{item.created_at | relativeTime}}</div>
+                  <div class="time bottom-line-item">
+                    {{ item.created_at | relativeTime }}
+                  </div>
                   <div class="like bottom-line-item">
                     {{ item.newsLikeNum }}点赞&nbsp;·&nbsp;{{
                       item.newsReadNum
@@ -162,10 +164,10 @@ export default {
       hotList: [], // 热门文章推荐
       moreList: [], // 相关文章推荐
       pageSize: 10, //页容量
-      pageIndex: 2, // 当前页
-      moreList: [], // 相关文章推荐
+      pageIndex: 1, // 当前页
       fixedLeft: 200, // 左侧点赞面板距离左侧位置
-      fixedTop: 160 // 左侧点赞面板距离顶部位置
+      fixedTop: 160, // 左侧点赞面板距离顶部位置
+      countNum: 0 // 更多文章总文章数
     };
   },
   async asyncData({ params, $axios }) {
@@ -198,23 +200,16 @@ export default {
       Message.error("获取热门文章推荐失败！");
     }
 
-    // 获取相关文章推荐
-    const moreList = await $axios.get("/news/more", {
-      params: { id: params.id, pageIndex: 1, pageSize: 10 }
-    });
-
-    if (moreList.error_code !== 0) {
-      Message.error("获取相关文章推荐失败！");
-    }
-
     return {
       mdContent, // 博客内容
       articleInfo: data.data, // 作者信息
       hotList: hotList.data.rows, // 热门文章推荐
-      newList: newList.data.rows, // 最新文章推荐
-      moreList: moreList.data.rows, // 更多相关文章推荐
-      countNum: moreList.data.count // 更多文章总文章数
+      newList: newList.data.rows // 最新文章推荐
     };
+  },
+  created() {
+    // 获取更多文章列表
+    this.getMoreNews();
   },
   mounted() {
     // 实时更新左侧操作面板的位置：
@@ -249,12 +244,12 @@ export default {
       });
 
       if (listData.error_code === 0) {
-        listData.data.rows.forEach(item => {
-          this.moreList.push(item);
-        });
+        this.moreList.push(...listData.data.rows);
 
         // 当前页数+1
         this.pageIndex += 1;
+
+        this.countNum = listData.data.count; // 更多文章总文章数
       } else {
         Message.error("更多文章获取失败！");
       }

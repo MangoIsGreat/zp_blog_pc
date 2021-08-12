@@ -93,23 +93,9 @@ export default {
       showAvatar: false // 是否展示头像蒙版
     };
   },
-  async asyncData({ $axios, params }) {
-    const data = await $axios.get("/author/userinfo", {
-      params: { uid: params.id }
-    });
-
-    if (data.error_code === 0) {
-      return {
-        form: {
-          nickname: data.data.nickname,
-          profession: data.data.profession,
-          signature: data.data.signature
-        },
-        avatar: data.data.avatar
-      };
-    } else {
-      Message.error("用户信息获取失败");
-    }
+  created() {
+    // 获取用户信息
+    this.getUserInfo();
   },
   methods: {
     // 获取用户信息数据

@@ -42,27 +42,14 @@ export default {
   data() {
     return {
       listData: [],
-      pageIndex: 2,
+      countNum: 0, // 总数据长度
+      pageIndex: 1,
       pageSize: 20
     };
   },
-  async asyncData({ $axios }) {
-    // 获取"动态"列表数据
-    const data = await $axios.get("/author/ranking", {
-      params: {
-        pageIndex: 1,
-        pageSize: 20
-      }
-    });
-
-    if (data.error_code !== 0) {
-      Message.error("数据获取失败");
-    }
-
-    return {
-      listData: data.data.rows, // 列表数据
-      countNum: data.data.count // 总数据长度
-    };
+  created() {
+    // 获取列表数据
+    this.getAuthorList();
   },
   methods: {
     loadData() {
@@ -84,10 +71,12 @@ export default {
       if (listData.error_code === 0) {
         this.listData.push(...listData.data.rows);
 
+        this.countNum = listData.data.count;
+
         // 当前页数+1
         this.pageIndex += 1;
       } else {
-        Message.error("更多文章获取失败！");
+        Message.error("获取用户列表失败！");
       }
     },
     // 关注作者
@@ -114,7 +103,7 @@ export default {
     },
     // 跳转至用户页
     toUserPage(id) {
-      window.open(`/user?id=${id}`);
+      window.open(`/user/${id}`);
     }
   }
 };

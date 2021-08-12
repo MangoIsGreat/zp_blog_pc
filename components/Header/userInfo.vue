@@ -25,7 +25,7 @@
         @click="toUserPage(currentUserInfo.id, 'collection')"
         class="content-first-line-item"
       >
-        <i class="iconfont icon-xingxing"></i>我的收藏
+        <i class="iconfont icon-xingxingmianxing"></i>我的收藏
       </div>
     </div>
     <div class="content-third-line">

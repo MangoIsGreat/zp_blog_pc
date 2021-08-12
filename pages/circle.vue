@@ -596,8 +596,9 @@ export default {
       theme: "", // 当前选中的动态主题
       type: "new", // 当前选中的"动态"类型 -- recommend/hot/attention
       picUrl: [], // 上传的图片
-      pageIndex: 2, // 当前动态是第几页
+      pageIndex: 1, // 当前动态是第几页
       pageSize: 15, // 当前请求数据数
+      countNum: 0, // 总“动态”条数
       comment: "", // "动态"评论
       commentList: [], // 评论列表
       dynamicId: "", // 当前选中的“动态”id号
@@ -615,39 +616,6 @@ export default {
     };
   },
   async asyncData({ $axios }) {
-    // 获取"动态"列表数据
-    const data = await $axios.get("/dynamic/list", {
-      params: {
-        type: "new", // 动态类型 -- 推荐/热门/关注
-        theme: "", // 当前选中的动态主题
-        pageIndex: 1,
-        pageSize: 15
-      }
-    });
-
-    data.data.forEach(item => {
-      if (item.picUrl) {
-        item.picUrl = JSON.parse(item.picUrl);
-      }
-    });
-
-    if (data.error_code !== 0) {
-      Message.error("动态列表数据获取失败");
-    }
-
-    // 获取精选留言数据
-    const favList = await $axios.get("/dynamic/favlist");
-
-    if (favList.error_code !== 0) {
-      Message.error("精选留言获取失败");
-    }
-
-    favList.data.forEach(item => {
-      if (item.picUrl) {
-        item.picUrl = JSON.parse(item.picUrl);
-      }
-    });
-
     // 获取"动态"类型
     const theme = await $axios.get("/theme/list");
 
@@ -656,9 +624,6 @@ export default {
     }
 
     return {
-      listData: data.data, // 动态列表数据
-      countNum: data.data.count, // 总"动态"条数
-      messageList: favList.data, // 精选留言
       menuList: theme.data // 动态类型
     };
   },
@@ -670,6 +635,12 @@ export default {
   created() {
     // 获取token
     this.getToken();
+
+    // 获取"动态"列表
+    this.getList();
+
+    // 获取精选留言列表数据
+    this.getFavList();
   },
   methods: {
     // 选择emoji表情
@@ -799,11 +770,30 @@ export default {
           this.listData.push(item);
         });
 
+        this.countNum = data.data.count;
+
         // 当前页数+1
         this.pageIndex += 1;
       } else {
         Message.error("获取数据失败！");
       }
+    },
+    // 获取"精选"留言列表数据
+    async getFavList() {
+      // 获取精选留言数据
+      const favList = await this.$axios.get("/dynamic/favlist");
+
+      if (favList.error_code !== 0) {
+        return Message.error("精选留言获取失败");
+      }
+
+      favList.data.forEach(item => {
+        if (item.picUrl) {
+          item.picUrl = JSON.parse(item.picUrl);
+        }
+      });
+
+      this.messageList = favList.data;
     },
     // 关注作者
     async follow(id) {
