@@ -170,6 +170,9 @@ export default {
             setLocalStorage("user_info", data.data);
 
             this.$store.commit("login/saveUserInfo", data.data);
+
+            // 触发页面刷新
+            this.$emit("reload");
           }
         } else {
           // 验证失败

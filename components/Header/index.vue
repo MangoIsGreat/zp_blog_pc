@@ -50,7 +50,7 @@
             ></el-avatar>
           </div>
           <!-- 用户面板 -->
-          <UserInfo v-if="isShowInfo" />
+          <UserInfo @reload="reload" v-if="isShowInfo" />
         </div>
       </div>
     </div>
@@ -99,6 +99,10 @@ export default {
     }
   },
   methods: {
+    reload() {
+      // 触发页面刷新
+      this.$emit("reload");
+    },
     openPage(path) {
       window.open(`${path}/article`, "_blank");
     },

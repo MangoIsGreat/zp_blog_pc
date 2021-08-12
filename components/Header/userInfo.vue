@@ -10,15 +10,21 @@
     </div>
     <div class="content-second-line">
       <div
-        @click="toUserPage(currentUserInfo.id)"
+        @click="toUserPage(currentUserInfo.id, 'author')"
         class="content-first-line-item"
       >
         <i class="iconfont icon-wode"></i>我的主页
       </div>
-      <div @click="toUserPage(currentUserInfo.id, 'likeArt')" class="content-first-line-item">
+      <div
+        @click="toUserPage(currentUserInfo.id, 'likeArt')"
+        class="content-first-line-item"
+      >
         <i class="iconfont icon-dianzan1"></i>我赞过的
       </div>
-      <div @click="toUserPage(currentUserInfo.id, 'collection')" class="content-first-line-item">
+      <div
+        @click="toUserPage(currentUserInfo.id, 'collection')"
+        class="content-first-line-item"
+      >
         <i class="iconfont icon-xingxing"></i>我的收藏
       </div>
     </div>
@@ -57,6 +63,9 @@ export default {
       this.$store.commit("login/toggleOpen", false);
 
       this.$store.commit("login/clearUserInfo");
+
+      // 触发页面刷新
+      this.$emit("reload");
     }
   }
 };

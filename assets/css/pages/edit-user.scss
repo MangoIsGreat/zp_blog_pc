@@ -2,6 +2,8 @@
 
 .edit-user-wrapper {
   .edit-user-wrapper-back {
+    display: flex;
+    justify-content: space-between;
     margin: 24px auto 16px;
     padding-left: 22px;
     width: 1200px;

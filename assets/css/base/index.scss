@@ -58,6 +58,7 @@ a:active {
 .el-header {
   border-bottom: 1px solid $border-color;
   background-color: $bg-color-white;
+  z-index: 99999;
 }
 
 .el-main {

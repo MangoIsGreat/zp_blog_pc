@@ -23,11 +23,23 @@
           </div>
           <div class="innerBox-content-user-right">
             <el-button
+              v-if="userInfo.isSelf"
               @click="$router.push(`/edit-user/${$route.params.id}`)"
               class="edit-userinfo"
               size="small"
               plain
               >编辑个人资料</el-button
+            >
+            <el-button
+              v-else
+              @click="followUser(userInfo.id)"
+              class="edit-userinfo"
+              size="small"
+              plain
+              ><span v-if="!userInfo.isAttention">关注</span
+              ><span class="edit-userinfo-follow" v-else
+                >已关注</span
+              ></el-button
             >
           </div>
         </div>
@@ -1158,6 +1170,24 @@ export default {
               item.isAttention = false;
             }
           });
+        }
+      } else {
+        Message.error("关注失败！");
+      }
+    },
+    // 关注当前用户
+    async followUser(id) {
+      const data = await this.$axios.post("/fans/follow", { leader: id });
+
+      if (data.error_code === 0) {
+        if (data.data === "ok") {
+          this.userInfo.isAttention = true;
+
+          this.userInfo.fansNum++;
+        } else if (data.data === "cancel") {
+          this.userInfo.isAttention = false;
+
+          this.userInfo.fansNum--;
         }
       } else {
         Message.error("关注失败！");

@@ -4,6 +4,7 @@
       <div class="edit-user-wrapper-back-icon" @click="$router.go(-1)">
         <i class="iconfont icon-xiangzuo"></i>&nbsp;返回个人主页
       </div>
+      <div></div>
     </div>
     <div class="edit-user-wrapper-content">
       <div class="edit-user-wrapper-content-tit">个人资料</div>

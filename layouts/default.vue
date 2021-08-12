@@ -2,10 +2,10 @@
   <div class="wrapper" @click="hidden">
     <el-container>
       <el-header>
-        <Header />
+        <Header @reload="reload" />
       </el-header>
       <el-main>
-        <nuxt id="main" />
+        <nuxt v-if="showMain" id="main" />
       </el-main>
     </el-container>
     <div id="to_top" class="to-top" @click="toTop">
@@ -15,7 +15,7 @@
       <i class="iconfont icon-pinglun"></i>
     </div>
     <!-- 登录组件 -->
-    <login v-if="isLogin" />
+    <login v-if="isLogin" @reload="reload" />
   </div>
 </template>
 
@@ -25,6 +25,11 @@ import { getLocalStorage } from "@/utils/store";
 import { getCookie } from "@/utils/cookie";
 
 export default {
+  data() {
+    return {
+      showMain: true
+    };
+  },
   computed: {
     isLogin() {
       return this.$store.state.login.isLogin;
@@ -45,6 +50,13 @@ export default {
     );
   },
   methods: {
+    reload() {
+      this.showMain = false;
+
+      setTimeout(() => {
+        this.showMain = true;
+      }, 0);
+    },
     // 保存用户信息至vuex
     saveUserInfo() {
       if (getLocalStorage("user_info") && getCookie(this, "user_token")) {
@@ -115,82 +127,112 @@ export default {
         // 首页
         if (pathname === "/") {
           author_ranking.style.position = "fixed";
-          author_ranking.style.right = "278px";
-          author_ranking.style.top = "85px";
+          author_ranking.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          author_ranking.style.top =
+            (85 * document.body.clientWidth) / 1920 + "px";
 
           home_poster.style.position = "fixed";
-          home_poster.style.right = "278px";
-          home_poster.style.top = "395px";
+          home_poster.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          home_poster.style.top =
+            (475 * document.body.clientWidth) / 1920 + "px";
 
           home_qr_code.style.position = "fixed";
-          home_qr_code.style.right = "278px";
-          home_qr_code.style.top = "605px";
+          home_qr_code.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          home_qr_code.style.top =
+            (740 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 互动页
         if (pathname === "/circle") {
           circle_info_great.style.position = "fixed";
-          circle_info_great.style.right = "280px";
-          circle_info_great.style.top = "85px";
+          circle_info_great.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          circle_info_great.style.top =
+            (100 * document.body.clientWidth) / 1920 + "px";
 
           circle_poster.style.position = "fixed";
-          circle_poster.style.right = "280px";
-          circle_poster.style.top = "375px";
+          circle_poster.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          circle_poster.style.top =
+            (523 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 资讯页
         if (pathname === "/news") {
           news_send_news.style.position = "fixed";
-          news_send_news.style.right = "285px";
-          news_send_news.style.top = "85px";
+          news_send_news.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          news_send_news.style.top =
+            (106 * document.body.clientWidth) / 1920 + "px";
 
           news_qr_code.style.position = "fixed";
-          news_qr_code.style.right = "285px";
-          news_qr_code.style.top = "203px";
+          news_qr_code.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          news_qr_code.style.top =
+            (251 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 文章页
         if (pathname.indexOf("/article") > -1) {
           article_author_info.style.position = "fixed";
-          article_author_info.style.right = "285px";
-          article_author_info.style.top = "85px";
+          article_author_info.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          article_author_info.style.top =
+            (100 * document.body.clientWidth) / 1920 + "px";
 
           article_more_art.style.position = "fixed";
-          article_more_art.style.right = "285px";
-          article_more_art.style.top = "290px";
+          article_more_art.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          article_more_art.style.top =
+            (366 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 互动详情页
         if (pathname.indexOf("/circle-detail") > -1) {
           circle_detail_greate.style.position = "fixed";
-          circle_detail_greate.style.right = "285px";
-          circle_detail_greate.style.top = "85px";
+          circle_detail_greate.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          circle_detail_greate.style.top =
+            (100 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 资讯详情页
         if (pathname.indexOf("/news-detail") > -1) {
           news_detail_send_news.style.position = "fixed";
-          news_detail_send_news.style.right = "275px";
-          news_detail_send_news.style.top = "85px";
+          news_detail_send_news.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          news_detail_send_news.style.top =
+            (100 * document.body.clientWidth) / 1920 + "px";
 
           news_detail_new.style.position = "fixed";
-          news_detail_new.style.right = "275px";
-          news_detail_new.style.top = "205px";
+          news_detail_new.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          news_detail_new.style.top =
+            (248 * document.body.clientWidth) / 1920 + "px";
         }
 
         // 用户详情页
         if (pathname.indexOf("/user") > -1) {
           user_aside_userinfo.style.position = "fixed";
-          user_aside_userinfo.style.right = "275px";
-          user_aside_userinfo.style.top = "85px";
+          user_aside_userinfo.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          user_aside_userinfo.style.top =
+            (100 * document.body.clientWidth) / 1920 + "px";
 
           user_aside_attention.style.position = "fixed";
-          user_aside_attention.style.right = "275px";
-          user_aside_attention.style.top = "235px";
+          user_aside_attention.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          user_aside_attention.style.top =
+            (293 * document.body.clientWidth) / 1920 + "px";
 
           user_aside_footer.style.position = "fixed";
-          user_aside_footer.style.right = "275px";
-          user_aside_footer.style.top = "320px";
+          user_aside_footer.style.right =
+            (352 * document.body.clientWidth) / 1920 + "px";
+          user_aside_footer.style.top =
+            (400 * document.body.clientWidth) / 1920 + "px";
         }
       } else {
         document.getElementById("to_top").style.opacity = 0;
