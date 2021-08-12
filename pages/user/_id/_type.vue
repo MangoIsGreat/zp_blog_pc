@@ -918,6 +918,15 @@ export default {
     this.getLikeNum();
   },
   methods: {
+    setSelectedType() {
+      const { type } = this.$route.params;
+
+      if (
+        ["likeArt", "collection", "attention", "beAttention"].includes(type)
+      ) {
+        this.selectItem = type;
+      }
+    },
     loadData() {
       // 当前页大于总页数时停止请求数据：
       if (this.pageIndex > Math.ceil(this.listData.length / this.pageSize))
@@ -1096,6 +1105,9 @@ export default {
 
       if (data.error_code === 0) {
         this.likeNumData = data.data;
+
+        // 设置选中的类型
+        this.setSelectedType();
       } else {
         Message.error("获取点赞数据失败");
       }
@@ -1360,9 +1372,7 @@ export default {
     },
     toNewsPage(id) {
       window.open(`/news-detai/${id}`, "_blank");
-    },
-    // 隐藏评论输入框
-    hiddenToComment() {}
+    }
   }
 };
 </script>

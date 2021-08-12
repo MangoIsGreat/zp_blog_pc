@@ -57,6 +57,8 @@
               placeholder="留下你的想法，大家一起参与讨论吧..."
               v-model="content"
               resize="none"
+              :maxlength="300"
+              :show-word-limit="true"
             >
             </el-input>
             <div class="publish-operateLine">
@@ -136,26 +138,6 @@
                     :src="file.url"
                     alt=""
                   />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
                 </div>
               </el-upload>
             </div>
@@ -507,7 +489,7 @@
       </div>
       <div class="circle-info">
         <div
-          @click="toUserPage(currentUserInfo.id)"
+          @click="toUserPage(currentUserInfo.id, 'author')"
           class="circle-info-authorInfo"
           v-if="currentUserInfo"
         >
@@ -523,7 +505,10 @@
             </div>
           </div>
           <div class="authorInfo-bottom">
-            <div class="authorInfo-bottom-item">
+            <div
+              @click.stop="toUserPage(currentUserInfo.id, 'attention')"
+              class="authorInfo-bottom-item"
+            >
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注</div>
                 <div class="authorInfo-bottom-item-num">
@@ -531,7 +516,10 @@
                 </div>
               </div>
             </div>
-            <div class="authorInfo-bottom-item">
+            <div
+              @click.stop="toUserPage(currentUserInfo.id, 'beAttention')"
+              class="authorInfo-bottom-item"
+            >
               <div class="bottom-item-box">
                 <div class="authorInfo-bottom-item-title">关注者</div>
                 <div class="authorInfo-bottom-item-num">
@@ -1043,8 +1031,8 @@ export default {
       window.open(`/circle-detail/${id}`);
     },
     // 跳转至用户页
-    toUserPage(id) {
-      window.open(`/user/${id}`);
+    toUserPage(id, type) {
+      window.open(`/user/${id}/${type}`);
     },
     // 选中标签类型
     setMenu(value) {
@@ -1127,15 +1115,6 @@ export default {
     // 文件上传失败
     uploadError(err, file, fileList) {
       Message.error("文件上传失败");
-    },
-    handleRemove(file) {
-      console.log(file);
-    },
-    handlePictureCardPreview(file) {
-      console.log(file);
-    },
-    handleDownload(file) {
-      console.log(file);
     }
   }
 };

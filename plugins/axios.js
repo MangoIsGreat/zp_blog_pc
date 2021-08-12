@@ -18,8 +18,10 @@ export default ({ $axios, app, store }) => {
 
   // 响应拦截器
   $axios.onResponse(response => {
+    // 未登录弹出登录弹框
     if (response.data.error_code === 10006) {
       store.commit("login/toggleOpen", true);
+      response.data.error_code = 0;
     }
 
     return response.data;

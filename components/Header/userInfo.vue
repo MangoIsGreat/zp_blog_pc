@@ -15,14 +15,11 @@
       >
         <i class="iconfont icon-wode"></i>我的主页
       </div>
-      <div class="content-first-line-item">
+      <div @click="toUserPage(currentUserInfo.id, 'likeArt')" class="content-first-line-item">
         <i class="iconfont icon-dianzan1"></i>我赞过的
       </div>
-      <div class="content-first-line-item">
+      <div @click="toUserPage(currentUserInfo.id, 'collection')" class="content-first-line-item">
         <i class="iconfont icon-xingxing"></i>我的收藏
-      </div>
-      <div class="content-first-line-item">
-        <i class="iconfont icon-biaoqian"></i>标签管理
       </div>
     </div>
     <div class="content-third-line">
@@ -43,10 +40,10 @@ export default {
     }
   },
   methods: {
-    toUserPage(id) {
-      window.open(`/user/${id}`);
+    toUserPage(id, type) {
+      window.open(`/user/${id}/${type}`);
 
-      this.$store.commit("login/isShowInfo", false);
+      this.$store.commit("login/toggleInfoOpen", false);
     },
     writing() {
       window.open("/writing/article", "_blank");
