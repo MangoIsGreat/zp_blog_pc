@@ -297,20 +297,31 @@
                     v-if="[100, 200, 300].includes(item.type)"
                   >
                     <img
+                      @click="toUserPage(item.User.id)"
                       v-if="item.type === 200"
                       class="avatar"
-                      :src="item.userInfo.avatar"
+                      :src="item.userInfo && item.userInfo.avatar"
                       alt=""
                     />
-                    <img v-else class="avatar" :src="item.User.avatar" alt="" />
+                    <img
+                      @click="toUserPage(item.User.id)"
+                      v-else
+                      class="avatar"
+                      :src="item.User && item.User.avatar"
+                      alt=""
+                    />
                     <div class="list-item-right">
                       <!-- 发表过的文章 -->
                       <div
                         class="list-item-right-title"
                         v-if="item.type === 100"
                       >
-                        {{ item.User.nickname }}发布了文章<span
+                        <span @click="toUserPage(item.User.id)">{{
+                          item.User && item.User.nickname
+                        }}</span
+                        >发布了文章<span
                           class="list-item-right-title-name"
+                          @click="toArticle(item.id)"
                           >{{ item.title }}</span
                         >
                       </div>
@@ -319,7 +330,11 @@
                         class="list-item-right-title"
                         v-if="item.type === 200"
                       >
-                        {{ item.userInfo.nickname }}发布了动态<span
+                        <span @click="toUserPage(item.userInfo.id)">{{
+                          item.userInfo && item.userInfo.nickname
+                        }}</span
+                        >发布了动态<span
+                          @click="toDetailPage(item.id)"
                           class="list-item-right-title-name"
                           >{{ item.content }}</span
                         >
@@ -329,7 +344,11 @@
                         class="list-item-right-title"
                         v-if="item.type === 300"
                       >
-                        {{ item.User.nickname }}发布了资讯<span
+                        <span @click="toUserPage(item.User.id)">{{
+                          item.User && item.User.nickname
+                        }}</span
+                        >发布了资讯<span
+                          @click="toNewsPage(item.id)"
                           class="list-item-right-title-name"
                           >{{ item.title }}</span
                         >
@@ -344,43 +363,60 @@
                   <!-- 赞过的资讯 -->
                   <div
                     class="list-item-like-innerBox"
-                    v-if="[400, 500, 600].includes(item.type)"
+                    v-if="
+                      (item.type === 500 && item.Dynamic) ||
+                        (item.type === 400 && item.Blog) ||
+                        item.type === 600
+                    "
                   >
                     <div class="list-item-like-innerBox-header">
-                      <div class="header-name">{{ item.User.nickname }}</div>
+                      <div class="header-name">
+                        {{ item.User && item.User.nickname }}
+                      </div>
                       &nbsp;赞了这篇<span v-if="item.type === 400">文章</span
                       ><span v-if="item.type === 500">动态</span
                       ><span v-if="item.type === 600">资讯</span>
                     </div>
                     <div class="list-item-like-innerBox-content">
-                      <img class="avatar" :src="item.User.avatar" alt="" />
+                      <img
+                        @click="toUserPage(item.User.id)"
+                        class="avatar"
+                        :src="item.User && item.User.avatar"
+                        alt=""
+                      />
                       <div class="like-innerBox-content-right">
-                        <div class="like-innerBox-content-right-title">
-                          {{ item.User.nickname }}
+                        <div
+                          @click="toUserPage(item.User.id)"
+                          class="like-innerBox-content-right-title"
+                        >
+                          {{ item.User && item.User.nickname }}
                         </div>
                         <div class="like-innerBox-content-right-job">
-                          {{ item.User.profession
+                          {{ item.User && item.User.profession
                           }}<span class="time">{{
                             item.created_at | relativeTime
                           }}</span>
                         </div>
                         <div
                           v-if="item.type === 400"
+                          @click="toArticle(item.Blog.id)"
                           class="like-innerBox-content-right-headline"
                         >
-                          {{ item.Blog.title }}
+                          {{ item.Blog && item.Blog.title }}
                         </div>
                         <div
                           v-if="item.type === 500"
+                          @click="toDetailPage(item.Dynamic.id)"
                           class="like-innerBox-content-right-headline"
                         >
-                          {{ item.Dynamic.content }}
+                          {{ item.Dynamic && item.Dynamic.content }}
                         </div>
                         <div
                           v-if="item.type === 600"
+                          @click="toNewsPage(item.News.id)"
                           class="like-innerBox-content-right-headline"
                         >
-                          {{ item.News.title }}
+                          {{ item.News && item.News.title }}
                         </div>
                       </div>
                     </div>
@@ -390,19 +426,30 @@
                     class="list-item-attention-innerBox"
                     v-if="item.type === 700"
                   >
-                    <img class="avatar" :src="item.attention.avatar" alt="" />
+                    <img
+                      class="avatar"
+                      @click="toUserPage(item.attention.id)"
+                      :src="item.attention && item.attention.avatar"
+                      alt=""
+                    />
                     <div class="list-item-attention-innerBox-right">
                       <div class="attention-innerBox-right-title">
-                        <div class="attention-innerBox-right-title-nickname">
-                          {{ item.attention.nickname }}
+                        <div
+                          @click="toUserPage(item.attention.id)"
+                          class="attention-innerBox-right-title-nickname"
+                        >
+                          {{ item.attention && item.attention.nickname }}
                         </div>
                         &nbsp;关注了&nbsp;
-                        <div class="attention-innerBox-right-title-nickname">
-                          {{ item.beAttention.nickname }}
+                        <div
+                          @click="toUserPage(item.beAttention.id)"
+                          class="attention-innerBox-right-title-nickname"
+                        >
+                          {{ item.beAttention && item.beAttention.nickname }}
                         </div>
                       </div>
                       <div class="attention-innerBox-right-job">
-                        {{ item.attention.profession }}
+                        {{ item.attention && item.attention.profession }}
                       </div>
                     </div>
                   </div>
@@ -422,9 +469,13 @@
                   @click="toArticle(item.id)"
                 >
                   <div class="item-info">
-                    <div class="author-name">{{ item.User.nickname }}</div>
+                    <div class="author-name">
+                      {{ item.User && item.User.nickname }}
+                    </div>
                     <div class="time">{{ item.created_at | relativeTime }}</div>
-                    <div class="tag-type">{{ item.Tag.tagName }}</div>
+                    <div class="tag-type">
+                      {{ item.Tag && item.Tag.tagName }}
+                    </div>
                   </div>
                   <div class="item-content">
                     <div class="content-left">
@@ -449,10 +500,36 @@
                             >&nbsp;{{ item.blogLikeNum }}</i
                           >
                         </div>
-                        <div @click.stop="toComment(item.id)">
+                        <div
+                          class="operate-item"
+                          @click.stop="toComment(item.id)"
+                        >
                           <i class="iconfont icon-pinglun"
                             >&nbsp;{{ item.commentNum }}</i
                           >
+                        </div>
+                        <div class="operate-item-delete">
+                          <i
+                            @click.stop="showDeleteBlog = item.id"
+                            class="iconfont icon-shenglvehao edit-blog"
+                          ></i>
+                          <div
+                            v-if="showDeleteBlog === item.id"
+                            class="operate-item-delete-btn"
+                          >
+                            <div
+                              @click.stop="editBlog(item.id)"
+                              class="operate-item-delete-btn-t"
+                            >
+                              编辑
+                            </div>
+                            <div
+                              @click.stop="deleteBlog(item.id)"
+                              class="operate-item-delete-btn-t"
+                            >
+                              删除
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -474,19 +551,26 @@
                     <div class="list-item-info">
                       <div class="list-item-info-left">
                         <img
-                          :src="item.userInfo.avatar"
+                          @click="toUserPage(item.userInfo.id)"
+                          :src="item.userInfo && item.userInfo.avatar"
                           class="list-item-info-left-avatar"
                         />
                         <div class="list-item-info-left-info">
-                          <div class="list-item-info-left-info-title">
-                            {{ item.userInfo.nickname }}
+                          <div
+                            @click="toUserPage(item.userInfo.id)"
+                            class="list-item-info-left-info-title"
+                          >
+                            {{ item.userInfo && item.userInfo.nickname }}
                           </div>
                           <div class="list-item-info-left-info-details">
                             <div class="details-job">
-                              {{ item.userInfo.profession }}
+                              {{ item.userInfo && item.userInfo.profession }}
                             </div>
                             &nbsp;
-                            <span v-if="item.userInfo.profession">·</span>&nbsp;
+                            <span
+                              v-if="item.userInfo && item.userInfo.profession"
+                              >·</span
+                            >&nbsp;
                             <div class="details-time">
                               {{ item.created_at | relativeTime }}
                             </div>
@@ -507,6 +591,21 @@
                           >已关注</span
                         >
                       </el-button>
+                      <div
+                        @mouseenter.stop="showDeleteDyn = item.id"
+                        @mouseleave.stop="showDeleteDyn = ''"
+                        class="list-item-info-delete"
+                        v-else
+                      >
+                        <i class="iconfont icon-shenglvehao delete-icon"></i>
+                        <div
+                          @click.stop="deleteDyn(item.id)"
+                          v-if="showDeleteDyn === item.id"
+                          class="delete-btn"
+                        >
+                          删除
+                        </div>
+                      </div>
                     </div>
                     <div class="list-item-desc">
                       <span class="list-item-desc-theme" v-if="item.theme">{{
@@ -590,14 +689,22 @@
                         v-for="(itm, idx) in commentList"
                         :key="idx"
                       >
-                        <img class="avatar" :src="itm.userInfo.avatar" alt="" />
+                        <img
+                          @click="toUserPage(item.userInfo.id)"
+                          class="avatar"
+                          :src="itm.userInfo && itm.userInfo.avatar"
+                          alt=""
+                        />
                         <div class="main-body-innerBox-right">
                           <div class="body-innerBox-right-firstline">
-                            <div class="right-firstline-nickname">
-                              {{ itm.userInfo.nickname }}
+                            <div
+                              @click="toUserPage(item.userInfo.id)"
+                              class="right-firstline-nickname"
+                            >
+                              {{ itm.userInfo && itm.userInfo.nickname }}
                             </div>
                             <div class="right-firstline-job">
-                              {{ itm.userInfo.profession }}
+                              {{ itm.userInfo && itm.userInfo.profession }}
                             </div>
                           </div>
                           <div class="body-innerBox-right-content">
@@ -650,7 +757,8 @@
                                 class="input-btn"
                                 v-model="replyComment"
                                 :placeholder="
-                                  `回复${item.userInfo.nickname}...`
+                                  `回复${item.userInfo &&
+                                    item.userInfo.nickname}...`
                                 "
                               ></el-input>
                             </div>
@@ -669,11 +777,18 @@
                             v-for="(t, i) in itm.child"
                             :key="i"
                           >
-                            <img class="avatar" :src="t.from.avatar" alt="" />
+                            <img
+                              class="avatar"
+                              :src="t.from && t.from.avatar"
+                              alt=""
+                            />
                             <div class="main-body-innerBox-right">
                               <div class="body-innerBox-right-firstline">
-                                <div class="right-firstline-nickname">
-                                  {{ t.from.nickname }}
+                                <div
+                                  @click="toUserPage(t.from.id)"
+                                  class="right-firstline-nickname"
+                                >
+                                  {{ t.from && t.from.nickname }}
                                 </div>
                                 <div
                                   class="identity"
@@ -682,13 +797,14 @@
                                   (作者)
                                 </div>
                                 <div class="right-firstline-job">
-                                  {{ t.from.profession }}
+                                  {{ t.from && t.from.profession }}
                                 </div>
                               </div>
                               <div class="body-innerBox-right-content">
-                                回复&nbsp;<span class="reply">{{
-                                  t.to.nickname
-                                }}</span
+                                回复&nbsp;<span
+                                  @click="toUserPage(t.to.id)"
+                                  class="reply"
+                                  >{{ t.to.nickname }}</span
                                 >：{{ t.content }}
                               </div>
                               <div class="body-innerBox-right-bottomline">
@@ -925,7 +1041,9 @@ export default {
       showReplyToReply: "", // 是否展示回复评论输入框
       showLikePanel: false, // 展示“赞”面板
       showMorePanel: false, // 展示“更多”面板
-      likeNumData: null // 点赞数据量
+      likeNumData: null, // 点赞数据量
+      showDeleteDyn: "", // 展示删除“动态”按钮
+      showDeleteBlog: "" // 展示删除“博客”按钮
     };
   },
   async asyncData({ $axios, params }) {
@@ -947,7 +1065,6 @@ export default {
     }
   },
   created() {
-    console.log("=====================================>created");
     // 请求列表数据
     this.getArtData();
 
@@ -965,11 +1082,6 @@ export default {
       }
     },
     loadData() {
-      console.log("====================================>loadData");
-      console.log(111);
-      console.log("countNum", this.countNum);
-      console.log("pageIndex", this.pageIndex);
-      console.log("Math.ceil", Math.ceil(this.countNum / this.pageSize));
       // 当前页大于总页数时停止请求数据：
       if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
 
@@ -1027,8 +1139,6 @@ export default {
     },
     // 获取文章列表数据
     async getArtData() {
-      console.log("==========================>getArtData");
-      console.log(this.pageIndex);
       let path = "";
 
       // 要传递的参数
@@ -1098,7 +1208,6 @@ export default {
             }
           });
 
-          // this.listData = data.data.list;
           this.listData.push(...data.data.list);
           this.countNum = data.data.count;
         } else if (this.selectItem === "attention") {
@@ -1111,7 +1220,6 @@ export default {
             result.push(obj);
           });
 
-          // this.listData = result;
           this.listData.push(...result);
           this.countNum = data.data.count;
         } else if (this.selectItem === "beAttention") {
@@ -1124,14 +1232,12 @@ export default {
             result.push(obj);
           });
 
-          // this.listData = result;
           this.listData.push(...result);
           this.countNum = data.data.count;
         }
 
         // 当前页数+1
         this.pageIndex += 1;
-        console.log("pageindex++++", this.pageIndex);
       } else {
         Message.error("数据获取失败");
       }
@@ -1152,10 +1258,6 @@ export default {
       } else {
         Message.error("获取点赞数据失败");
       }
-    },
-    // 跳转到文章页
-    toArticle(id) {
-      window.open(`/article/${id}`, "_blank");
     },
     // 点赞博客
     async likeBlog(blogId) {
@@ -1256,10 +1358,50 @@ export default {
       });
 
       if (commentList.error_code !== 0) {
-        Message.error("获取评论列表失败！");
+        return Message.error("获取评论列表失败！");
       }
 
       this.commentList = commentList.data; // 评论列表
+    },
+    // 删除“动态”
+    async deleteDyn(id) {
+      const data = await this.$axios.post("/dynamic/delete", {
+        dynamicId: id
+      });
+
+      if (data.error_code !== 0) {
+        return Message.error("删除失败！");
+      }
+
+      // 隐藏删除按钮
+      this.showDeleteDyn = "";
+      // 重新请求数据
+      this.pageIndex = 1;
+      this.listData = [];
+      this.getArtData();
+    },
+    // 删除“博客”
+    async deleteBlog(id) {
+      const data = await this.$axios.post("/blog/delete", {
+        id
+      });
+
+      if (data.error_code !== 0) {
+        return Message.error("删除失败！");
+      }
+
+      // 隐藏删除按钮
+      this.showDeleteBlog = "";
+      // 重新请求数据
+      this.pageIndex = 1;
+      this.listData = [];
+      this.getArtData();
+    },
+    editBlog(id) {
+      // 隐藏编辑按钮
+      this.showDeleteBlog = "";
+
+      window.open(`/writing/edit/${id}`, "_blank");
     },
     // 是否展示评论面板
     toggleComment(commenId) {
@@ -1295,6 +1437,9 @@ export default {
       this.showLikePanel = false;
       // 隐藏“更多”面板
       this.showMorePanel = false;
+
+      // 隐藏删除博客按钮
+      this.showDeleteBlog = "";
     },
     // 评论"动态评论"
     async replyToComment(comment, dynamic) {
@@ -1429,7 +1574,15 @@ export default {
       window.open(`/article/${id}#make_comments`, "_blank");
     },
     toNewsPage(id) {
-      window.open(`/news-detai/${id}`, "_blank");
+      window.open(`/news-detail/${id}`, "_blank");
+    },
+    // 跳转到文章页
+    toArticle(id) {
+      window.open(`/article/${id}`, "_blank");
+    },
+    // 跳转至用户页
+    toUserPage(id) {
+      window.open(`/user/${id}`);
     }
   }
 };

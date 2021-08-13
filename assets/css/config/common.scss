@@ -127,19 +127,3 @@ $fontSize-small: 12px;
   border-bottom: none;
   transform: rotate(45deg);
 }
-
-// 画三角
-// &::before {
-//   content: "";
-//   position: absolute;
-//   margin-left: -6px;
-//   top: -7px;
-//   left: 60px;
-//   width: 12px;
-//   height: 12px;
-//   background-color: #fff;
-//   border: 1px solid #ddd;
-//   border-right: none;
-//   border-bottom: none;
-//   transform: rotate(45deg);
-// }

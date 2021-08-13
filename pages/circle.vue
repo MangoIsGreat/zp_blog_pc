@@ -1094,7 +1094,7 @@ export default {
     },
     // 上传图片超过时提醒
     limit() {
-      Message.warning("只允许上传三张图片作为封面！");
+      Message.warning("只允许上传三张图片！");
     },
     // 文件上传成功
     uploadSuccess(response, file, fileList) {

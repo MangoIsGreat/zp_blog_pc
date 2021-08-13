@@ -69,10 +69,15 @@ export default {
 
     // 获取发布文章类型
     this.getPublishType();
+
+    // 编辑博客
+    if (this.$route.params.type === "edit") {
+      this.getBlogInfo();
+    }
   },
   methods: {
     getPublishType() {
-      if (this.$route.params.type === "article") {
+      if (["article", "edit"].includes(this.$route.params.type)) {
         this.uploadType = "article";
       } else if (this.$route.params.type === "news") {
         this.uploadType = "news";
@@ -82,6 +87,18 @@ export default {
       // 关闭弹框
       if (!this.isShowPanel) return;
       this.isShowPanel = false;
+    },
+    async getBlogInfo() {
+      const data = await this.$axios.get("/blog/findBlog", {
+        params: { id: this.$route.params.id }
+      });
+
+      if (data.error_code !== 0) {
+        return Message.error("获取文章失败！");
+      }
+
+      this.handbook = data.data.content;
+      this.articleTitle = data.data.title;
     },
     async publish(value) {
       let description = value.description; // 文章描述
