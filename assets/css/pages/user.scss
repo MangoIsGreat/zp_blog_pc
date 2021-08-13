@@ -162,7 +162,7 @@
             // 动态列表
             .list-wrapper-innerBox-dynamic {
               .list-item {
-                border-bottom: 1px solid $border-color;
+                margin-bottom: 8px;
                 display: flex;
                 background-color: #fff;
                 cursor: pointer;
@@ -170,10 +170,6 @@
 
                 &:hover {
                   background-color: #fafafa;
-                }
-
-                &:nth-last-child(1) {
-                  border-bottom: none;
                 }
 
                 // 发表的文章/动态/资讯等
@@ -238,6 +234,8 @@
                     }
 
                     .like-innerBox-content-right {
+                      width: calc(100% - 55px);
+
                       .like-innerBox-content-right-title {
                         font-size: 13px;
                         font-weight: 700;

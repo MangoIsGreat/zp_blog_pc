@@ -1,5 +1,5 @@
 <template>
-  <div class="article-root" @click.stop="hiddenToComment">
+  <div class="article-root" @click="hiddenToComment">
     <div class="article-wrapper">
       <div class="article-wrapper-content">
         <div class="content-innerBox">

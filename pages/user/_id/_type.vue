@@ -1,5 +1,5 @@
 <template>
-  <div class="user-wrapper" @click.stop="hiddenBtn">
+  <div class="user-wrapper" @click="hiddenBtn">
     <div class="user-wrapper-innerBox">
       <div class="user-wrapper-innerBox-content">
         <div class="innerBox-content-user">
@@ -239,7 +239,7 @@
                 </div>
               </div>
             </div>
-            <!-- 更多头部 -->
+            <!-- 更多-关注-头部 -->
             <div
               class="innerBox-content-header"
               v-if="['attention', 'beAttention'].includes(selectItem)"
@@ -267,6 +267,15 @@
                 </div>
               </div>
             </div>
+            <!-- 收藏夹头部 -->
+            <div
+              class="innerBox-content-header"
+              v-if="['collection'].includes(selectItem)"
+            >
+              <div class="innerBox-content-header-name">收藏集</div>
+              <div></div>
+            </div>
+            <!-- 动态列表 -->
             <div
               class="infinite-list list-wrapper"
               v-infinite-scroll="loadData"
@@ -287,7 +296,13 @@
                     class="list-item-innerBox"
                     v-if="[100, 200, 300].includes(item.type)"
                   >
-                    <img class="avatar" :src="item.User.avatar" alt="" />
+                    <img
+                      v-if="item.type === 200"
+                      class="avatar"
+                      :src="item.userInfo.avatar"
+                      alt=""
+                    />
+                    <img v-else class="avatar" :src="item.User.avatar" alt="" />
                     <div class="list-item-right">
                       <!-- 发表过的文章 -->
                       <div
@@ -304,9 +319,9 @@
                         class="list-item-right-title"
                         v-if="item.type === 200"
                       >
-                        橘猫很方发布了动态<span
+                        {{ item.userInfo.nickname }}发布了动态<span
                           class="list-item-right-title-name"
-                          >今天天气真好</span
+                          >{{ item.content }}</span
                         >
                       </div>
                       <!-- 发表过的资讯 -->
@@ -332,28 +347,40 @@
                     v-if="[400, 500, 600].includes(item.type)"
                   >
                     <div class="list-item-like-innerBox-header">
-                      <div class="header-name">橘猫横放</div>
+                      <div class="header-name">{{ item.User.nickname }}</div>
                       &nbsp;赞了这篇<span v-if="item.type === 400">文章</span
                       ><span v-if="item.type === 500">动态</span
                       ><span v-if="item.type === 600">资讯</span>
                     </div>
                     <div class="list-item-like-innerBox-content">
-                      <img
-                        class="avatar"
-                        src="https://sf6-ttcdn-tos.pstatp.com/img/user-avatar/b963d484d05cba9ce3e0aa029561fa2b~300x300.image"
-                        alt=""
-                      />
+                      <img class="avatar" :src="item.User.avatar" alt="" />
                       <div class="like-innerBox-content-right">
                         <div class="like-innerBox-content-right-title">
-                          橘猫橘猫
+                          {{ item.User.nickname }}
                         </div>
                         <div class="like-innerBox-content-right-job">
-                          前端开发工程师<span class="time">{{
+                          {{ item.User.profession
+                          }}<span class="time">{{
                             item.created_at | relativeTime
                           }}</span>
                         </div>
-                        <div class="like-innerBox-content-right-headline">
-                          百万PV商城实践系列-前端图片资源优化
+                        <div
+                          v-if="item.type === 400"
+                          class="like-innerBox-content-right-headline"
+                        >
+                          {{ item.Blog.title }}
+                        </div>
+                        <div
+                          v-if="item.type === 500"
+                          class="like-innerBox-content-right-headline"
+                        >
+                          {{ item.Dynamic.content }}
+                        </div>
+                        <div
+                          v-if="item.type === 600"
+                          class="like-innerBox-content-right-headline"
+                        >
+                          {{ item.News.title }}
                         </div>
                       </div>
                     </div>
@@ -363,23 +390,19 @@
                     class="list-item-attention-innerBox"
                     v-if="item.type === 700"
                   >
-                    <img
-                      class="avatar"
-                      src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/18/16fb901f1bac3975~tplv-t2oaga2asx-no-mark:100:100:100:100.awebp"
-                      alt=""
-                    />
+                    <img class="avatar" :src="item.attention.avatar" alt="" />
                     <div class="list-item-attention-innerBox-right">
                       <div class="attention-innerBox-right-title">
                         <div class="attention-innerBox-right-title-nickname">
-                          橘猫很方
+                          {{ item.attention.nickname }}
                         </div>
                         &nbsp;关注了&nbsp;
                         <div class="attention-innerBox-right-title-nickname">
-                          执鸢者
+                          {{ item.beAttention.nickname }}
                         </div>
                       </div>
                       <div class="attention-innerBox-right-job">
-                        前端开发工程师
+                        {{ item.attention.profession }}
                       </div>
                     </div>
                   </div>
@@ -889,6 +912,7 @@ export default {
       defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       selectItem: "dynamic", // 选中的类型
       listData: [], // 列表数据
+      countNum: 0, // 列表数据数量
       pageSize: 15,
       pageIndex: 1,
       comment: "", // "动态"评论
@@ -923,6 +947,7 @@ export default {
     }
   },
   created() {
+    console.log("=====================================>created");
     // 请求列表数据
     this.getArtData();
 
@@ -940,18 +965,18 @@ export default {
       }
     },
     loadData() {
+      console.log("====================================>loadData");
+      console.log(111);
+      console.log("countNum", this.countNum);
+      console.log("pageIndex", this.pageIndex);
+      console.log("Math.ceil", Math.ceil(this.countNum / this.pageSize));
       // 当前页大于总页数时停止请求数据：
-      if (this.pageIndex > Math.ceil(this.listData.length / this.pageSize))
-        return;
+      if (this.pageIndex > Math.ceil(this.countNum / this.pageSize)) return;
 
       // 下拉加载更多：
+      // if (this.pageIndex > 2) return;
       this.getArtData();
     },
-    // 跳转到编辑用户信息页
-    // editUserInfo() {
-    //   console.log(88899)
-    //   this.$router.push(`/edit-user/${this.$route.params.id}`);
-    // },
     // 查看收藏夹
     getUserCollection() {
       this.selectItem = "collection";
@@ -1002,12 +1027,14 @@ export default {
     },
     // 获取文章列表数据
     async getArtData() {
+      console.log("==========================>getArtData");
+      console.log(this.pageIndex);
       let path = "";
 
       // 要传递的参数
       const params = {
         uid: this.$route.params.id,
-        pageIndex: 1,
+        pageIndex: this.pageIndex,
         pageSize: this.pageSize
       };
 
@@ -1053,56 +1080,58 @@ export default {
       });
 
       if (data.error_code === 0) {
-        // 当前页数+1
-        this.pageIndex += 1;
-
         if (
-          ["collection", "articleHot", "articleNew"].includes(this.selectItem)
+          [
+            "collection",
+            "articleHot",
+            "articleNew",
+            "chat",
+            "likeArt",
+            "dynamic",
+            "likeNews",
+            "likeChat"
+          ].includes(this.selectItem)
         ) {
-          this.listData = data.data.rows;
-        } else if (this.selectItem === "chat") {
-          data.data.rows.forEach(item => {
+          data.data.list.forEach(item => {
             if (item.picUrl) {
               item.picUrl = JSON.parse(item.picUrl);
             }
           });
 
-          this.listData = data.data.rows;
-        } else if (this.selectItem === "likeChat") {
-          data.data.forEach(item => {
-            if (item.picUrl) {
-              item.picUrl = JSON.parse(item.picUrl);
-            }
-          });
-
-          this.listData = data.data;
-        } else if (
-          ["likeArt", "dynamic", "likeNews"].includes(this.selectItem)
-        ) {
-          this.listData = data.data;
+          // this.listData = data.data.list;
+          this.listData.push(...data.data.list);
+          this.countNum = data.data.count;
         } else if (this.selectItem === "attention") {
           const result = [];
 
-          data.data.rows.forEach(item => {
+          data.data.list.forEach(item => {
             let obj = {};
             obj.userInfo = item.attention;
             obj.isAttention = item.isAttention;
             result.push(obj);
           });
 
-          this.listData = result;
+          // this.listData = result;
+          this.listData.push(...result);
+          this.countNum = data.data.count;
         } else if (this.selectItem === "beAttention") {
           const result = [];
 
-          data.data.rows.forEach(item => {
+          data.data.list.forEach(item => {
             let obj = {};
             obj.userInfo = item.beAttention;
             obj.isAttention = item.isAttention;
             result.push(obj);
           });
 
-          this.listData = result;
+          // this.listData = result;
+          this.listData.push(...result);
+          this.countNum = data.data.count;
         }
+
+        // 当前页数+1
+        this.pageIndex += 1;
+        console.log("pageindex++++", this.pageIndex);
       } else {
         Message.error("数据获取失败");
       }
@@ -1161,7 +1190,6 @@ export default {
           this.listData.forEach(item => {
             if (item.userInfo.id === id) {
               item.isAttention = true;
-              console.log(11, this.listData);
             }
           });
         } else if (data.data === "cancel") {

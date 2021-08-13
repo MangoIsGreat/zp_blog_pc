@@ -1,5 +1,5 @@
 <template>
-  <div class="circle-detail-wrapper" @click.stop="hiddenReply">
+  <div class="circle-detail-wrapper" @click="hiddenReply">
     <div class="circle-detail-wrapper-innerBox">
       <div class="wrapper-innerBox-content">
         <div class="list-item-top">

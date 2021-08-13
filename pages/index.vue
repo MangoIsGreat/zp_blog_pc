@@ -76,11 +76,12 @@
                         <div
                           class="operate-item"
                           @click.stop="likeBlog(item.id)"
-                          :style="{
-                            color: item.isLike ? '#2de938' : '#4e5969'
-                          }"
                         >
-                          <i class="iconfont icon-dianzan1"
+                          <i
+                            :style="{
+                              color: item.isLike ? '#2de938' : '#b2bac2'
+                            }"
+                            class="iconfont icon-dianzan1"
                             >&nbsp;{{ item.blogLikeNum }}</i
                           >
                         </div>

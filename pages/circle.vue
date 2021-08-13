@@ -1,5 +1,5 @@
 <template>
-  <div class="circle-box" @click.stop="hiddenCommenBtn">
+  <div class="circle-box" @click="hiddenCommenBtn">
     <div class="circle-wrapper">
       <div class="circle-menu">
         <div
