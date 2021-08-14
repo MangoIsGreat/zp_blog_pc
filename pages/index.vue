@@ -93,6 +93,7 @@
                       </div>
                     </div>
                     <div
+                      v-if="item.titlePic"
                       v-lazy:background-image="item.titlePic"
                       class="content-right"
                     ></div>

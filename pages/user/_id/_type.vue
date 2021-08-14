@@ -926,6 +926,7 @@
                 <div
                   v-for="(item, index) in listData"
                   :key="index"
+                  @click="openCollection(item.id)"
                   class="infinite-list-item list-item infinite-list-item-collection"
                 >
                   <div class="list-item-name">{{ item.type }}</div>
@@ -1365,6 +1366,10 @@ export default {
     },
     // 删除“动态”
     async deleteDyn(id) {
+      if (!confirm("您确定要删除吗？")) {
+        return;
+      }
+
       const data = await this.$axios.post("/dynamic/delete", {
         dynamicId: id
       });
@@ -1382,6 +1387,10 @@ export default {
     },
     // 删除“博客”
     async deleteBlog(id) {
+      if (!confirm("您确定要删除吗？")) {
+        return;
+      }
+
       const data = await this.$axios.post("/blog/delete", {
         id
       });
@@ -1583,6 +1592,11 @@ export default {
     // 跳转至用户页
     toUserPage(id) {
       window.open(`/user/${id}`);
+    },
+    // 打开收藏列表页
+    openCollection(id) {
+      // window.open(`/collection/${id}`, "_blank");
+      this.$router.push(`/collection/${id}`);
     }
   }
 };
