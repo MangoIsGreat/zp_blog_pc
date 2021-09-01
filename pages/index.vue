@@ -15,7 +15,6 @@
             {{ item.tag_name }}
           </div>
         </div>
-        <div class="btn">标签管理</div>
       </div>
     </div>
     <div class="content">

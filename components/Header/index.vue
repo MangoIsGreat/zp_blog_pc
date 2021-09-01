@@ -10,10 +10,7 @@
                 color: selectPath === item.route ? '#00c58e' : '#4e5969'
               }"
               class="item-link"
-              @click="
-                selectPath = item.route;
-                $router.push(item.route);
-              "
+              @click="clickItem(item)"
             >
               {{ item.name }}
             </div>
@@ -30,6 +27,7 @@
               placeholder="探索得到"
               @focus="showWrite = false"
               @blur="showWrite = true"
+              @change="search"
             ></el-input>
             <el-button
               v-if="showWrite"
@@ -40,9 +38,6 @@
               >写文章</el-button
             >
           </div>
-          <el-badge :value="3" class="item">
-            <i class="el-icon-bell"></i>
-          </el-badge>
           <div @click.stop="login">
             <el-avatar
               class="avatar item"
@@ -98,6 +93,9 @@ export default {
       return this.$store.state.login.userinfo;
     }
   },
+  created() {
+    this.search();
+  },
   methods: {
     reload() {
       // 触发页面刷新
@@ -117,6 +115,30 @@ export default {
       }
 
       this.$store.commit("login/toggleInfoOpen", true);
+    },
+    clickItem(item) {
+      this.selectPath = item.route;
+      this.$router.push(item.route);
+
+      // 清空搜索框
+      this.input = "";
+      this.$store.commit("search/setSearchValue", []);
+    },
+    async search() {
+      const listData = await this.$axios.get("/blog/search", {
+        params: {
+          tag: 10000,
+          content: this.input
+        }
+      });
+
+      if (listData.error_code === 0) {
+        this.$store.commit("search/setSearchValue", listData.data.rows);
+
+        this.$router.push("/search");
+      } else {
+        Message.error("搜索失败！");
+      }
     }
   }
 };

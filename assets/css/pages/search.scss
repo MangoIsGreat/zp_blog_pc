@@ -1,0 +1,154 @@
+@import "/assets/css/config/common.scss";
+
+.search-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  margin-top: 10px;
+
+  .content {
+    width: 100%;
+
+    .inner-content-box {
+      display: flex;
+      width: 980px;
+      margin: 0 auto;
+    }
+
+    .content-left {
+      width: 700px;
+      background-color: $bg-color-white;
+
+      .head {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border-bottom: 1px solid $border-color;
+        box-sizing: border-box;
+
+        .head-item {
+          padding: 0 16px;
+          cursor: pointer;
+          border-right: 1px solid $border-color;
+
+          &:hover {
+            color: $primary-color;
+          }
+
+          &:nth-last-child(1) {
+            border: none;
+          }
+        }
+      }
+
+      .content-body {
+        width: 100%;
+        // padding: 0 15px;
+        box-sizing: border-box;
+
+        .body {
+          width: 100%;
+
+          .list-wrapper {
+            width: 100%;
+
+            .infinite-list-item:hover {
+              background-color: #fafafa;
+            }
+
+            .list-item {
+              padding: 0 15px;
+              box-sizing: border-box;
+              width: 100%;
+              border-bottom: 1px solid $border-color;
+              font-size: 13px;
+              cursor: pointer;
+
+              .iconfont {
+                color: #96909c;
+              }
+
+              &:nth-last-child(1) {
+                border: none;
+              }
+
+              .item-info {
+                padding: 12px 0;
+                display: flex;
+
+                .author-name,
+                .time {
+                  pointer-events: none;
+                  border-right: 1px solid $border-color;
+                }
+
+                .author-name {
+                  padding-right: 8px;
+                }
+
+                .time {
+                  pointer-events: none;
+                  padding: 0 8px;
+                }
+
+                .tag-type {
+                  pointer-events: none;
+                  padding-left: 8px;
+                }
+              }
+
+              .item-content-t {
+                display: flex;
+
+                .content-left-t {
+                  flex: 1;
+                  width: calc(100% - 120px);
+                  padding-right: 15px;
+                  box-sizing: border-box;
+
+                  .title {
+                    color: #1d2129;
+                    font-weight: 700;
+                  }
+
+                  .desc {
+                    padding: 12px 0;
+                  }
+
+                  .title,
+                  .desc {
+                    @include ellipsis();
+                  }
+
+                  .operate {
+                    display: flex;
+                    margin-bottom: 12px;
+
+                    .operate-item {
+                      margin-right: 12px;
+                      color: #4e5969;
+                    }
+
+                    i {
+                      font-size: 13px;
+                    }
+                  }
+                }
+
+                .content-right {
+                  @include setBgImg2(120px, 80px);
+                  padding: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .content-right {
+      width: 260px;
+      padding: 0 10px;
+    }
+  }
+}

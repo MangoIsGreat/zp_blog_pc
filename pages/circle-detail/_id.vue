@@ -70,7 +70,11 @@
               >&nbsp;{{ !dynData.commNum ? "评论" : dynData.commNum }}</i
             >
           </div>
-          <div class="list-item-operate-t">
+          <div
+            class="list-item-operate-t list-item-operate-t-fenxiang"
+            :data-clipboard-text="`${host}/circle-detail/${dynData.id}`"
+            @click="copy"
+          >
             <i class="iconfont icon-fenxiang">&nbsp;分享</i>
           </div>
         </div>
@@ -350,12 +354,15 @@
 </template>
 
 <script>
+import Clipboard from "clipboard";
 import dev from "@/env";
+import { Message } from "element-ui";
 
 export default {
   layout: "default",
   data() {
     return {
+      host: "",
       showCommEmoji: false, // 是否展示评论emoji表情选择器
       showReplyCommEmoji: false, // 是否展示回复评论emoji表情选择器
       showReplyReplyEmoji: false, // 是否展示回复回复emoji表情选择器
@@ -412,7 +419,24 @@ export default {
     // 获取动态评论
     this.getReplyList();
   },
+  mounted() {
+    this.host = window.location.host;
+  },
   methods: {
+    copy() {
+      let clipboard = new Clipboard(".list-item-operate-t-fenxiang");
+      //监听事件给出提示,可忽略
+      clipboard.on("success", function(e) {
+        Message.success("复制链接成功！");
+      });
+      clipboard.on("error", function(e) {
+        Message.error("复制链接失败！");
+      });
+
+      setTimeout(() => {
+        clipboard.destroy();
+      }, 200);
+    },
     // 选择评论emoji表情
     selectCommEmoji(emoji) {
       let input = document.getElementById("d_comm_emoji_ipt");
@@ -537,6 +561,8 @@ export default {
     },
     // 回复"评论回复"
     async replyToReply(value, item, dynamic) {
+      if (!this.replyToReplyValue) return;
+
       const data = await this.$axios.post("/dcomment/reply", {
         dynamicId: dynamic.id,
         commentId: item.id,

@@ -228,7 +228,11 @@
                     >&nbsp;{{ !item.commNum ? "评论" : item.commNum }}</i
                   >
                 </div>
-                <div class="list-item-operate-t">
+                <div
+                  :data-clipboard-text="`${host}/circle-detail/${item.id}`"
+                  class="list-item-operate-t list-item-operate-t-fenxiang"
+                  @click="copy"
+                >
                   <i class="iconfont icon-fenxiang">&nbsp;分享</i>
                 </div>
               </div>
@@ -573,6 +577,7 @@
 </template>
 
 <script>
+import Clipboard from "clipboard";
 import dev from "@/env";
 import { encode } from "@/utils/encode";
 import { getCookie } from "@/utils/cookie";
@@ -582,6 +587,7 @@ export default {
   layout: "default",
   data() {
     return {
+      host: "",
       showEmoji: false, // 是否展示emoji表情选择器
       showCommEmoji: false, // 是否展示评论emoji表情选择器
       showReplyCommEmoji: false, // 是否展示回复评论emoji表情选择器
@@ -642,7 +648,24 @@ export default {
     // 获取精选留言列表数据
     this.getFavList();
   },
+  mounted() {
+    this.host = window.location.host;
+  },
   methods: {
+    copy() {
+      let clipboard = new Clipboard(".list-item-operate-t-fenxiang");
+      //监听事件给出提示,可忽略
+      clipboard.on("success", function(e) {
+        Message.success("复制链接成功！");
+      });
+      clipboard.on("error", function(e) {
+        Message.error("复制链接失败！");
+      });
+
+      setTimeout(() => {
+        clipboard.destroy();
+      }, 200);
+    },
     // 选择emoji表情
     selectEmoji(emoji) {
       let input = document.getElementById("circle_input");
@@ -726,6 +749,8 @@ export default {
     },
     // 发布动态
     async publish() {
+      if (!this.content) return;
+
       const picUrl = JSON.stringify(this.picUrl);
 
       const tmpTheme = this.content.split("#");
@@ -914,6 +939,8 @@ export default {
     },
     // 回复"评论回复"
     async replyToReply(value, item, dynamic) {
+      if (!this.replyToReplyValue) return;
+
       const data = await this.$axios.post("/dcomment/reply", {
         dynamicId: dynamic.id,
         commentId: item.id,

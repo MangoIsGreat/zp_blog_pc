@@ -9,14 +9,14 @@
           :maxlength="30"
         ></el-input>
         <div class="header-wrapper-right">
-          <el-button class="draft" size="small">草稿箱</el-button>
+          <!-- <el-button class="draft" size="small">草稿箱</el-button> -->
           <el-button
             size="small"
             type="primary"
             @click.stop="isShowPanel = true"
             >发布</el-button
           >
-          <el-avatar class="avatar" size="medium" :src="avatarUrl"></el-avatar>
+          <!-- <el-avatar class="avatar" size="medium" :src="avatarUrl"></el-avatar> -->
         </div>
       </div>
       <div class="writing-wrapper-body">

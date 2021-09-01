@@ -508,7 +508,10 @@
                             >&nbsp;{{ item.commentNum }}</i
                           >
                         </div>
-                        <div class="operate-item-delete">
+                        <div
+                          class="operate-item-delete"
+                          v-if="selectItem !== 'likeArt'"
+                        >
                           <i
                             @click.stop="showDeleteBlog = item.id"
                             class="iconfont icon-shenglvehao edit-blog"
@@ -517,12 +520,12 @@
                             v-if="showDeleteBlog === item.id"
                             class="operate-item-delete-btn"
                           >
-                            <div
+                            <!-- <div
                               @click.stop="editBlog(item.id)"
                               class="operate-item-delete-btn-t"
                             >
                               编辑
-                            </div>
+                            </div> -->
                             <div
                               @click.stop="deleteBlog(item.id)"
                               class="operate-item-delete-btn-t"
@@ -647,7 +650,11 @@
                         >&nbsp;{{ !item.commNum ? "评论" : item.commNum }}</i
                       >
                     </div>
-                    <div class="list-item-operate-t">
+                    <div
+                      class="list-item-operate-t list-item-operate-t-fenxiang"
+                      :data-clipboard-text="`${host}/circle-detail/${item.id}`"
+                      @click="copy"
+                    >
                       <i class="iconfont icon-fenxiang">&nbsp;分享</i>
                     </div>
                   </div>
@@ -673,7 +680,7 @@
                           ></el-input>
                         </div>
                         <div class="second-line" v-if="showComment">
-                          <div class="emoj">表情</div>
+                          <div class="emoj"></div>
                           <el-button
                             @click.stop="makeComment(item.id)"
                             size="small"
@@ -763,7 +770,7 @@
                               ></el-input>
                             </div>
                             <div class="second-line">
-                              <div class="emoj">表情</div>
+                              <div class="emoj"></div>
                               <el-button
                                 @click.stop="replyToComment(itm, item)"
                                 size="small"
@@ -1019,6 +1026,7 @@
 </template>
 
 <script>
+import Clipboard from "clipboard";
 import dev from "@/env";
 import { Message } from "element-ui";
 
@@ -1026,6 +1034,7 @@ export default {
   layout: "default",
   data() {
     return {
+      host: "",
       defaultAvatar: dev[process.env.NODE_ENV].PIC_URL + "/default_avatar.png", // 默认头像
       selectItem: "dynamic", // 选中的类型
       listData: [], // 列表数据
@@ -1072,7 +1081,24 @@ export default {
     // 获取用户赞过的文章/动态/资讯
     this.getLikeNum();
   },
+  mounted() {
+    this.host = window.location.host;
+  },
   methods: {
+    copy() {
+      let clipboard = new Clipboard(".list-item-operate-t-fenxiang");
+      //监听事件给出提示,可忽略
+      clipboard.on("success", function(e) {
+        Message.success("复制链接成功！");
+      });
+      clipboard.on("error", function(e) {
+        Message.error("复制链接失败！");
+      });
+
+      setTimeout(() => {
+        clipboard.destroy();
+      }, 200);
+    },
     setSelectedType() {
       const { type } = this.$route.params;
 
@@ -1180,7 +1206,7 @@ export default {
           path = "/author/byfollowers"; // 更多-idol
           break;
         case "dynamic":
-          path = "/author/dynamic"; // 更多-idol
+          path = "/author/dynamic"; // 作者动态记录
           break;
         default:
           break;
@@ -1406,12 +1432,12 @@ export default {
       this.listData = [];
       this.getArtData();
     },
-    editBlog(id) {
-      // 隐藏编辑按钮
-      this.showDeleteBlog = "";
+    // editBlog(id) {
+    //   // 隐藏编辑按钮
+    //   this.showDeleteBlog = "";
 
-      window.open(`/writing/edit/${id}`, "_blank");
-    },
+    //   window.open(`/writing/edit/${id}`, "_blank");
+    // },
     // 是否展示评论面板
     toggleComment(commenId) {
       // 未展开评论面板则展开
@@ -1473,6 +1499,8 @@ export default {
     },
     // 回复"评论回复"
     async replyToReply(value, item, dynamic) {
+      if (!this.replyToReplyValue) return;
+
       const data = await this.$axios.post("/dcomment/reply", {
         dynamicId: dynamic.id,
         commentId: item.id,

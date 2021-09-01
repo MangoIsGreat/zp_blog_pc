@@ -536,9 +536,6 @@
             </div>
           </div>
         </div>
-        <div class="icon-item">
-          <i class="iconfont icon-xinfangjubao"></i>
-        </div>
       </div>
     </div>
   </div>
@@ -727,6 +724,8 @@ export default {
     },
     // 评论博客
     async makeComment() {
+      if (!this.comment) return;
+
       const data = await this.$axios.post("/bcomment/comment", {
         blog: this.$route.params.id,
         content: this.comment
@@ -769,6 +768,8 @@ export default {
     },
     // 评论"博客评论"
     async replyToComment(value) {
+      if (!this.replyComment) return;
+
       const data = await this.$axios.post("/bcomment/reply", {
         blog: this.$route.params.id,
         comment: value.id,
@@ -788,6 +789,8 @@ export default {
     },
     // 回复"博客评论"
     async replyToReply(value, item) {
+      if (!this.replyContent) return;
+
       const data = await this.$axios.post("/bcomment/reply", {
         blog: this.$route.params.id,
         comment: item.id,
@@ -954,7 +957,11 @@ export default {
     },
     // 获取收藏集列表
     async getCollection() {
-      const result = await this.$axios.get("/collect/list");
+      const result = await this.$axios.get("/collect/list", {
+        params: {
+          collectionId: this.$route.params.id
+        }
+      });
 
       if (result.error_code === 0) {
         this.collectionList = result.data;

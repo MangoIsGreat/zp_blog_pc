@@ -146,9 +146,6 @@
       <div class="icon-item icon-item-badge" :badge="articleInfo.newsReadNum">
         <i class="iconfont icon-yanjing"></i>
       </div>
-      <div class="icon-item">
-        <i class="iconfont icon-xinfangjubao"></i>
-      </div>
     </div>
   </div>
 </template>

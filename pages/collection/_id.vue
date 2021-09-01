@@ -16,7 +16,11 @@
                 />
                 <div class="content-body-header-tit" v-else>
                   {{ infoData && infoData.type }}
-                  <i @click.stop="editName" class="iconfont icon-edit"></i>
+                  <i
+                    v-if="infoData && infoData.isSelf"
+                    @click.stop="editName"
+                    class="iconfont icon-edit"
+                  ></i>
                 </div>
                 <div class="content-body-header-info">
                   {{ infoData && infoData.number }}篇&nbsp;·&nbsp;{{
@@ -38,6 +42,7 @@
                 <div
                   @click="deleteCollection"
                   class="content-body-operate-delete"
+                  v-if="listData.length !== 0 && infoData && infoData.isSelf"
                 >
                   删除
                 </div>
