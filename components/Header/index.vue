@@ -93,9 +93,9 @@ export default {
       return this.$store.state.login.userinfo;
     }
   },
-  created() {
-    this.search();
-  },
+  // created() {
+  //   this.search();
+  // },
   methods: {
     reload() {
       // 触发页面刷新
@@ -125,6 +125,7 @@ export default {
       this.$store.commit("search/setSearchValue", []);
     },
     async search() {
+      console.log(1111)
       const listData = await this.$axios.get("/blog/search", {
         params: {
           tag: 10000,
