@@ -32,7 +32,7 @@
           <h1 class="main-title-name">
             {{ articleInfo.title }}
           </h1>
-          <div class="markdown-body" v-html="mdContent"></div>
+          <div class="markdown-body" v-html="compiledMarkdown"></div>
           <div class="article-author-wrapper">
             <div class="article-tag-type">
               <div class="type">
@@ -543,8 +543,29 @@
 
 <script>
 import dev from "@/env";
-import marked from "marked";
+// import marked from "marked";
 import { Message } from "element-ui";
+
+let marked = require("marked");
+let hljs = require("highlight.js");
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  // sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(lang, code, true).value;
+    } else {
+      return hljs.highlightAuto(code).value;
+    }
+  }
+});
 
 export default {
   layout: "default",
@@ -585,7 +606,8 @@ export default {
       Message.error("获取文章失败！");
     }
 
-    const mdContent = marked(data.data.content || "");
+    // const mdContent = marked(data.data.content || "");
+    const mdContent = data.data.content || "";
 
     // 获取热门文章推荐
     const hotList = await $axios.get("/blog/hot", {
@@ -605,6 +627,9 @@ export default {
   computed: {
     currentUserInfo() {
       return this.$store.state.login.userinfo;
+    },
+    compiledMarkdown() {
+      return marked(this.mdContent || "");
     }
   },
   created() {

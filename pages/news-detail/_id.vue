@@ -23,7 +23,7 @@
           </div>
         </div>
         <img class="theme-pic" :src="articleInfo.titlePic" alt="" />
-        <div class="markdown-body" v-html="mdContent"></div>
+        <div class="markdown-body" v-html="compiledMarkdown"></div>
       </div>
       <div class="more-article-list">
         <div class="more-article-list-header">
@@ -151,8 +151,29 @@
 </template>
 
 <script>
-import marked from "marked";
+// import marked from "marked";
 import { Message } from "element-ui";
+
+let marked = require("marked");
+let hljs = require("highlight.js");
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  // sanitize: false,
+  smartLists: true,
+  smartypants: false,
+  highlight: function(code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(lang, code, true).value;
+    } else {
+      return hljs.highlightAuto(code).value;
+    }
+  }
+});
 
 export default {
   layout: "default",
@@ -177,7 +198,8 @@ export default {
       Message.error("获取文章失败！");
     }
 
-    const mdContent = marked(data.data.content || "");
+    // const mdContent = marked(data.data.content || "");
+    const mdContent = data.data.content || "";
 
     // 获取热门文章推荐
     const hotList = await $axios.get("/news/hot", {
@@ -203,6 +225,11 @@ export default {
       hotList: hotList.data.rows, // 热门文章推荐
       newList: newList.data.rows // 最新文章推荐
     };
+  },
+  computed: {
+    compiledMarkdown() {
+      return marked(this.mdContent || "");
+    }
   },
   created() {
     // 获取更多文章列表

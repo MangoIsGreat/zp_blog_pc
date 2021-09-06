@@ -1,9 +1,18 @@
 @import "/assets/css/config/common.scss";
+@import "highlight.js/styles/default.css";
 
 .news-detail-page-wrapper {
   display: flex;
   width: 960px;
   margin: 20px auto;
+
+  img {
+    width: 100%;
+  }
+
+  pre {
+    overflow-x: auto;
+  }
 
   .article-wrapper-content {
     width: 700px;
@@ -341,7 +350,7 @@
       margin-bottom: 10px;
       box-sizing: border-box;
       background-color: $bg-color-white;
-      transition: all .2s;
+      transition: all 0.2s;
 
       .sen-news-t {
         width: 100%;
@@ -370,7 +379,7 @@
       width: 240px;
       background-color: $bg-color-white;
       margin-bottom: 10px;
-      transition: all .2s;
+      transition: all 0.2s;
 
       .more-article-header {
         color: $article-title-color2;

@@ -1,9 +1,18 @@
 @import "/assets/css/config/common.scss";
+@import "highlight.js/styles/default.css";
 
 .article-wrapper {
   display: flex;
   width: 960px;
   margin: 20px auto;
+
+  img {
+    width: 100%;
+  }
+
+  pre {
+    overflow-x: auto;
+  }
 
   .article-wrapper-content {
     width: 700px;
